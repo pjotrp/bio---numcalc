@@ -53,12 +53,48 @@ namespace MatrixTools
 		unsigned int nrA = A.nrows();
 		unsigned int nrB = B.nrows();
 		unsigned int ncB = B.ncols();
-		if(ncA != nrB) throw DimensionException("MatrixTools::pow(). nrows B != ncols A.", nrB, ncA); 
+		if(ncA != nrB) throw DimensionException("MatrixTools::operator*(). nrows B != ncols A.", nrB, ncA); 
 		MatrixB C(nrA, ncB);
 		mult(A, B, C);
 		return C;
 	}
+
+	template<class MatrixA, class MatrixB>
+	MatrixB operator+(const MatrixA & A, const MatrixB & B) throw (DimensionException)
+	{
+	  unsigned int ncA = A.ncols();
+		unsigned int nrA = A.nrows();
+		unsigned int nrB = B.nrows();
+		unsigned int ncB = B.ncols();
+		if(ncA != ncB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of colums.", ncB, ncA); 
+		if(nrA != nrB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of rows.", nrB, nrA); 
+		MatrixB C(B);
+		add(A, C);
+		return C;
+	}		
 	
+	template<class Matrix>
+	Matrix operator-(const Matrix A)
+	{
+		Matrix B(A);
+		scale(B, -1);
+		return B;
+	}
+
+	template<class MatrixA, class MatrixB>
+	MatrixB operator-(const MatrixA & A, const MatrixB & B) throw (DimensionException)
+	{
+	  unsigned int ncA = A.ncols();
+		unsigned int nrA = A.nrows();
+		unsigned int nrB = B.nrows();
+		unsigned int ncB = B.ncols();
+		if(ncA != ncB) throw DimensionException("MatrixTools::operator-(). A and B must have the same number of colums.", ncB, ncA); 
+		if(nrA != nrB) throw DimensionException("MatrixTools::operator-(). A and B must have the same number of rows.", nrB, nrA); 
+		MatrixB C(-B);
+		add(A, C);
+		return C;
+	}
+
 	template<class Matrix>
 	Matrix pow(const Matrix & m, int p) throw (DimensionException)
 	{
@@ -71,7 +107,23 @@ namespace MatrixTools
 			return result;
 		}
 	}
+	
+	template<class Matrix, class Vector>
+	Vector row(const Matrix & m, unsigned int rowIndex)
+	{
+		Vector r(m.ncols());
+		for(unsigned int i = 0; i < m.ncols(); i++) r[i] = m(rowIndex, i);
+		return(r);
+	}
 
+	template<class Matrix, class Vector>
+	Vector col(const Matrix & m, unsigned int colIndex)
+	{
+		Vector c(m.nrows());
+		for(unsigned int i = 0; i < m.nrows(); i++) c[i] = m(colIndex, i);
+		return(c);
+	}
+	
 };
 
 
