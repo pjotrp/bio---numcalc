@@ -16,6 +16,9 @@
 #include <cmath>
 #include <cassert>
 #include <ctime>
+#include <vector>
+using namespace std;
+
 #include "RandomFactory.h"
 
 class RandomTools
@@ -64,6 +67,32 @@ class RandomTools
 	
 		// Added by jdutheil on 08 11 2002.
   		static double randExponential(double mean, const RandomFactory * generator = DEFAULT_GENERATOR);
+
+		// Added by Sylvain Gaillard on 09 24 2004
+		/**
+		 * @brief Get a sample of a vector.
+		 *
+		 * The sample is a new vector of the specified size.
+		 * If the size of the sample is identical to the original vector,
+		 * the result is a shuffl of the original vector.
+		 *
+		 * @param v The vector to sample.
+		 * @param size The size of the sample.
+		 * @return A vector which is a sample of v.
+		 */
+		template<class T> static vector<T> getSample(const vector<T> & v, unsigned int size) {
+			vector<unsigned int> hat;
+			for (unsigned int i = 0 ; i < v.size() ; i++)
+				hat.push_back(i);
+			vector<T> sample;
+			for (unsigned int i = 0 ; i < size ; i++) {
+				unsigned int pos = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(hat.size());
+				sample.push_back(v[hat[pos]]);
+				hat[pos] = hat[hat.size() - 1];
+				hat.pop_back();
+			}
+			return sample;
+		}
 
 	private:
 //		static RandInt r;

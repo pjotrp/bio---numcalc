@@ -10,7 +10,7 @@
 // Class destructor
 RandomTools::~RandomTools() {}
 
-RandomFactory * DEFAULT_GENERATOR = new Uniform01QD(time(NULL));
+RandomFactory * RandomTools::DEFAULT_GENERATOR = new Uniform01QD(time(NULL));
 
 // Initiate random seed :
 //RandomTools::RandInt RandomTools::r = time(NULL) ;
