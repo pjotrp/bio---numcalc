@@ -30,7 +30,7 @@ class Optimizer
 	public:
 		
 		/**
-		 * @brief Set the intial values of the parameters.
+		 * @brief Set the initial values of the parameters.
 		 *
 		 * @param params The initial values of parameters.
 		 */
