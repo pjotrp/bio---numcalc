@@ -36,6 +36,17 @@ namespace MatrixTools
 		return diago;
 	}
 
+	template<class Matrix, class T>
+	vector<T> diag(const Matrix & M) throw (DimensionException)
+	{
+		unsigned int nc = M.ncols();
+		unsigned int nr = M.nrows();
+		if(nc != nr) throw DimensionException("MatrixTools::diag(). M must be a square matrix.", nr, nc); 
+		vector<T> diago(nc);
+		for(unsigned int i = 0; i < nc; i++) diago[i] = M(i, i);
+		return diago;
+	}
+
 	template<class Matrix, class X>
 	void fill(Matrix & M, X x)
 	{
