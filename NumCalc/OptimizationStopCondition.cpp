@@ -146,3 +146,51 @@ bool ParametersStopCondition::isToleranceReached() const
 }
 
 /******************************************************************************/
+
+FunctionStopCondition::FunctionStopCondition(
+	const Optimizer * optimizer):
+	AbstractOptimizationStopCondition(optimizer)
+{
+	_newFunctionValue = _optimizer -> getFunctionValue();
+}
+
+FunctionStopCondition::FunctionStopCondition(
+	const Optimizer * optimizer,
+	double tolerance):
+	AbstractOptimizationStopCondition(optimizer, tolerance)
+{
+	_newFunctionValue = _optimizer -> getFunctionValue();
+}
+
+FunctionStopCondition::FunctionStopCondition(
+	const Optimizer * optimizer,
+	int burnin):
+	AbstractOptimizationStopCondition(optimizer, burnin)
+{
+	_newFunctionValue = _optimizer -> getFunctionValue();
+}
+
+FunctionStopCondition::FunctionStopCondition(
+	const Optimizer * optimizer,
+	double tolerance,
+	int burnin):
+	AbstractOptimizationStopCondition(optimizer, tolerance, burnin)
+{
+	_newFunctionValue = _optimizer -> getFunctionValue();
+}
+
+FunctionStopCondition::~FunctionStopCondition() {}
+
+/******************************************************************************/
+
+bool FunctionStopCondition::isToleranceReached() const
+{
+	_callCount++;
+	_lastFunctionValue = _newFunctionValue;
+	_newFunctionValue  = _optimizer -> getFunctionValue();
+	if(_callCount <= _burnin) return false;
+	double tol = NumTools::abs<double>(_newFunctionValue - _lastFunctionValue);
+	return tol < _tolerance;
+}
+
+/******************************************************************************/

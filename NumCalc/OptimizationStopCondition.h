@@ -11,6 +11,8 @@
 
 class Optimizer;
 	
+/******************************************************************************/
+
 class OptimizationStopCondition
 {
 	public:
@@ -109,6 +111,38 @@ class ParametersStopCondition: public AbstractOptimizationStopCondition
 	
 	public:
 		bool isToleranceReached() const;
+};
+
+/******************************************************************************/
+
+class FunctionStopCondition: public AbstractOptimizationStopCondition
+{
+	protected:
+		/**
+		 * @brief The last value of the function.
+		 *
+		 * This is used by the isToleranceReached() method.
+		 */
+		mutable double _lastFunctionValue;
+		
+		/**
+		 * @brief The new value of the function.
+		 *
+		 * This is used by the isToleranceReached() method.
+		 */
+		mutable double _newFunctionValue;
+	
+	public:
+		FunctionStopCondition(const Optimizer * optimizer);
+		FunctionStopCondition(const Optimizer * optimizer, double tolerance);
+		FunctionStopCondition(const Optimizer * optimizer, int burnin);
+		FunctionStopCondition(const Optimizer * optimizer, double tolerance, int burnin);
+		
+		~FunctionStopCondition();
+	
+	public:
+		bool isToleranceReached() const;
+
 };
 
 /******************************************************************************/
