@@ -23,14 +23,13 @@
 #ifndef _VECTORTOOLS_H_
 #define _VECTORTOOLS_H_
 
+#include "VectorExceptions.h"
+
 #include "NumTools.h"
 using namespace NumTools;
 
 #include <vector>
 using namespace std;
-
-//From utils:
-#include <Utils/Exceptions.h>
 
 typedef vector<double> Vdouble;
 typedef vector<Vdouble> VVdouble;
@@ -41,61 +40,6 @@ typedef vector<int> Vint;
 typedef vector<Vint> VVint;
 typedef vector<VVint> VVVint;
 typedef vector<VVVint> VVVVint;
-
-/******************************************************************************
- *                           VectorTools exceptions:                          *
- ******************************************************************************/
-
-class VectorException : public Exception {
-
-	protected:
-		const Vdouble * _vect;
-			
-	public:
-		// Class constructor
-		VectorException(const char *   text, const Vdouble * vect = NULL);
-		VectorException(const string & text, const Vdouble * vect = NULL);
-	
-		// Class destructor
-		~VectorException() throw ();
-	public:
-		virtual const Vdouble * getVector() const;
-};
-
-/******************************************************************************/
-
-class EmptyVectorException : public VectorException {
-
-	public:
-		// Class constructor
-		EmptyVectorException(const char *   text, const Vdouble * vect = NULL);
-		EmptyVectorException(const string & text, const Vdouble * vect = NULL);
-	
-		// Class destructor
-		~EmptyVectorException() throw ();
-};
-
-/******************************************************************************/
-
-class DimensionException : public Exception {
-
-	protected:
-		int dimension;
-		int correctDimension; 
-			
-	public:
-		// Class constructor
-		DimensionException(const char *   text, int dimension, int correctDimension);
-		DimensionException(const string & text, int dimension, int correctDimension);
-	
-		// Class destructor
-		~DimensionException() throw ();
-	public:
-		virtual int getDimension() const;
-		virtual int getCorrectDimension() const;
-};
-
-/******************************************************************************/
 
 namespace VectorOperators {
 
@@ -362,8 +306,8 @@ double cos(const Vdouble & v1, const Vdouble & v2) throw (DimensionException);
  * @return The minimum value in the vector.
  * @throw EmptyVectorException If the input vector is empty.
  */
-template<class T> T min(const vector<T> & v) throw (EmptyVectorException) {
-	if(v.size() == 0) throw EmptyVectorException("VectorFunctions::min()", & v);
+template<class T> T min(const vector<T> & v) throw (EmptyVectorException<T>) {
+	if(v.size() == 0) throw EmptyVectorException<T>("VectorFunctions::min()", & v);
 	T mini = v[0];
 	for(unsigned int i = 1; i < v.size(); i++)
 		if(v[i] < mini) mini = v[i];
@@ -379,8 +323,8 @@ template<class T> T min(const vector<T> & v) throw (EmptyVectorException) {
  * @return The maximum value in the vector.
  * @throw EmptyVectorException If the input vector is empty.
  */
-template<class T> T max(const vector<T> & v) throw (EmptyVectorException) {
-	if(v.size() == 0) throw EmptyVectorException("VectorFuntions::max()", & v);
+template<class T> T max(const vector<T> & v) throw (EmptyVectorException<T>) {
+	if(v.size() == 0) throw EmptyVectorException<T>("VectorFuntions::max()", & v);
 	T maxi = v[0];
 	for(unsigned int i = 1; i < v.size(); i++)
 		if(v[i] > maxi) maxi = v[i];
@@ -397,7 +341,7 @@ template<class T> T max(const vector<T> & v) throw (EmptyVectorException) {
  * @return The position of the minimum value in the vector.
  * @throw EmptyVectorException If the input vector is empty.
  */
-template<class T> int posmin(const vector<T> & v) throw (EmptyVectorException) {
+template<class T> int posmin(const vector<T> & v) throw (EmptyVectorException<T>) {
 	T mini = min(v);
 	for(unsigned int i = 0; i < v.size(); i++)
 		if(v[i] == mini) return i;
@@ -415,7 +359,7 @@ template<class T> int posmin(const vector<T> & v) throw (EmptyVectorException) {
  * @return The position of the maximum value in the vector.
  * @throw EmptyVectorException If the input vector is empty.
  */
-template<class T> int posmax(const vector<T> & v) throw (EmptyVectorException) {
+template<class T> int posmax(const vector<T> & v) throw (EmptyVectorException<T>) {
 	T maxi = max(v);
 	for(unsigned int i = 0; i < v.size(); i++)
 		if(v[i] == maxi) return i;

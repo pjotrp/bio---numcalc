@@ -15,6 +15,7 @@ ConstantDistribution.h\
 GoldenSectionSearch.h\
 Optimizer.h\
 VectorTools.h\
+VectorExceptions.h\
 Constraints.h\
 IntervalData.h\
 ParameterExceptions.h\
@@ -52,7 +53,8 @@ OneDimensionOptimizationTools.cpp\
 RandomTools.cpp\
 DownhillSimplexMethod.cpp\
 OptimizationStopCondition.cpp\
-VectorTools.cpp
+VectorTools.cpp\
+VectorExceptions.cpp
 
 lib_LTLIBRARIES = libnumcalc.la
 libnumcalc_la_SOURCES = $(H_FILES) $(CPP_FILES)

@@ -33,66 +33,6 @@ using namespace VectorStatTools;
 #include <iostream>
 using namespace std;
 
-/*******************************************************************************
- *                           VectorTools exceptions:                           *
- *******************************************************************************/
-
-VectorException::VectorException(const char *   text, const Vdouble * vect) :
-	Exception("VectorException: " + string(text)),
-	_vect(vect) {};
-		
-VectorException::VectorException(const string & text, const Vdouble * vect) :
-	Exception("VectorException: " + text),
-	_vect(vect) {};
-		
-VectorException::~VectorException() throw() {};
-	
-const Vdouble * VectorException::getVector() const { return _vect; }
-
-/******************************************************************************/
-
-EmptyVectorException::EmptyVectorException(const char * text, const Vdouble * vect) :
-	VectorException("EmptyVectorException: " + string(text), vect) {};
-		
-EmptyVectorException::EmptyVectorException(const string & text, const Vdouble * vect) :
-	VectorException("EmptyVectorException: " + text, vect) {};
-		
-EmptyVectorException::~EmptyVectorException() throw() {};
-
-/******************************************************************************/
-	
-DimensionException::DimensionException(
-	const char * text,
-	int dimension,
-	int correctDimension
-) :
-	Exception("DimensionException (found " +
-		TextTools::toString(dimension) +
-		", should be " +
-		TextTools::toString(correctDimension) +
-		string(text)),
-	dimension(dimension),
-	correctDimension(correctDimension) {};
-		
-DimensionException::DimensionException(
-	const string & text,
-	int dimension,
-	int correctDimension
-) :
-	Exception("DimensionException (found " +
-		TextTools::toString(dimension) +
-		", should be " +
-		TextTools::toString(correctDimension) +
-		text),
-	dimension(dimension),
-	correctDimension(correctDimension) {};
-		
-DimensionException::~DimensionException() throw() {};
-
-int DimensionException::getDimension() const { return dimension; }
-
-int DimensionException::getCorrectDimension() const { return correctDimension; }
-
 /******************************************************************************
  * These functions are part of the VectorOperators namespace.                 *
  ******************************************************************************/
