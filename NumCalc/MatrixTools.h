@@ -25,6 +25,17 @@ namespace MatrixTools
 		return id;
 	}
 
+	template<class Matrix, class T>
+	Matrix diag(const vector<T> & d)
+	{
+		unsigned int n = d.size();
+		Matrix diago(n, n);
+		for(unsigned int i = 0; i < n; i++) {
+			for(unsigned int j = 0; j < n; j++) diago(i, j) = (i == j) ? d[i] : 0;
+		}
+		return diago;
+	}
+
 	template<class Matrix, class X>
 	void fill(Matrix & M, X x)
 	{

@@ -273,6 +273,15 @@ Vdouble VectorFunctions::log(const Vdouble & v1)
 
 /******************************************************************************/
 
+Vdouble VectorFunctions::exp(const Vdouble & v1)
+{
+	Vdouble v2(v1.size());
+	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::exp(v1[i]);
+	return v2;
+}
+
+/******************************************************************************/
+
 Vdouble VectorFunctions::log10(const Vdouble & v1)
 {
 	Vdouble v2(v1.size());

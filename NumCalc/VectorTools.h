@@ -258,6 +258,14 @@ template<class T> vector<double> log(const vector<T> & v1, double base)
 }
 Vdouble log(const Vdouble & v1);
 
+template<class T> vector<double> exp(const vector<T> & v1)
+{
+	vector<double> v2(v1.size());
+	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::exp(v1[i]);
+	return v2;
+}
+Vdouble exp(const Vdouble & v1);
+
 template<class T> vector<double> log10(const vector<T> & v1)
 {
 	vector<double> v2(v1.size());
