@@ -96,7 +96,7 @@ class ParameterList : public vector<Parameter *>
 {
 	public: // Class constructor and destructor:
 		
-		/**
+		/**i
 		 * @brief Build a new ParameterList object.
 		 */
 		ParameterList();
@@ -131,15 +131,23 @@ class ParameterList : public vector<Parameter *>
 		 * @param names Name of the parameters to be included in the list.
 		 * @return A list with all parameters specified.
 		 */
-		virtual ParameterList subList(vector<string> names);
+		virtual ParameterList subList(const vector<string> & names) const ;
 		
+		/**
+		 * @brief Get given parameter as a sublist.
+		 *
+		 * @param name Name of the parameter to be included in the list.
+		 * @return A list with the parameter specified.
+		 */
+		virtual ParameterList subList(const string & name) const;
+
 		/**
 		 * @brief Get given parameters as a sublist.
 		 *
 		 * @param parameters Positions of the parameters to be included in the list.
 		 * @return A list with all parameters specified.
 		 */
-		virtual ParameterList subList(vector<unsigned int> parameters);
+		virtual ParameterList subList(vector<unsigned int> parameters) const;
 
 		/**
 		 * @brief Get given parameter as a sublist.
@@ -147,7 +155,15 @@ class ParameterList : public vector<Parameter *>
 		 * @param parameter Position of the parameters to be included in the list.
 		 * @return A list with the parameter specified.
 		 */
-		virtual ParameterList subList(unsigned int parameter);
+		virtual ParameterList subList(unsigned int parameter) const;
+
+		/**
+		 * @brief Get the sublist containing all common parameter between this list and pl.
+		 *
+		 * @param params The list to compare to.
+		 * @return A list with all common parameters.
+		 */
+		virtual ParameterList getCommonParametersWith(const ParameterList & params) const;
 	
 		/**
 		 * @brief Get all parameter names in the list.

@@ -144,19 +144,28 @@ inline Parameter * ParameterList::getParameter(const string & name) {
 
 /******************************************************************************/
 
-inline ParameterList ParameterList::subList(vector<string> names)
+inline ParameterList ParameterList::subList(const vector<string> & names) const
 {
 	ParameterList pl;
 	for(unsigned int i = 0; i < names.size(); i++) {
-		Parameter * param = getParameter(names[i]);
+		const Parameter * param = getParameter(names[i]);
 		if(param != NULL) pl.push_back(dynamic_cast<Parameter *>(param -> clone()));
 	}
 	return pl;
 }
 
 /******************************************************************************/
+inline ParameterList ParameterList::subList(const string & name) const
+{
+	ParameterList pl;
+	const Parameter * param = getParameter(name);
+	if(param != NULL) pl.push_back(dynamic_cast<Parameter *>(param -> clone()));
+	return pl;
+}
 
-inline ParameterList ParameterList::subList(vector<unsigned int> parameters)
+/******************************************************************************/
+
+inline ParameterList ParameterList::subList(vector<unsigned int> parameters) const 
 {
 	ParameterList pl;
 	for(unsigned int i = 0; i < parameters.size(); i++) {
@@ -167,13 +176,27 @@ inline ParameterList ParameterList::subList(vector<unsigned int> parameters)
 
 /******************************************************************************/
 
-inline ParameterList ParameterList::subList(unsigned int parameter)
+inline ParameterList ParameterList::subList(unsigned int parameter) const
 {
 	ParameterList pl;
   if(parameter < size()) pl.push_back(dynamic_cast<Parameter *>(this -> operator[](parameter) -> clone()));
 	return pl;
 }
 
+/******************************************************************************/
+	
+inline ParameterList ParameterList::getCommonParametersWith(const ParameterList & params) const
+{
+	ParameterList pl;
+  for(unsigned int i = 0; i < params.size(); i++) {
+		Parameter * p = params[i];
+		if(getParameter(p -> getName()) != NULL)
+			pl.push_back(dynamic_cast<Parameter *>(p -> clone()));
+	}
+	
+	return pl;
+}
+	
 /******************************************************************************/
 
 inline vector<string> ParameterList::getParameterNames() const {

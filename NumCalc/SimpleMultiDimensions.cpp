@@ -142,18 +142,17 @@ void SimpleMultiDimensions::init(const ParameterList & params) throw (Exception)
 double SimpleMultiDimensions::step() throw (Exception)
 {
 	for(unsigned int i = 0; i < _nbParams; i++) {
+		cout << _parameters[i] -> getName() << ":";
+		cout.flush();
 		// Re-init optimizer according to new values:
 		double v = _parameters[i] -> getValue();
 		_optimizers[i] -> setInitialInterval(v - 0.01, v + 0.01);
 		_optimizers[i] -> init(_parameters.subList(i));
-		cout << _parameters.subList(i)[0] -> getValue() << endl;
 
 		// Optimize through this dimension:
 		_optimizers[i] -> optimize();
 		// Update parameters with the new value:
-		cout << _optimizers[i] -> getParameters()[0] -> getValue() << endl;
 		_parameters.setParametersValues(_optimizers[i] -> getParameters());
-		cout << _parameters[0] -> getValue() << endl;
 		_nbEval += _optimizers[i] -> getNumberOfEvaluations(); 
 	}
 	_tolIsReached = _nbParams <= 1 || _stopCondition -> isToleranceReached();
@@ -166,7 +165,6 @@ double SimpleMultiDimensions::optimize() throw (Exception)
 	_tolIsReached = false;
 	_nbEval = 0;
 	for (_nbEval = 0; _nbEval < _nbEvalMax && ! _tolIsReached; _nbEval++) {
-		cout << "#" << endl;
 		step();
 	}
 	return _function -> getValue();
