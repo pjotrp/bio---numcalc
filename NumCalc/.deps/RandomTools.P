@@ -1,0 +1,40 @@
+RandomTools.lo RandomTools.o : RandomTools.cpp RandomTools.h /usr/include/c++/3.3.1/cmath \
+  /usr/include/c++/3.3.1/i586-mandrake-linux-gnu/bits/c++config.h \
+  /usr/include/c++/3.3.1/i586-mandrake-linux-gnu/bits/os_defines.h \
+  /usr/include/features.h /usr/include/sys/cdefs.h \
+  /usr/include/gnu/stubs.h /usr/include/math.h \
+  /usr/include/bits/huge_val.h /usr/include/bits/nan.h \
+  /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
+  /usr/include/bits/mathinline.h /usr/include/c++/3.3.1/bits/cmath.tcc \
+  /usr/include/c++/3.3.1/cassert /usr/include/assert.h \
+  /usr/include/c++/3.3.1/ctime /usr/include/c++/3.3.1/cstddef \
+  /usr/lib/gcc-lib/i586-mandrake-linux-gnu/3.3.1/include/stddef.h \
+  /usr/include/time.h /usr/include/bits/time.h /usr/include/bits/types.h \
+  /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h \
+  /usr/include/xlocale.h
+RandomTools.cpp :
+RandomTools.h :
+/usr/include/c++/3.3.1/cmath :
+/usr/include/c++/3.3.1/i586-mandrake-linux-gnu/bits/c++config.h :
+/usr/include/c++/3.3.1/i586-mandrake-linux-gnu/bits/os_defines.h :
+/usr/include/features.h :
+/usr/include/sys/cdefs.h :
+/usr/include/gnu/stubs.h :
+/usr/include/math.h :
+/usr/include/bits/huge_val.h :
+/usr/include/bits/nan.h :
+/usr/include/bits/mathdef.h :
+/usr/include/bits/mathcalls.h :
+/usr/include/bits/mathinline.h :
+/usr/include/c++/3.3.1/bits/cmath.tcc :
+/usr/include/c++/3.3.1/cassert :
+/usr/include/assert.h :
+/usr/include/c++/3.3.1/ctime :
+/usr/include/c++/3.3.1/cstddef :
+/usr/lib/gcc-lib/i586-mandrake-linux-gnu/3.3.1/include/stddef.h :
+/usr/include/time.h :
+/usr/include/bits/time.h :
+/usr/include/bits/types.h :
+/usr/include/bits/wordsize.h :
+/usr/include/bits/typesizes.h :
+/usr/include/xlocale.h :
