@@ -7,6 +7,7 @@ rm -rf ./autom4te.cache
 rm ./ChangeLog
 rm ./config.guess
 rm ./config.sub
+rm ./config.cache
 rm ./configure
 rm ./COPYING
 rm ./depcomp

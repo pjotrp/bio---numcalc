@@ -1,3 +1,0 @@
-NumTools.lo NumTools.o : NumTools.cpp NumTools.h
-NumTools.cpp :
-NumTools.h :
