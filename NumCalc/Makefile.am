@@ -22,6 +22,7 @@ ParameterExceptions.h\
 DiscreteDistribution.h\
 AbstractDiscreteDistribution.h\
 SimpleDiscreteDistribution.h\
+SimpleMultiDimensions.h\
 MatrixTools.h\
 Parameter.h\
 Domain.h\
@@ -50,6 +51,7 @@ MultiDimensionsOptimizationTools.cpp\
 Parametrizable.cpp\
 AbstractDiscreteDistribution.cpp\
 SimpleDiscreteDistribution.cpp\
+SimpleMultiDimensions.cpp\
 NumTools.cpp\
 PowellMultiDimensions.cpp\
 Domain.cpp\
