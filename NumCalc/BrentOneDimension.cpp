@@ -33,7 +33,7 @@ bool BrentOneDimension::BODStopCondition::isToleranceReached() const {
 		
 /******************************************************************************/
 
-BrentOneDimension::BrentOneDimension(const Function * function) :
+BrentOneDimension::BrentOneDimension(Function * function) :
 AbstractOptimizer(function)
 {
 	_defaultStopCondition = new BODStopCondition(this);
@@ -61,10 +61,10 @@ void BrentOneDimension::init(const ParameterList & params) throw (Exception) {
 
 	// Bracket the minimum.
 	Bracket bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, _function, _parameters);
-	//printMessage("Initial bracketing:");
-	//printMessage("A: x = " + TextTools::toString(bracket.a.x) + ", f = " + TextTools::toString(bracket.a.f));
-	//printMessage("B: x = " + TextTools::toString(bracket.b.x) + ", f = " + TextTools::toString(bracket.b.f));
-	//printMessage("C: x = " + TextTools::toString(bracket.c.x) + ", f = " + TextTools::toString(bracket.c.f));
+	printMessage("Initial bracketing:");
+	printMessage("A: x = " + TextTools::toString(bracket.a.x) + ", f = " + TextTools::toString(bracket.a.f));
+	printMessage("B: x = " + TextTools::toString(bracket.b.x) + ", f = " + TextTools::toString(bracket.b.f));
+	printMessage("C: x = " + TextTools::toString(bracket.c.x) + ", f = " + TextTools::toString(bracket.c.f));
 
 	// This will be the distance moved on the step before last.
 	e = 0.0;
@@ -82,7 +82,7 @@ void BrentOneDimension::init(const ParameterList & params) throw (Exception) {
 }
 
 /******************************************************************************/
-
+	
 void BrentOneDimension::setInitialInterval(double inf, double sup) {
 	_xinf = inf; _xsup = sup;	
 }

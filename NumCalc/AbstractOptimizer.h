@@ -18,7 +18,7 @@ class AbstractOptimizer: public Optimizer
 		/**
 		 * @brief The function to optimize.
 		 */
-		const Function * _function;
+		Function * _function;
 	
 		/**
 		 * @brief The parameters that will be optimized.
@@ -41,7 +41,7 @@ class AbstractOptimizer: public Optimizer
 		 * Must be one the following:
 		 * <ul>
 		 * <li>CONSTRAINTS_KEEP: keep the constraint associated to the parameters (default).</li>
-		 * <li>CONSTRAINTS_REMOVE: remove all constraints.</li>
+		 * <li>CONSTRAINTS_IGNORE: remove all constraints.</li>
 		 * <li>CONSTRAINTS_AUTO: use AutoParameters to deal with constraints.
 		 * </ul>
 		 * @see AutoParameter
@@ -78,7 +78,7 @@ class AbstractOptimizer: public Optimizer
 
 
 	public:
-		AbstractOptimizer(const Function * function);
+		AbstractOptimizer(Function * function);
 		virtual ~AbstractOptimizer();
 	
 	public:

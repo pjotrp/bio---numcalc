@@ -60,7 +60,7 @@ class OneDimensionOptimizationTools
 		 * @param a, b Two initial values for the parameter.
 		 * @return     A bracket object.
 		 */
-		static Bracket bracketMinimum(double a, double a, const Function * function, ParameterList parameters);
+		static Bracket bracketMinimum(double a, double a, Function * function, ParameterList parameters);
 	
 	public:
 		

@@ -34,7 +34,7 @@ class GoldenSectionSearch : public AbstractOptimizer
 	
 	public: // Class constructor and destructor:
 		
-		GoldenSectionSearch(const Function * function);
+		GoldenSectionSearch(Function * function);
 		virtual ~GoldenSectionSearch();
 	
 	public: // Optimizer interface implemented here:
@@ -65,15 +65,6 @@ class GoldenSectionSearch : public AbstractOptimizer
 		 * @param max The maximum number of itarations to perform.
 		 */
 		void setMaximumNumberOfIterations(int max);
-	
-		/**
-		 * @brief Set the tolerance parameter. See the NRC book for more detail.
-		 *
-		 * The algorithm will stop when the size of the simplex is less than the tolerance parameter.
-		 *
-		 * @param tol The tolerance parameter.
-		 */	
-		void setTolerance(double tol);
 	
 		void setInitialInterval(double inf, double sup);
 				

@@ -27,7 +27,7 @@ bool GoldenSectionSearch::GSSStopCondition::isToleranceReached() const {
 	double x1 = gss -> x1;
 	double x2 = gss -> x2;
 	double x3 = gss -> x3;
-	return NumTools::abs(x3 - x0) > _tolerance * (NumTools::abs(x1) + NumTools::abs(x2));
+	return NumTools::abs(x3 - x0) <= _tolerance * (NumTools::abs(x1) + NumTools::abs(x2));
 }
 		
 /******************************************************************************/
@@ -37,7 +37,7 @@ double GoldenSectionSearch::C = 1. - R;
 
 /******************************************************************************/
 
-GoldenSectionSearch::GoldenSectionSearch(const Function * function) :
+GoldenSectionSearch::GoldenSectionSearch(Function * function) :
 AbstractOptimizer(function)
 {
 	_nbEvalMax = 10000;
@@ -60,10 +60,10 @@ void GoldenSectionSearch::init(const ParameterList & params) throw (Exception) {
 
 	// Bracket the minimum.
 	Bracket bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, _function, _parameters);
-	//printMessage("Initial bracketing:");
-	//printMessage("A: x = " + TextTools::toString(bracket.a.x) + ", f = " + TextTools::toString(bracket.a.f));
-	//printMessage("B: x = " + TextTools::toString(bracket.b.x) + ", f = " + TextTools::toString(bracket.b.f));
-	//printMessage("C: x = " + TextTools::toString(bracket.c.x) + ", f = " + TextTools::toString(bracket.c.f));
+	printMessage("Initial bracketing:");
+	printMessage("A: x = " + TextTools::toString(bracket.a.x) + ", f = " + TextTools::toString(bracket.a.f));
+	printMessage("B: x = " + TextTools::toString(bracket.b.x) + ", f = " + TextTools::toString(bracket.b.f));
+	printMessage("C: x = " + TextTools::toString(bracket.c.x) + ", f = " + TextTools::toString(bracket.c.f));
 
 	// At any given time we will keep track of four points, x0, x1, x2 and x3.
 	x0 = bracket.a.x;
@@ -117,7 +117,7 @@ double GoldenSectionSearch::step() throw (Exception)
 		x1 = R * x2 + C * x0;
 		// and its new function evaluation.
 		_parameters[0] -> setValue(x1);
-		_tolIsReached = _stopCondition -> isToleranceReached();
+		_tolIsReached = _nbEval > 2 && _stopCondition -> isToleranceReached();
 		NumTools::shift<double>(f2, f1, _function -> f(_parameters));
 		printPoint(_parameters, f1);
 		return f1;

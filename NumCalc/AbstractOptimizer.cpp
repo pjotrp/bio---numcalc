@@ -15,11 +15,13 @@
 
 /******************************************************************************/
 
-AbstractOptimizer::AbstractOptimizer(const Function * function): _function(function) {
+AbstractOptimizer::AbstractOptimizer(Function * function): _function(function) 
+{
 	// Initialization with defaults:
 	_messageHandler   = & cout;
 	_profiler         = & cout;
 	_constraintPolicy = CONSTRAINTS_KEEP;	
+	_nbEvalMax = 1000000;
 }
 
 /******************************************************************************/

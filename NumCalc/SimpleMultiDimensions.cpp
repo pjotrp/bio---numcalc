@@ -81,10 +81,12 @@ knowledge of the CeCILL license and that you accept its terms.
 
 /******************************************************************************/
 
-SimpleMultiDimensions::SimpleMultiDimensions(const Function * function):
+SimpleMultiDimensions::SimpleMultiDimensions(Function * function):
 	AbstractOptimizer(function)
 {
-	_stopCondition = new FunctionStopCondition(this); 
+	_defaultStopCondition = new FunctionStopCondition(this);
+	_stopCondition = _defaultStopCondition;
+	_nbParams = 0;
 }
 
 /******************************************************************************/
@@ -94,7 +96,7 @@ SimpleMultiDimensions::~SimpleMultiDimensions()
 	for(unsigned int i = 0; i < _nbParams; i++) {
 		delete _optimizers[i];
 	}
-	delete _stopCondition;
+	delete _defaultStopCondition;
 }
 
 /******************************************************************************/
@@ -110,13 +112,29 @@ void SimpleMultiDimensions::init(const ParameterList & params) throw (Exception)
 	_parameters = params;
 
 	_nbParams = params.size();
+	if(_nbParams == 0) return;
+
 	// Initialize optimizers:
-	unsigned int nbEvalMax = (unsigned int)(_nbEvalMax / _nbParams);
+	unsigned int nbEvalMax = _nbEvalMax / _nbParams;
 	_optimizers.resize(_nbParams);
 	for(unsigned int i = 0; i < _nbParams; i++) {
-		_optimizers[i] = new BrentOneDimension(_function);
+		//_optimizers[i] = new BrentOneDimension(_function);
+		_optimizers[i] = new GoldenSectionSearch(_function);
 		_optimizers[i] -> setMaximumNumberOfEvaluations(nbEvalMax);
-	}	
+		_optimizers[i] -> setProfiler(_profiler);
+		_optimizers[i] -> setMessageHandler(_messageHandler);
+		//_optimizers[i] -> setTolerance(_stopCondition -> getTolerance());
+		_optimizers[i] -> getStopCondition() -> setTolerance(getStopCondition() -> getTolerance());
+		_optimizers[i] -> setConstraintPolicy(_constraintPolicy);
+		_optimizers[i] -> setInitialInterval(0.,1.);
+		profile(_parameters[i] -> getName() + "\t"); 
+	}
+	
+	profileln("Function");
+
+	printPoint(_parameters, _function -> f(_parameters));
+	// Initialize the StopCondition:
+	_stopCondition -> isToleranceReached();
 }
 
 /******************************************************************************/
@@ -125,13 +143,20 @@ double SimpleMultiDimensions::step() throw (Exception)
 {
 	for(unsigned int i = 0; i < _nbParams; i++) {
 		// Re-init optimizer according to new values:
+		double v = _parameters[i] -> getValue();
+		_optimizers[i] -> setInitialInterval(v - 0.01, v + 0.01);
 		_optimizers[i] -> init(_parameters.subList(i));
+		cout << _parameters.subList(i)[0] -> getValue() << endl;
+
 		// Optimize through this dimension:
 		_optimizers[i] -> optimize();
 		// Update parameters with the new value:
+		cout << _optimizers[i] -> getParameters()[0] -> getValue() << endl;
 		_parameters.setParametersValues(_optimizers[i] -> getParameters());
+		cout << _parameters[0] -> getValue() << endl;
+		_nbEval += _optimizers[i] -> getNumberOfEvaluations(); 
 	}
-	_tolIsReached = _stopCondition -> isToleranceReached();
+	_tolIsReached = _nbParams <= 1 || _stopCondition -> isToleranceReached();
 }
 
 /******************************************************************************/
@@ -139,10 +164,19 @@ double SimpleMultiDimensions::step() throw (Exception)
 double SimpleMultiDimensions::optimize() throw (Exception)
 {
 	_tolIsReached = false;
+	_nbEval = 0;
 	for (_nbEval = 0; _nbEval < _nbEvalMax && ! _tolIsReached; _nbEval++) {
+		cout << "#" << endl;
 		step();
 	}
-	return _currentValue;
+	return _function -> getValue();
+}
+
+/******************************************************************************/
+
+double SimpleMultiDimensions::getFunctionValue() const
+{
+ return _function -> getValue();
 }
 
 /******************************************************************************/

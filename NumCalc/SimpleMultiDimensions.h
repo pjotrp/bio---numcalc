@@ -80,6 +80,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractOptimizer.h"
 #include "BrentOneDimension.h"
+#include "GoldenSectionSearch.h"
 
 /**
  * @brief This Optimizer is a very simple multi-dimensions optimizer, calling
@@ -93,19 +94,14 @@ class SimpleMultiDimensions : public AbstractOptimizer
         
 	protected:
 
-		ParameterList _previousPoint; // Current point is in _parameters
+		unsigned int _nbParams;
 
-		double _currentValue, _previousValue;
-
-		unsigned int _nbParams; // Number of parameters
-
-		vector<string> _params; // All parameter names
-
-		vector<BrentOneDimension *> _optimizers; // One dimensional optimizers.
+		//vector<BrentOneDimension *> _optimizers; // One dimensional optimizers.
+		vector<GoldenSectionSearch *> _optimizers; // One dimensional optimizers.
 
 	public:
 
-		SimpleMultiDimensions(const Function * function);
+		SimpleMultiDimensions(Function * function);
 
 		virtual ~SimpleMultiDimensions();
 

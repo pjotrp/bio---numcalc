@@ -37,14 +37,15 @@ class PowellMultiDimensions: public AbstractOptimizer
 			protected:
 				mutable ParameterList _params, p, _xt;
 				Vdouble xi;
-				const Function * function;
+				Function * function;
 			
 			public:
-				DirectionFunction(const Function * function);
+				DirectionFunction(Function * function);
 				virtual ~DirectionFunction();
 			
 			public: // Function interface implementation:
-				void setParameters(const ParameterList & params) const;
+				void setParameters(const ParameterList & params)
+					throw (ParameterNotFoundException, ConstraintException);
 				double getValue() const throw (Exception);
 				ParameterList getParameters() const throw (Exception);
 				double getParameter(const string & name) const throw (ParameterNotFoundException) { return 0; };
@@ -74,7 +75,7 @@ class PowellMultiDimensions: public AbstractOptimizer
 		DirectionFunction * f1dim;
 		
 	public:
-		PowellMultiDimensions(const Function * function);
+		PowellMultiDimensions(Function * function);
 		virtual ~PowellMultiDimensions();
 	
 	public: // The Optimizer interface:

@@ -34,7 +34,7 @@ class BrentOneDimension: public AbstractOptimizer
 		double _tolerance;
 
 	public:
-		BrentOneDimension(const Function * function);
+		BrentOneDimension(Function * function);
 		virtual ~BrentOneDimension();
 	
 	public: // Optimizer interface implemented here:

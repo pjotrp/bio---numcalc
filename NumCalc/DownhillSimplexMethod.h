@@ -63,7 +63,7 @@ class DownhillSimplexMethod: public AbstractOptimizer
 		 *
 		 * @param function A pointer toward an object implementing the Optimizable interface.
 		 */
-		DownhillSimplexMethod(const Function * function);
+		DownhillSimplexMethod(Function * function);
 	
 		virtual ~DownhillSimplexMethod();
 	

@@ -38,7 +38,7 @@ inline void Bracket::setC(double xc, double fc) { c.set(xc, fc); }
 Bracket OneDimensionOptimizationTools::bracketMinimum(
 	double a,
 	double b,
-	const Function * function,
+	Function * function,
 	ParameterList parameters)
 {
 	Bracket bracket;

@@ -37,7 +37,7 @@ int DownhillSimplexMethod::Simplex::getDimension() const { return operator[](0).
 
 /******************************************************************************/
 			
-DownhillSimplexMethod::DownhillSimplexMethod(const Function * function): AbstractOptimizer(function) {
+DownhillSimplexMethod::DownhillSimplexMethod(Function * function): AbstractOptimizer(function) {
 	// Default values:
 	_nbEvalMax = 5000;
 	_defaultStopCondition = new DSMStopCondition(this);
