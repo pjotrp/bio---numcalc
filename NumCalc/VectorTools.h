@@ -134,7 +134,7 @@ template<class T, class C> vector<T> operator* (const vector<T> & v1, const C & 
 
 template<class T, class C> vector<T> operator/ (const vector<T> & v1, const C & c)
 {
-	Vdouble result(v1.size());
+	vector<T> result(v1.size());
 	for(unsigned int i = 0; i < result.size(); i++) {
 		result[i] = v1[i] / c;
 	}
@@ -146,28 +146,28 @@ template<class T, class C> vector<T> operator/ (const vector<T> & v1, const C & 
 template<class T> void operator+= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
-		v1[i] += c;
+		v1[i] += v2[i];
 	}
 }
 
 template<class T> void operator-= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
-		v1[i] -= c;
+		v1[i] -= v2[i];
 	}
 }
 
 template<class T> void operator*= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
-		v1[i] *= c;
+		v1[i] *= v2[i];
 	}
 }
 
 template<class T> void operator/= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
-		v1[i] /= c;
+		v1[i] /= v2[i];
 	}
 }
 

@@ -44,25 +44,25 @@ Clonable * Parameter::clone() const { return new Parameter(* this); }
 	
 /** Name: *********************************************************************/
 	
-void Parameter::setName(const string & name) { this -> name = name;}
+inline void Parameter::setName(const string & name) { this -> name = name;}
 
-string Parameter::getName() const {	return name; }
+inline string Parameter::getName() const {	return name; }
 
 /** Value: ********************************************************************/
 
-void Parameter::setValue(double value) throw (ConstraintException) {
+inline void Parameter::setValue(double value) throw (ConstraintException) {
 	if(constraint != NULL && !constraint -> isCorrect(value)) 
 		throw ConstraintException("Parameter::setValue", this, value);
 	this -> value = value;
 }
 
-double Parameter::getValue() const { return value; }
+inline double Parameter::getValue() const { return value; }
 
 /** Constraint: ***************************************************************/
 
-const Constraint * Parameter::getConstraint() const { return constraint; }
+inline const Constraint * Parameter::getConstraint() const { return constraint; }
 
-bool Parameter::hasConstraint() const { return (constraint != NULL); }
+inline bool Parameter::hasConstraint() const { return (constraint != NULL); }
 
 const Constraint * Parameter::removeConstraint() {
 	const Constraint * c = constraint;

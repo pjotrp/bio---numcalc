@@ -4,6 +4,77 @@
 // Created on: Wed Oct 15 18:17:29 2003
 //
 
+/*
+Copyright ou © ou Copr. Julien Dutheil, (19 Novembre 2004) 
+
+Julien.Dutheil@univ-montp2.fr
+
+Ce logiciel est un programme informatique servant à fournir des classes
+pour le calcul numérique.
+
+Ce logiciel est régi par la licence CeCILL soumise au droit français et
+respectant les principes de diffusion des logiciels libres. Vous pouvez
+utiliser, modifier et/ou redistribuer ce programme sous les conditions
+de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+sur le site "http://www.cecill.info".
+
+En contrepartie de l'accessibilité au code source et des droits de copie,
+de modification et de redistribution accordés par cette licence, il n'est
+offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+titulaire des droits patrimoniaux et les concédants successifs.
+
+A cet égard  l'attention de l'utilisateur est attirée sur les risques
+associés au chargement,  à l'utilisation,  à la modification et/ou au
+développement et à la reproduction du logiciel par l'utilisateur étant 
+donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+manipuler et qui le réserve donc à des développeurs et des professionnels
+avertis possédant  des  connaissances  informatiques approfondies.  Les
+utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+logiciel à leurs besoins dans des conditions permettant d'assurer la
+sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+
+Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+pris connaissance de la licence CeCILL, et que vous en avez accepté les
+termes.
+*/
+
+/*
+Copyright or © or Copr. Julien Dutheil, (November 19, 2004)
+
+Julien.Dutheil@univ-montp2.fr
+
+This software is a computer program whose purpose is to provide classes
+for numerical calculus.
+
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
+*/
+
 #include "ParameterList.h"
 
 #include <iostream>
@@ -53,7 +124,7 @@ ParameterList::~ParameterList() {
 	
 /******************************************************************************/
 
-const Parameter * ParameterList::getParameter(const string & name) const {
+inline const Parameter * ParameterList::getParameter(const string & name) const {
 	for(unsigned int i = 0; i < size(); i++) {
 		const Parameter * p = operator[](i);
 		if(p -> getName() == name) return p;
@@ -63,7 +134,7 @@ const Parameter * ParameterList::getParameter(const string & name) const {
 
 /******************************************************************************/
 
-Parameter * ParameterList::getParameter(const string & name) {
+inline Parameter * ParameterList::getParameter(const string & name) {
 	for(unsigned int i = 0; i < size(); i++) {
 		Parameter * p = operator[](i);
 		if(p -> getName() == name) return p;
@@ -73,7 +144,39 @@ Parameter * ParameterList::getParameter(const string & name) {
 
 /******************************************************************************/
 
-vector<string> ParameterList::getParameterNames() const {
+inline ParameterList ParameterList::subList(vector<string> names)
+{
+	ParameterList pl;
+	for(unsigned int i = 0; i < names.size(); i++) {
+		Parameter * param = getParameter(names[i]);
+		if(param != NULL) pl.push_back(dynamic_cast<Parameter *>(param -> clone()));
+	}
+	return pl;
+}
+
+/******************************************************************************/
+
+inline ParameterList ParameterList::subList(vector<unsigned int> parameters)
+{
+	ParameterList pl;
+	for(unsigned int i = 0; i < parameters.size(); i++) {
+		if(parameters[i] < size()) pl.push_back(dynamic_cast<Parameter *>(this -> operator[](parameters[i]) -> clone()));
+	}
+	return pl;
+}
+
+/******************************************************************************/
+
+inline ParameterList ParameterList::subList(unsigned int parameter)
+{
+	ParameterList pl;
+  if(parameter < size()) pl.push_back(dynamic_cast<Parameter *>(this -> operator[](parameter) -> clone()));
+	return pl;
+}
+
+/******************************************************************************/
+
+inline vector<string> ParameterList::getParameterNames() const {
 	vector<string> pNames(size());
 	for(unsigned int i = 0; i < size(); i++) pNames[i] = operator[](i) -> getName();
 	return pNames;
@@ -97,7 +200,7 @@ throw (ParameterException)
 
 /******************************************************************************/
 
-void ParameterList::setParameterValue(const string & name, double value)
+inline void ParameterList::setParameterValue(const string & name, double value)
 throw (ParameterNotFoundException, ConstraintException)
 {
 	Parameter * p = getParameter(name);
@@ -107,7 +210,7 @@ throw (ParameterNotFoundException, ConstraintException)
 	
 /******************************************************************************/
 
-void ParameterList::setAllParametersValues(const ParameterList & params)
+inline void ParameterList::setAllParametersValues(const ParameterList & params)
 throw (ParameterNotFoundException, ConstraintException)
 {
 	// First we check if all values are correct:
@@ -127,7 +230,7 @@ throw (ParameterNotFoundException, ConstraintException)
 
 /******************************************************************************/
 
-void ParameterList::setParametersValues(const ParameterList & params) 
+inline void ParameterList::setParametersValues(const ParameterList & params) 
 throw (ParameterNotFoundException, ConstraintException)
 {
 	// First we check if all values are correct:
@@ -147,7 +250,7 @@ throw (ParameterNotFoundException, ConstraintException)
 
 /******************************************************************************/
 
-void ParameterList::matchParametersValues(const ParameterList & params) 
+inline void ParameterList::matchParametersValues(const ParameterList & params) 
 throw (ConstraintException) 
 {
 	// First we check if all values are correct:
@@ -166,7 +269,7 @@ throw (ConstraintException)
 
 /******************************************************************************/
 
-void ParameterList::setAllParameters(const ParameterList & params)
+inline void ParameterList::setAllParameters(const ParameterList & params)
 throw (ParameterNotFoundException)
 {
 	for(ParameterList::iterator it = begin(); it < end(); it++) {
@@ -178,7 +281,7 @@ throw (ParameterNotFoundException)
 
 /******************************************************************************/
 
-void ParameterList::setParameters(const ParameterList & params) 
+inline void ParameterList::setParameters(const ParameterList & params) 
 throw (ParameterNotFoundException)
 {
 	for(ParameterList::const_iterator it = params.begin(); it < params.end(); it++) {
@@ -190,7 +293,7 @@ throw (ParameterNotFoundException)
 
 /******************************************************************************/
 
-void ParameterList::matchParameters(const ParameterList & params) 
+inline void ParameterList::matchParameters(const ParameterList & params) 
 {
 	for(ParameterList::const_iterator it = params.begin(); it < params.end(); it++) {
 		Parameter * p = getParameter((*it) -> getName());
@@ -200,7 +303,7 @@ void ParameterList::matchParameters(const ParameterList & params)
 
 /******************************************************************************/
 
-void ParameterList::deleteParameter(const string & name) throw (ParameterNotFoundException) {
+inline void ParameterList::deleteParameter(const string & name) throw (ParameterNotFoundException) {
 	for(unsigned int i = 0; i < size(); i++) {
 		Parameter * p = operator[](i);
 		if(p -> getName() == name) {
