@@ -9,7 +9,7 @@
 
 #include "VectorTools.h"
 
-// From the MTL:
+//  From the MTL:
 #include <mtl/mtl.h>
 using namespace mtl;
 

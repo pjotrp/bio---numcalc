@@ -220,7 +220,7 @@ void ParameterList::printParameters(ostream & out) const {
 	for(unsigned int i = 0; i < size(); i++) {
 		out << operator[](i) -> getName();
 		out	<< "\t" << operator[](i) -> getValue();
-		out	<< (operator[](i) -> hasConstraint() ? "\t" + operator[](i) -> getConstraint() -> getDescription() : "");
+		out	<< (operator[](i) -> hasConstraint() ? "\t" + operator[](i) -> getConstraint() -> getDescription() : string(""));
 		out << endl;
 	}
 }
