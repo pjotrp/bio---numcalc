@@ -191,18 +191,22 @@ PowellMultiDimensions::DirectionFunction::DirectionFunction(
 
 PowellMultiDimensions::DirectionFunction::~DirectionFunction() {}
 	
-double PowellMultiDimensions::DirectionFunction::f(
+void PowellMultiDimensions::DirectionFunction::setParameters(
 	const ParameterList & params) const
 {
 	_params = params;
-	ParameterList xt = p;
+	_xt = p;
 	for(unsigned int j = 0; j < p.size(); j++) {
-		xt[j] -> setValue((p[j] -> getValue()) + (_params[0] -> getValue()) * xi[j]);
+		_xt[j] -> setValue((p[j] -> getValue()) + (_params[0] -> getValue()) * xi[j]);
 	}
-	return function -> f(xt);
 }
 
-ParameterList PowellMultiDimensions::DirectionFunction::getParameters() const {
+double PowellMultiDimensions::DirectionFunction::getValue() const throw (Exception)
+{
+	return function -> f(_xt);
+}
+
+ParameterList PowellMultiDimensions::DirectionFunction::getParameters() const throw (Exception) {
 	return _params;
 }
 

@@ -66,7 +66,7 @@ class AbstractOptimizer: public Optimizer
 		 */
 		OptimizationStopCondition * _defaultStopCondition;
 
-/**
+		/**
 		 * @brief The maximum number of function evaluations allowed.
 		 */
 		int _nbEvalMax;

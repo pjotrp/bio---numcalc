@@ -151,7 +151,7 @@ class ParameterList : public vector<Parameter *>
 		 */
 		virtual void matchParameters(const ParameterList & params);
 
-/**
+		/**
 		 * @brief Delete a parameter from the list.
 		 *
 		 * @param name The name of the parameter to delete from the list.

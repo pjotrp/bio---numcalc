@@ -94,5 +94,36 @@ class Parametrizable
 
 };
 
+/**
+ * @brief A low-level implementation of Parametrizable with void functions.
+ *
+ * @see Parameter, ParameterList, Parametrizable
+ */
+class ParametrizableAdapter : public Parametrizable
+{
+	public:
+		ParametrizableAdapter() {}
+		virtual ~ParametrizableAdapter() {}
+
+	public:
+
+		/**
+		 * @name The Parametrizable interface.
+		 *
+		 * @{
+		 */
+		ParameterList getParameters() const { return ParameterList(); }
+		double getParameter(const string & name) const throw (ParameterNotFoundException) { return 0; };
+		void setAllParametersValues(const ParameterList & params) 
+			throw (ParameterNotFoundException, ConstraintException) {}
+		void setParameterValue(const string & name, double value) 
+			throw (ParameterNotFoundException, ConstraintException) {}
+		void setParametersValues(const ParameterList & params)
+			throw (ParameterNotFoundException, ConstraintException) {}
+		void matchParametersValues(const ParameterList & params)
+			throw (ConstraintException) {};
+		/** @} */
+
+};
 
 #endif	//_PARAMETRIZABLE_H_
