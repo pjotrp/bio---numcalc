@@ -7,7 +7,7 @@
 #ifndef _CONSTANTDISTRIBUTION_H_
 #define _CONSTANTDISTRIBUTION_H_
 
-#include "DiscreteDistribution.h"
+#include "AbstractDiscreteDistribution.h"
 
 class ConstantDistribution : public AbstractDiscreteDistribution
 {

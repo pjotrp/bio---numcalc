@@ -19,6 +19,8 @@ Constraints.h\
 IntervalData.h\
 ParameterExceptions.h\
 DiscreteDistribution.h\
+AbstractDiscreteDistribution.h\
+SimpleDiscreteDistribution.h\
 MatrixTools.h\
 Parameter.h\
 Domain.h\
@@ -41,7 +43,8 @@ ParameterList.cpp\
 Constraints.cpp\
 MultiDimensionsOptimizationTools.cpp\
 Parametrizable.cpp\
-DiscreteDistribution.cpp\
+AbstractDiscreteDistribution.cpp\
+SimpleDiscreteDistribution.cpp\
 NumTools.cpp\
 PowellMultiDimensions.cpp\
 Domain.cpp\

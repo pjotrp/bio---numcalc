@@ -7,7 +7,7 @@
 #ifndef _GAMMADISCRETEDISTRIBUTION_H_
 #define _GAMMADISCRETEDISTRIBUTION_H_
 
-#include "DiscreteDistribution.h"
+#include "AbstractDiscreteDistribution.h"
 #include "Constraints.h"
 
 class GammaDiscreteDistribution : public AbstractDiscreteDistribution
