@@ -47,7 +47,7 @@ throw (DimensionException)
 		size = v1.size();
 	}
 	Vdouble result(size);
-	for(int i = 0; i < size; i++) {
+	for(unsigned int i = 0; i < size; i++) {
 		result[i] = v1[i] + v2[i];
 	}
 	return result;
@@ -65,7 +65,7 @@ throw (DimensionException)
 		size = v1.size();
 	}
 	Vdouble result(size);
-	for(int i = 0; i < size; i++) {
+	for(unsigned int i = 0; i < size; i++) {
 		result[i] = v1[i] - v2[i];
 	}
 	return result;
@@ -83,7 +83,7 @@ throw (DimensionException)
 		size = v1.size();
 	}
 	Vdouble result(size);
-	for(int i = 0; i < size; i++) {
+	for(unsigned int i = 0; i < size; i++) {
 		result[i] = v1[i] * v2[i];
 	}
 	return result;
@@ -101,7 +101,7 @@ throw (DimensionException)
 		size = v1.size();
 	}
 	Vdouble result(size);
-	for(int i = 0; i < size; i++) {
+	for(unsigned int i = 0; i < size; i++) {
 		result[i] = v1[i] / v2[i];
 	}
 	return result;

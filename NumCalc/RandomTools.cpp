@@ -1,46 +1,51 @@
 /*
  * File RandomTools.cpp
  * Author : Julien Dutheil <julien.dutheil@ens-lyon.fr>
- * Last modification : Tuesday August 21 2003
+ * Last modification : Friday Septembre 24 2004
 */
 
 #include "RandomTools.h"
+#include "Uniform01QD.h"
 
 // Class destructor
 RandomTools::~RandomTools() {}
 
-// Initiate random seed :
-RandomTools::RandInt RandomTools::r = time(NULL) ;
+RandomFactory * DEFAULT_GENERATOR = new Uniform01QD(time(NULL));
 
-void RandomTools::setSeed(unsigned long seed) {
-	r.setSeed(seed);
+// Initiate random seed :
+//RandomTools::RandInt RandomTools::r = time(NULL) ;
+
+void RandomTools::setSeed(long seed) {
+	//r.setSeed(seed);
+	DEFAULT_GENERATOR -> setSeed(seed);
 }
 
 // Method to get a double random value (between 0 and specified range)
 // Note : the number you get is between 0 and entry not including entry !
-double RandomTools::giveRandomNumberBetweenZeroAndEntry(double entry) {
-	double tm = r.drawFloatNumber();
+double RandomTools::giveRandomNumberBetweenZeroAndEntry(double entry, const RandomFactory * generator) {
+	//double tm = r.drawFloatNumber();
+	double tm = generator -> drawNumber();
 	return (tm * entry);
 }
 
 // Method to get a boolean random value
-bool RandomTools::flipCoin() {
-	return ((RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0) - 0.5) > 0);
+bool RandomTools::flipCoin(const RandomFactory * generator) {
+	return ((RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0, generator) - 0.5) > 0);
 }
 
 // Method to get a integer random value (between 0 and specified range)
 // Note : the number you get is between 0 and entry not including entry !
-int RandomTools::giveIntRandomNumberBetweenZeroAndEntry(int entry) {
-	return (int)(giveRandomNumberBetweenZeroAndEntry(entry));
+int RandomTools::giveIntRandomNumberBetweenZeroAndEntry(int entry, const RandomFactory * generator) {
+	return (int)(giveRandomNumberBetweenZeroAndEntry(entry, generator));
 }
 
-double RandomTools::randGaussian(double mean, double variance) {
+double RandomTools::randGaussian(double mean, double variance, const RandomFactory * generator) {
 	static int N = 100;
 	static double X;
 	X=0.0-N/2; /* set mean to 0 */
 	for (int ri = 0; ri < N; ri++){
 		//    X += 1.0*rand()/RAND_MAX;
-		X += giveRandomNumberBetweenZeroAndEntry(1);
+		X += giveRandomNumberBetweenZeroAndEntry(1, generator);
 	}
 	
 	/* for uniform randoms in [0,1], mu = 0.5 and var = 1/12 */
@@ -52,26 +57,26 @@ double RandomTools::randGaussian(double mean, double variance) {
 	return (g);
 }
 
-double RandomTools::randGamma(double dblAlpha) {
+double RandomTools::randGamma(double dblAlpha, const RandomFactory * generator) {
 	assert(dblAlpha > 0.0);
-	if( dblAlpha < 1.0 ) return RandomTools::DblGammaLessThanOne(dblAlpha);
-	else if( dblAlpha > 1.0 ) return RandomTools::DblGammaGreaterThanOne(dblAlpha);
-	return -log(RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0));
+	if( dblAlpha < 1.0 ) return RandomTools::DblGammaLessThanOne(dblAlpha, generator);
+	else if( dblAlpha > 1.0 ) return RandomTools::DblGammaGreaterThanOne(dblAlpha, generator);
+	return -log(RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0, generator));
 }  
 
-double RandomTools::randGamma(double alpha, double beta) {
-	double x= RandomTools::randGamma(alpha) / beta;
+double RandomTools::randGamma(double alpha, double beta, const RandomFactory * generator) {
+	double x= RandomTools::randGamma(alpha, generator) / beta;
 	return x;
 }
 
-double RandomTools::randExponential(double mean) {
-	return - mean * log(RandomTools::giveRandomNumberBetweenZeroAndEntry(1));
+double RandomTools::randExponential(double mean, const RandomFactory * generator) {
+	return - mean * log(RandomTools::giveRandomNumberBetweenZeroAndEntry(1, generator));
 }
 
 //------------------------------------------------------------------------------
 
 	
-double RandomTools::DblGammaGreaterThanOne(double dblAlpha) {
+double RandomTools::DblGammaGreaterThanOne(double dblAlpha, const RandomFactory * generator) {
 	// Code adopted from David Heckerman
  	//-----------------------------------------------------------
  	//	DblGammaGreaterThanOne(dblAlpha)
@@ -93,8 +98,8 @@ double RandomTools::DblGammaGreaterThanOne(double dblAlpha) {
 		double dblRand1;
 		double dblRand2;
 		do {
-	    	dblRand1 = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
-	    	dblRand2 = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
+	    	dblRand1 = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0, generator);
+	    	dblRand2 = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0, generator);
 	        if (dblAlpha > 2.5) dblRand1 = dblRand2 + rgdbl[5] * (1.0 - 1.86 * dblRand1);
 		} while (!(0.0 < dblRand1 && dblRand1 < 1.0));
 	
@@ -109,15 +114,15 @@ double RandomTools::DblGammaGreaterThanOne(double dblAlpha) {
     return 0.0;
 }
 
-double RandomTools::DblGammaLessThanOne(double dblAlpha) {
+double RandomTools::DblGammaLessThanOne(double dblAlpha, const RandomFactory * generator) {
 	//routine to generate a gamma random variable with 
 	//unit scale and alpha < 1
 	//reference: Ripley, Stochastic Simulation, p.88 
 	double dblTemp;
 	const double dblexp = exp(1.0);
 	for (;;) {
-		double dblRand0 = giveRandomNumberBetweenZeroAndEntry(1.0);
-		double dblRand1 = giveRandomNumberBetweenZeroAndEntry(1.0);
+		double dblRand0 = giveRandomNumberBetweenZeroAndEntry(1.0, generator);
+		double dblRand1 = giveRandomNumberBetweenZeroAndEntry(1.0, generator);
 		if (dblRand0 <= (dblexp / (dblAlpha + dblexp))){
 			dblTemp = pow(((dblAlpha + dblexp) * dblRand0) /
 			dblexp, 1.0 / dblAlpha);

@@ -26,7 +26,11 @@ MatrixTools.h\
 Parameter.h\
 Domain.h\
 MultiDimensionsOptimizationTools.h\
-ParameterList.h
+ParameterList.h\
+RandomFactory.h\
+Uniform01K.h\
+Uniform01QD.h\
+Uniform01WH.h
 
 CPP_FILES = \
 AbstractOptimizer.cpp\
@@ -54,7 +58,10 @@ RandomTools.cpp\
 DownhillSimplexMethod.cpp\
 OptimizationStopCondition.cpp\
 VectorTools.cpp\
-VectorExceptions.cpp
+VectorExceptions.cpp\
+Uniform01K.cpp\
+Uniform01QD.cpp\
+Uniform01WH.cpp
 
 lib_LTLIBRARIES = libnumcalc.la
 libnumcalc_la_SOURCES = $(H_FILES) $(CPP_FILES)
