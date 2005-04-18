@@ -47,12 +47,12 @@ class Parametrizable
 		 * The list must contain exactly the same parameters (ie same names)
 		 * than the parameters available.
 		 *
-		 * @param params A list with all parameters.
+		 * @param parameters A list with all parameters.
 		 * @throw ParameterNotFoundException If a some parameter in the list is not in <i>params</i>.
 		 * @throw ConstraintException If a value in <i>params</i> does not match the constraint in the
 		 * corresponding parameter in the list.
 		 */
-		virtual void setAllParametersValues(const ParameterList & params) 
+		virtual void setAllParametersValues(const ParameterList & parameters) 
 			throw (ParameterNotFoundException, ConstraintException) = 0;
 
 		/**
@@ -72,24 +72,24 @@ class Parametrizable
 		 *
 		 * <i>params</i> must be a subset of all parameters available.
 		 *
-		 * @param params A list containing all parameters to update.
+		 * @param parameters A list containing all parameters to update.
 		 * @throw ParameterNotFoundException If a some parameter in <i>params</i> is not in the list.
-		 * @throw ConstraintException If a value in <i>params</i> does not match the constraint in the
+		 * @throw ConstraintException If a value in <i>parameters</i> does not match the constraint in the
 		 * corresponding parameter in the list.
 		 */
-		virtual void setParametersValues(const ParameterList & params)
+		virtual void setParametersValues(const ParameterList & parameters)
 			throw (ParameterNotFoundException, ConstraintException) = 0;
 
 		/**
-		 * @brief Update the parameters from <i>params</i>.
+		 * @brief Update the parameters from <i>parameters</i>.
 		 *
-		 * Only common parameters with <i>params</i> will be updated.
+		 * Only common parameters with <i>parameters</i> will be updated.
 		 *
-		 * @param params A list of parameters.
-		 * @throw ConstraintException If a value in <i>params</i> does not match the constraint in the
+		 * @param parameters A list of parameters.
+		 * @throw ConstraintException If a value in <i>parameters</i> does not match the constraint in the
 		 * corresponding parameter in the list.
 		 */
-		virtual void matchParametersValues(const ParameterList & params)
+		virtual void matchParametersValues(const ParameterList & parameters)
 			throw (ConstraintException) = 0;
 
 };
@@ -114,13 +114,13 @@ class ParametrizableAdapter : public Parametrizable
 		 */
 		ParameterList getParameters() const { return ParameterList(); }
 		double getParameter(const string & name) const throw (ParameterNotFoundException) { return 0; };
-		void setAllParametersValues(const ParameterList & params) 
+		void setAllParametersValues(const ParameterList & parameters) 
 			throw (ParameterNotFoundException, ConstraintException) {}
 		void setParameterValue(const string & name, double value) 
 			throw (ParameterNotFoundException, ConstraintException) {}
-		void setParametersValues(const ParameterList & params)
+		void setParametersValues(const ParameterList & parameters)
 			throw (ParameterNotFoundException, ConstraintException) {}
-		void matchParametersValues(const ParameterList & params)
+		void matchParametersValues(const ParameterList & parameters)
 			throw (ConstraintException) {};
 		/** @} */
 

@@ -133,7 +133,6 @@ class DerivableSecondOrder : public DerivableFirstOrder
 		 *
 		 * @param variable1  The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
 		 * @param variable2  The name of the @f$ y @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
-		 * @param parameters The parameter set to pass to the function.
 		 * @return The value of the function with the given parameter set.
 		 * @throw Exception If an error occured.
 		 */

@@ -23,7 +23,10 @@ DiscreteDistribution.h\
 AbstractDiscreteDistribution.h\
 SimpleDiscreteDistribution.h\
 SimpleMultiDimensions.h\
+Matrix.h\
 MatrixTools.h\
+EigenValue.h\
+LUDecomposition.h\
 Parameter.h\
 Domain.h\
 MultiDimensionsOptimizationTools.h\

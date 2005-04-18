@@ -30,7 +30,7 @@ class AbstractDiscreteDistribution: public DiscreteDistribution {
 	public:
 
 		/**
-		 * @name From the DiscreteDistribution inteface.
+		 * @name From the DiscreteDistribution interface.
 		 *
 		 * @{
 		 */
@@ -59,10 +59,10 @@ class AbstractDiscreteDistribution: public DiscreteDistribution {
 		 */
 		ParameterList getParameters()                            const ;
 		double        getParameter (const string & name)         const throw (ParameterNotFoundException);
-		void       setAllParametersValues(const ParameterList & params)      throw (ParameterNotFoundException, ConstraintException);
+		void       setAllParametersValues(const ParameterList & parameters)      throw (ParameterNotFoundException, ConstraintException);
 		void          setParameterValue  (const string & name, double value) throw (ParameterNotFoundException, ConstraintException);
-		void          setParametersValues(const ParameterList & params)      throw (ParameterNotFoundException, ConstraintException);
-		void        matchParametersValues(const ParameterList & params)      throw (ConstraintException);
+		void          setParametersValues(const ParameterList & parameters)      throw (ParameterNotFoundException, ConstraintException);
+		void        matchParametersValues(const ParameterList & parameters)      throw (ConstraintException);
 		/** @} */
 };
 

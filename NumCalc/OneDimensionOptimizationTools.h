@@ -57,10 +57,12 @@ class OneDimensionOptimizationTools
 		 * a.x, b.x and c.x that bracket a minimum of the function. Also returned are the
 		 * function values at the three points, a.f, b.f and c.f.
 		 *
-		 * @param a, b Two initial values for the parameter.
-		 * @return     A bracket object.
+		 * @param a, b       Two initial values for the parameter.
+		 * @param function   The function to bracket.
+		 * @param parameters The parameter to use as a variable.
+		 * @return           A bracket object.
 		 */
-		static Bracket bracketMinimum(double a, double a, Function * function, ParameterList parameters);
+		static Bracket bracketMinimum(double a, double b, Function * function, ParameterList parameters);
 	
 	public:
 		

@@ -35,7 +35,7 @@ class OptimizationStopCondition
 		/**
 		 * @brief Set the tolerance parameter.
 		 *
-		 * @param tol The tolerance parameter.
+		 * @param tolerance The tolerance parameter.
 		 */	
 		virtual void setTolerance(double tolerance) = 0;
 

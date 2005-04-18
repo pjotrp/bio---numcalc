@@ -19,8 +19,9 @@
 /**
  * @brief This class is designed to facilitate the manipulation of parameters.
  *
- * A parameter contains a <i>value<i> stored as a double. It also contains a <i>name</i> and optionaly
- * a Constraint. The constraint object allows to apply restriction on the value of the parameter,
+ * A parameter contains a <i>value</i> stored as a double.
+ * It also contains a <i>name</i> and optionaly a Constraint.
+ * The constraint object allows to apply restriction on the value of the parameter,
  * for instance positive number, or a particular interval and so on.
  *
  * @see ParameterList, Parametrizable

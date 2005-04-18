@@ -44,18 +44,18 @@ class PowellMultiDimensions: public AbstractOptimizer
 				virtual ~DirectionFunction();
 			
 			public: // Function interface implementation:
-				void setParameters(const ParameterList & params)
+				void setParameters(const ParameterList & parameters)
 					throw (ParameterNotFoundException, ConstraintException);
 				double getValue() const throw (Exception);
 				ParameterList getParameters() const throw (Exception);
 				double getParameter(const string & name) const throw (ParameterNotFoundException) { return 0; };
-				void setAllParametersValues(const ParameterList & params) 
+				void setAllParametersValues(const ParameterList & parameters) 
 					throw (ParameterNotFoundException, ConstraintException) {}
 				void setParameterValue(const string & name, double value) 
 					throw (ParameterNotFoundException, ConstraintException) {}
-				void setParametersValues(const ParameterList & params)
+				void setParametersValues(const ParameterList & parameters)
 					throw (ParameterNotFoundException, ConstraintException) {}
-				void matchParametersValues(const ParameterList & params)
+				void matchParametersValues(const ParameterList & parameters)
 					throw (ConstraintException) {};
 			
 			public: // Specific methods:
