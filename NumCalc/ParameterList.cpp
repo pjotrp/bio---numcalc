@@ -1,6 +1,6 @@
 //
 // File: ParameterList.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
 // Created on: Wed Oct 15 18:17:29 2003
 //
 
@@ -100,7 +100,8 @@ ParameterList::ParameterList(const ParameterList & pl): vector<Parameter*>(pl.si
 
 /** Assignation operator: *****************************************************/
 		
-ParameterList & ParameterList::operator=(const ParameterList & pl) {
+ParameterList & ParameterList::operator=(const ParameterList & pl)
+{
 	// First delete all parameters:
 	reset();
 		
@@ -117,14 +118,16 @@ ParameterList & ParameterList::operator=(const ParameterList & pl) {
 	
 /** Destructor: ***************************************************************/
 	
-ParameterList::~ParameterList() {
+ParameterList::~ParameterList()
+{
 	// Delete all parameter objects.
 	reset();
 }
 	
 /******************************************************************************/
 
-inline const Parameter * ParameterList::getParameter(const string & name) const {
+inline const Parameter * ParameterList::getParameter(const string & name) const
+{
 	for(unsigned int i = 0; i < size(); i++) {
 		const Parameter * p = operator[](i);
 		if(p -> getName() == name) return p;
@@ -134,7 +137,8 @@ inline const Parameter * ParameterList::getParameter(const string & name) const 
 
 /******************************************************************************/
 
-inline Parameter * ParameterList::getParameter(const string & name) {
+inline Parameter * ParameterList::getParameter(const string & name)
+{
 	for(unsigned int i = 0; i < size(); i++) {
 		Parameter * p = operator[](i);
 		if(p -> getName() == name) return p;
@@ -199,7 +203,8 @@ inline ParameterList ParameterList::getCommonParametersWith(const ParameterList 
 	
 /******************************************************************************/
 
-inline vector<string> ParameterList::getParameterNames() const {
+inline vector<string> ParameterList::getParameterNames() const
+{
 	vector<string> pNames(size());
 	for(unsigned int i = 0; i < size(); i++) pNames[i] = operator[](i) -> getName();
 	return pNames;
@@ -207,7 +212,8 @@ inline vector<string> ParameterList::getParameterNames() const {
 
 /******************************************************************************/
 
-void ParameterList::addParameter(const Parameter & param) throw (ParameterException) {
+void ParameterList::addParameter(const Parameter & param) throw (ParameterException)
+{
 	if(getParameter(param.getName()) != NULL)
 		throw ParameterException("ParameterList::addParameter. Parameter with name '" + param.getName() + "' already exists.", &param); 
 	push_back(dynamic_cast<Parameter *>(param.clone()));
@@ -326,7 +332,8 @@ inline void ParameterList::matchParameters(const ParameterList & params)
 
 /******************************************************************************/
 
-inline void ParameterList::deleteParameter(const string & name) throw (ParameterNotFoundException) {
+inline void ParameterList::deleteParameter(const string & name) throw (ParameterNotFoundException)
+{
 	for(unsigned int i = 0; i < size(); i++) {
 		Parameter * p = operator[](i);
 		if(p -> getName() == name) {
@@ -340,7 +347,8 @@ inline void ParameterList::deleteParameter(const string & name) throw (Parameter
 
 /******************************************************************************/
 
-void ParameterList::printParameters(ostream & out) const {
+void ParameterList::printParameters(ostream & out) const
+{
 	out << "Name:\tValue:\tConstraint:" << endl;
 	out << "_________________________________________________" << endl;
 	for(unsigned int i = 0; i < size(); i++) {
@@ -353,11 +361,13 @@ void ParameterList::printParameters(ostream & out) const {
 
 /******************************************************************************/
 
-void ParameterList::reset() {
+void ParameterList::reset()
+{
 	for(unsigned int i = 0; i < size(); i++) {
 		//cout << "Deleting parameter " << i << ": " << operator[](i) -> getName() << endl;
 		delete operator[](i);
 	}
+	resize(0);
 }
 
 /******************************************************************************/

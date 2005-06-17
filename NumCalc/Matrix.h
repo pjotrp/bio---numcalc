@@ -1,6 +1,6 @@
 //
 // File: Matrix.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
 // Created on: Tue Apr 07 11:58 2004
 //
 

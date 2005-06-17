@@ -1,11 +1,11 @@
 //
 // File: SimpleMultiDimensions.h
-// Created by; jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
 // Created on: ue Nov 16 17:51 2004
 //
 
 /*
-Copyright ou © ou Copr. Julien Dutheil, (19 Novembre 2004) 
+Copyright ou © ou Copr. CNRS, (19 Novembre 2004) 
 
 Julien.Dutheil@univ-montp2.fr
 
@@ -41,7 +41,7 @@ termes.
 */
 
 /*
-Copyright or © or Copr. Julien Dutheil, (November 19, 2004)
+Copyright or © or Copr. CNRS, (November 19, 2004)
 
 Julien.Dutheil@univ-montp2.fr
 
@@ -97,7 +97,7 @@ class SimpleMultiDimensions : public AbstractOptimizer
 		unsigned int _nbParams;
 
 		//vector<BrentOneDimension *> _optimizers; // One dimensional optimizers.
-		vector<GoldenSectionSearch *> _optimizers; // One dimensional optimizers.
+		GoldenSectionSearch * _optimizer; // One dimensional optimizer.
 
 	public:
 
@@ -117,7 +117,7 @@ class SimpleMultiDimensions : public AbstractOptimizer
 
 		double optimize() throw (Exception);
 
-		double getFunctionValue() const;
+		void setFunction(Function * function);
 		/** @} */
 };
 

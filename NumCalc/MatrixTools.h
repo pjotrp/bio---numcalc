@@ -335,7 +335,7 @@ namespace MatrixOperators {
 	template<class Matrix>
 	Matrix operator-(const Matrix A)
 	{
-		Matrix B(A.nRows(), A.cCols());
+		Matrix B(A.nRows(), A.nCols());
 		for(unsigned int i = 0; i < B.nRows(); i++) {
 			for(unsigned int j = 0; j < B.nCols(); j++) {
 				B(i, j) = -A(i, j);
@@ -361,7 +361,7 @@ namespace MatrixOperators {
 //		}
 //		return C;
 		MatrixA C = A;
-		MatrixTools::add<MatrixA, MatrixB>(A, -B);
+		MatrixTools::add<MatrixA, MatrixB>(C, -B);
 		return C;
 	}
 	
