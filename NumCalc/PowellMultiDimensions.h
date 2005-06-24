@@ -81,7 +81,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AbstractOptimizer.h"
 #include "VectorTools.h"
 
-class PowellMultiDimensions: public AbstractOptimizer
+class PowellMultiDimensions: public virtual AbstractOptimizer
 {
 	
 	public:
@@ -99,7 +99,7 @@ class PowellMultiDimensions: public AbstractOptimizer
 	friend class PMDStopCondition;
 		
 	protected:		
-		class DirectionFunction: public Function
+		class DirectionFunction: public virtual Function, public virtual ParametrizableAdapter
 		{
 			protected:
 				mutable ParameterList _params, p, _xt;
@@ -115,16 +115,6 @@ class PowellMultiDimensions: public AbstractOptimizer
 					throw (ParameterNotFoundException, ConstraintException);
 				double getValue() const throw (Exception);
 				ParameterList getParameters() const throw (Exception);
-				double getParameter(const string & name) const throw (ParameterNotFoundException) { return 0; };
-				void setAllParametersValues(const ParameterList & parameters) 
-					throw (ParameterNotFoundException, ConstraintException) {}
-				void setParameterValue(const string & name, double value) 
-					throw (ParameterNotFoundException, ConstraintException) {}
-				void setParametersValues(const ParameterList & parameters)
-					throw (ParameterNotFoundException, ConstraintException) {}
-				void matchParametersValues(const ParameterList & parameters)
-					throw (ConstraintException) {};
-			
 			public: // Specific methods:
 				void set(const ParameterList & p, const Vdouble & xi); 
 		};

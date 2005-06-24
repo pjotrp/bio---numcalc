@@ -39,7 +39,8 @@ class Parametrizable
 		 * @param name The name of the parameter.
 		 * @return the value of parameter <i>name</i>.
 		 */
-		virtual double getParameter(const string & name) const throw (ParameterNotFoundException) = 0;
+		virtual double getParameterValue(const string & name) const
+			throw (ParameterNotFoundException) = 0;
 
 		/**
 		 * @brief Set the parameters values to be equals to those of <i>params</i>.
@@ -99,7 +100,7 @@ class Parametrizable
  *
  * @see Parameter, ParameterList, Parametrizable
  */
-class ParametrizableAdapter : public Parametrizable
+class ParametrizableAdapter : public virtual Parametrizable
 {
 	public:
 		ParametrizableAdapter() {}
@@ -113,7 +114,8 @@ class ParametrizableAdapter : public Parametrizable
 		 * @{
 		 */
 		ParameterList getParameters() const { return ParameterList(); }
-		double getParameter(const string & name) const throw (ParameterNotFoundException) { return 0; };
+		double getParameterValue(const string & name) const
+			throw (ParameterNotFoundException) { return 0; };
 		void setAllParametersValues(const ParameterList & parameters) 
 			throw (ParameterNotFoundException, ConstraintException) {}
 		void setParameterValue(const string & name, double value) 
@@ -125,5 +127,41 @@ class ParametrizableAdapter : public Parametrizable
 		/** @} */
 
 };
+
+class AbstractParametrizable : public virtual Parametrizable
+{
+	protected:
+		ParameterList _parameters;
+	
+	public:
+		AbstractParametrizable() {}
+		virtual ~AbstractParametrizable() {}
+
+	public:
+
+		ParameterList getParameters() const { return _parameters; }
+	
+		double getParameterValue(const string & name) const
+			throw (ParameterNotFoundException)
+		{ return _parameters.getParameter(name) -> getValue(); }
+
+		void setAllParametersValues(const ParameterList & parameters) 
+			throw (ParameterNotFoundException, ConstraintException)
+		{ _parameters.setAllParametersValues(parameters); }
+
+		void setParameterValue(const string & name, double value) 
+			throw (ParameterNotFoundException, ConstraintException)
+		{ _parameters.setParameterValue(name, value); }
+
+		void setParametersValues(const ParameterList & parameters)
+			throw (ParameterNotFoundException, ConstraintException)
+		{ _parameters.setParametersValues(parameters); }
+
+		void matchParametersValues(const ParameterList & parameters)
+			throw (ConstraintException)
+		{ _parameters.matchParametersValues(parameters); }
+
+};
+
 
 #endif	//_PARAMETRIZABLE_H_

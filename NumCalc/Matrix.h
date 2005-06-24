@@ -104,6 +104,7 @@ class Matrix: public Clonable {
 		virtual unsigned int nCols() const = 0;
 		virtual vector<Scalar> row(unsigned int i) const = 0;
 		virtual vector<Scalar> col(unsigned int j) const = 0;
+		virtual void resize(unsigned int nRows, unsigned int nCols) = 0;
 };
 
 template<class Scalar>
@@ -121,9 +122,8 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 
 		RowMatrix(const Matrix<Scalar> & m) 
 		{
-			resize(m.nRows());
+			resize(m.nRows(), m.nCols());
 			for(unsigned int i = 0; i < m.nRows(); i++) {
-				operator[](i).resize(m.nCols());
 				for(unsigned int j = 0; j < m.nCols(); j++) {
 					operator()(i, j) = m(i, j);
 				}
@@ -175,6 +175,14 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 			vector<Scalar> c(nRows());
 			for(unsigned int i = 0; i < nRows(); i++) c[i] = operator()(i, j);
 			return(c);
+		}
+
+		void resize(unsigned int nRows, unsigned int nCols)
+		{
+			vector< vector<double> >::resize(nRows);
+			for(unsigned int i = 0; i < nRows; i++) {
+				operator[](i).resize(nCols);
+			}
 		}
 
 };

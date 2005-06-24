@@ -92,7 +92,7 @@ using namespace std;
  * This is a vector of Parameter with a few additional methods, mainly for giving
  * name access.
  */
-class ParameterList : public vector<Parameter *>
+class ParameterList : public virtual vector<Parameter *>
 {
 	public: // Class constructor and destructor:
 		

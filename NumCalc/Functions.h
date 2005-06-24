@@ -101,14 +101,6 @@ class Function : public virtual Parametrizable
 		virtual void setParameters(const ParameterList & parameters) throw (ParameterNotFoundException, ConstraintException) = 0;
 
 		/**
-		 * @brief Get the current point at which the function is evaluated.
-		 *
-		 * @return The set of parameters corresponding to the current point.
-		 * @throw Exception If no point is defined.
-		 */
-		virtual ParameterList getParameters() const throw (Exception) = 0;
-
-		/**
 		 * @brief Get the value of the function at the current point.
 		 *
 		 * @return The value of the function.
@@ -263,7 +255,7 @@ class InfinityFunctionWrapper : public virtual Function
 		}
 		
 		double getParameter(const string & name) const throw (ParameterNotFoundException) {
-			return _function -> getParameter(name);
+			return _function -> getParameterValue(name);
 		}
 			
 		void setAllParametersValues(const ParameterList & parameters) throw (ParameterNotFoundException, ConstraintException) {
