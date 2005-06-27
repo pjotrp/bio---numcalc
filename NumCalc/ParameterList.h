@@ -1,11 +1,11 @@
 //
 // File: ParameterList.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Wed Oct 15 18:17:29 2003
 //
 
 /*
-Copyright ou © ou Copr. Julien Dutheil, (19 Novembre 2004) 
+Copyright ou © ou Copr. CNRS, (19 Novembre 2004) 
 
 Julien.Dutheil@univ-montp2.fr
 
@@ -41,7 +41,7 @@ termes.
 */
 
 /*
-Copyright or © or Copr. Julien Dutheil, (November 19, 2004)
+Copyright or © or Copr. CNRS, (November 19, 2004)
 
 Julien.Dutheil@univ-montp2.fr
 

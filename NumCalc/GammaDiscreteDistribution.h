@@ -27,7 +27,7 @@ class GammaDiscreteDistribution : public AbstractDiscreteDistribution
 	
 	public:
     Domain getDomain() const;
-		void fireParameterChanged();
+		void fireParameterChanged(const ParameterList & parameters);
 	
 	protected:
 	

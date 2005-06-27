@@ -35,7 +35,8 @@ GammaDiscreteDistribution::~GammaDiscreteDistribution() {
 
 /******************************************************************************/
 
-void GammaDiscreteDistribution::fireParameterChanged() {
+void GammaDiscreteDistribution::fireParameterChanged(const ParameterList & parameters)
+{
 	//cout << "Parameter changed, alpha = " << getParameter("alpha") << endl;
 	applyParameters(getNumberOfCategories());	
 }
@@ -62,7 +63,7 @@ void GammaDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
 		_bounds[0] = 0; _bounds[1] = VERYBIG;
 		return;
 	} else if (numberOfCategories > 1) {
-		double alpha = getParameter("alpha");
+		double alpha = getParameterValue("alpha");
 		vector<double> means = computeValues(numberOfCategories, alpha, alpha, false);
 		double p = 1. / (double)numberOfCategories;
 		for(unsigned int i = 0; i < numberOfCategories; i++) {

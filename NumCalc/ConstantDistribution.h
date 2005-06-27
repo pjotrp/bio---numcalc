@@ -20,7 +20,7 @@ class ConstantDistribution : public AbstractDiscreteDistribution
 	
 	public:
         Domain getDomain() const;
-		void fireParameterChanged() {}
+		void fireParameterChanged(const ParameterList & parameters) {}
 	
 };
 
