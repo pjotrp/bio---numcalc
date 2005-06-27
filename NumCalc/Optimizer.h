@@ -235,6 +235,21 @@ class Optimizer
 		 * @return verbose level.
 		 */
 		virtual unsigned int getVerbose() const = 0;
+
+		/**
+		 * @brief Set the constraint policy for this optimizer.
+		 *
+		 * @param constraintPolicy The constraint policy.
+		 */
+		virtual void setConstraintPolicy(const string & constraintPolicy) = 0;
+
+		/**
+		 * @brief Get the constraint policy for this optimizer.
+		 *
+		 * @return The constraint policy.
+		 */
+		virtual string getConstraintPolicy() const = 0;
+
 };
 
 #endif	//_OPTIMIZER_H_
