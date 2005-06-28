@@ -29,6 +29,8 @@
 using namespace NumTools;
 
 #include <vector>
+#include <cmath>
+#include <iostream>
 using namespace std;
 
 typedef vector<double> Vdouble;

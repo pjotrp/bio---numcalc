@@ -82,6 +82,10 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Parametrizable.h"
 #include "ParameterExceptions.h"
 
+// From the STL:
+#include <cmath>
+using namespace std;
+
 /**
  * @brief This is the function abstract class.
  */

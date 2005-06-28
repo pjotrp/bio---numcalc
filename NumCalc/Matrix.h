@@ -116,7 +116,7 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 		RowMatrix(unsigned int nRow, unsigned int nCol): vector< vector<Scalar> >(nRow)
 		{
 			for(unsigned int i = 0; i < nRow; i++) {
-				operator[](i).resize(nCol);
+				vector< vector<Scalar> >::operator[](i).resize(nCol);
 			}
 		}
 
@@ -139,7 +139,7 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 		{
 			resize(m.nRows());	
 			for(unsigned int i = 0; i < m.nRows(); i++) {
-				operator[](i).resize(m.nCols());
+				vector< vector< Scalar> >::operator[](i).resize(m.nCols());
 				for(unsigned int j = 0; j < m.nCols(); j++) {
 					operator()(i,j) = m(i, j);
 				}
@@ -151,17 +151,17 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 		
 		const Scalar & operator()(unsigned int i, unsigned int j) const
 		{
-			return operator[](i)[j];
+			return vector< vector<Scalar> >::operator[](i)[j];
 		}
 		
 		Scalar & operator()(unsigned int i, unsigned int j)
 		{
-			return operator[](i)[j];
+			return vector< vector<Scalar> >::operator[](i)[j];
 		}
 		
-		unsigned int nRows() const { return size(); }
+		unsigned int nRows() const { return vector< vector < Scalar> >::size(); }
 		
-		unsigned int nCols() const { return size() == 0 ? 0 : operator[](0).size(); }
+		unsigned int nCols() const { return vector< vector < Scalar> >::size() == 0 ? 0 : vector< vector<Scalar> >::operator[](0).size(); }
 		
 		vector<Scalar> row(unsigned int i) const
 		{
@@ -179,9 +179,9 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 
 		void resize(unsigned int nRows, unsigned int nCols)
 		{
-			vector< vector<double> >::resize(nRows);
+			vector< vector<Scalar> >::resize(nRows);
 			for(unsigned int i = 0; i < nRows; i++) {
-				operator[](i).resize(nCols);
+				vector< vector<Scalar> >::operator[](i).resize(nCols);
 			}
 		}
 
