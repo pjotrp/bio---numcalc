@@ -3,4 +3,5 @@
 #include "GammaDiscreteDistribution.h"
 #include "GoldenSectionSearch.h"
 #include "SimpleDiscreteDistribution.h"
+#include "ConstantDistribution.h"
 
