@@ -100,7 +100,6 @@ class BrentOneDimension: public AbstractOptimizer
 	protected: // Fields:
 		double a, b, d, e, etemp, fu, fv, fw, fx, p, q, r, tol1, tol2, u, v, w, x, xm;
 		double _xinf, _xsup;
-		double _tolerance;
 
 	public:
 		BrentOneDimension(Function * function);
@@ -127,7 +126,6 @@ class BrentOneDimension: public AbstractOptimizer
 	public: // Specific methods:
 		
 		void setInitialInterval(double inf, double sup);
-		void setTolerance(double tolerance);
 	
 	public:
 		

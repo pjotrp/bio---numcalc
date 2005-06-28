@@ -1,6 +1,6 @@
 //
 // File: OptimizationStopCondition.cpp
-// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Tue Dec 23 11:51:31 2003
 //
 
@@ -92,7 +92,7 @@ OptimizationStopCondition::~OptimizationStopCondition() {}
 
 AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(const Optimizer * optimizer):
 	_optimizer(optimizer),
-	_tolerance(0.),
+	_tolerance(0.000001),
 	_callCount(0),
 	_burnin(0) {}
 

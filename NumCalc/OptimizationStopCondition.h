@@ -1,6 +1,6 @@
 //
 // File: OptimizationStopCondition.h
-// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Tue Dec 23 11:51:31 2003
 //
 

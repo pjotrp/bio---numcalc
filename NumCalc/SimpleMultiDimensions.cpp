@@ -171,7 +171,7 @@ double SimpleMultiDimensions::step() throw (Exception)
 		double v = _parameters[i] -> getValue();
 		//_optimizers[i] -> setInitialInterval(v - 0.01, v + 0.01);
 		//_optimizers[i] -> init(_parameters.subList(i));
-		_optimizer -> setVerbose( _verbose > 1 ? 1 : 0);
+		_optimizer -> setVerbose( _verbose > 0 ? _verbose - 1 : 0);
 		_optimizer -> setInitialInterval(v - 0.01, v + 0.01);
 		_optimizer -> init(_parameters.subList(i));
 

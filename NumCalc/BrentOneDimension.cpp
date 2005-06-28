@@ -165,17 +165,10 @@ void BrentOneDimension::setInitialInterval(double inf, double sup)
 
 /******************************************************************************/
 
-void BrentOneDimension::setTolerance(double tolerance)
-{
-	_tolerance = tolerance;
-}
-
-/******************************************************************************/
-
 double BrentOneDimension::step() throw (Exception) {
 	if(_verbose > 0) { cout << "."; cout.flush(); }
 	xm   = 0.5 * (a + b);
-	tol2 = 2.0 * (tol1 = _tolerance * NumTools::abs(x) + ZEPS);
+	tol2 = 2.0 * (tol1 = _stopCondition -> getTolerance() * NumTools::abs(x) + ZEPS);
 	
 	// Construct a trial parabolic fit:
 	if (NumTools::abs(e) > tol1) {
