@@ -1,0 +1,11 @@
+#include "Optimizer.h"
+#include "AbstractOptimizer.h"
+#include "OptimizationStopCondition.h"
+#include "GoldenSectionSearch.h"
+#include "BrentOneDimension.h"
+#include "OneDimensionOptimizationTools.h"
+#include "DownhillSimplexMethod.h"
+#include "SimpleMultiDimensions.h"
+#include "PowellMultiDimensions.h"
+#include "MultiDimensionsOptimizationTools.h"
+

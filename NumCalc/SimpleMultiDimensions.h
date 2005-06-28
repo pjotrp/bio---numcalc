@@ -80,7 +80,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractOptimizer.h"
 #include "BrentOneDimension.h"
-#include "GoldenSectionSearch.h"
+//#include "GoldenSectionSearch.h"
 
 /**
  * @brief This Optimizer is a very simple multi-dimensions optimizer, calling
@@ -89,7 +89,7 @@ knowledge of the CeCILL license and that you accept its terms.
  * The one-dimensional optimizer used is BrentOneDimension.
  * Consider using PowellMultiDimensions optimizer for a more efficient modified version of the algorithm.
  */
-class SimpleMultiDimensions : public AbstractOptimizer
+class SimpleMultiDimensions : public virtual AbstractOptimizer
 {
         
 	protected:
@@ -97,7 +97,7 @@ class SimpleMultiDimensions : public AbstractOptimizer
 		unsigned int _nbParams;
 
 		//vector<BrentOneDimension *> _optimizers; // One dimensional optimizers.
-		GoldenSectionSearch * _optimizer; // One dimensional optimizer.
+		BrentOneDimension * _optimizer; // One dimensional optimizer.
 
 	public:
 

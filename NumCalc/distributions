@@ -1,0 +1,6 @@
+#include "DiscreteDistribution.h"
+#include "AbstractDiscreteDistribution.h"
+#include "GammaDiscreteDistribution.h"
+#include "GoldenSectionSearch.h"
+#include "SimpleDiscreteDistribution.h"
+

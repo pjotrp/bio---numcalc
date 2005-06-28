@@ -34,7 +34,13 @@ ParameterList.h\
 RandomFactory.h\
 Uniform01K.h\
 Uniform01QD.h\
-Uniform01WH.h
+Uniform01WH.h\
+parameters\
+optimizers\
+vectors\
+matrix\
+distributions\
+random
 
 CPP_FILES = \
 AbstractOptimizer.cpp\

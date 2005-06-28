@@ -87,7 +87,7 @@ SimpleMultiDimensions::SimpleMultiDimensions(Function * function):
 	_defaultStopCondition = new FunctionStopCondition(this);
 	_stopCondition = _defaultStopCondition;
 	_nbParams = 0;
-	_optimizer = new GoldenSectionSearch(function);
+	_optimizer = new BrentOneDimension(function);
 }
 
 /******************************************************************************/
