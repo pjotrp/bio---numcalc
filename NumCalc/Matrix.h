@@ -135,7 +135,7 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 		
 		Matrix<Scalar> & operator=(const Matrix<Scalar> & m)
 		{
-			resize(m.nRows());	
+			vector< vector<Scalar> >::resize(m.nRows());	
 			for(unsigned int i = 0; i < m.nRows(); i++) {
 				operator[](i).resize(m.nCols());
 				for(unsigned int j = 0; j < m.nCols(); j++) {
