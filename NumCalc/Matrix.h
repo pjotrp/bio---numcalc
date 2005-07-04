@@ -1,11 +1,11 @@
 //
 // File: Matrix.h
-// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Tue Apr 07 11:58 2004
 //
 
 /*
-Copyright ou © ou Copr. Julien Dutheil, (17 Novembre 2004) 
+Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
 
 Julien.Dutheil@univ-montp2.fr
 
@@ -41,7 +41,7 @@ termes.
 */
 
 /*
-Copyright or © or Copr. Julien Dutheil, (November 17, 2004)
+Copyright or © or Copr. CNRS, (November 17, 2004)
 
 Julien.Dutheil@univ-montp2.fr
 
@@ -116,7 +116,7 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 		RowMatrix(unsigned int nRow, unsigned int nCol): vector< vector<Scalar> >(nRow)
 		{
 			for(unsigned int i = 0; i < nRow; i++) {
-				vector< vector<Scalar> >::operator[](i).resize(nCol);
+				operator[](i).resize(nCol);
 			}
 		}
 
@@ -139,7 +139,7 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 		{
 			resize(m.nRows());	
 			for(unsigned int i = 0; i < m.nRows(); i++) {
-				vector< vector< Scalar> >::operator[](i).resize(m.nCols());
+				operator[](i).resize(m.nCols());
 				for(unsigned int j = 0; j < m.nCols(); j++) {
 					operator()(i,j) = m(i, j);
 				}
@@ -151,17 +151,17 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 		
 		const Scalar & operator()(unsigned int i, unsigned int j) const
 		{
-			return vector< vector<Scalar> >::operator[](i)[j];
+			return operator[](i)[j];
 		}
 		
 		Scalar & operator()(unsigned int i, unsigned int j)
 		{
-			return vector< vector<Scalar> >::operator[](i)[j];
+			return operator[](i)[j];
 		}
 		
-		unsigned int nRows() const { return vector< vector < Scalar> >::size(); }
+		unsigned int nRows() const { return size(); }
 		
-		unsigned int nCols() const { return vector< vector < Scalar> >::size() == 0 ? 0 : vector< vector<Scalar> >::operator[](0).size(); }
+		unsigned int nCols() const { return size() == 0 ? 0 : operator[](0).size(); }
 		
 		vector<Scalar> row(unsigned int i) const
 		{
@@ -179,9 +179,9 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 
 		void resize(unsigned int nRows, unsigned int nCols)
 		{
-			vector< vector<Scalar> >::resize(nRows);
+			vector< vector<double> >::resize(nRows);
 			for(unsigned int i = 0; i < nRows; i++) {
-				vector< vector<Scalar> >::operator[](i).resize(nCols);
+				operator[](i).resize(nCols);
 			}
 		}
 
