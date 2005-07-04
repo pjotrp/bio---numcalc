@@ -95,8 +95,7 @@ class Matrix: public Clonable {
 		virtual ~Matrix() {};
 
 	public:
-		template<class MatrixTemplate>
-		Matrix<Scalar> & operator=(const MatrixTemplate & m) = 0;
+		virtual Matrix<Scalar> & operator=(const Matrix<Scalar> & m) = 0;
 		
 		virtual const Scalar & operator()(unsigned int i, unsigned int j) const = 0;
 		virtual       Scalar & operator()(unsigned int i, unsigned int j) = 0;
@@ -134,8 +133,7 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 
 	public:
 		
-		template<class MatrixTemplate>
-		Matrix<Scalar> & operator=(const MatrixTemplate & m)
+		Matrix<Scalar> & operator=(const Matrix<Scalar> & m)
 		{
 			resize(m.nRows());	
 			for(unsigned int i = 0; i < m.nRows(); i++) {
