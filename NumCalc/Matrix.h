@@ -95,8 +95,7 @@ class Matrix: public Clonable {
 		virtual ~Matrix() {};
 
 	public:
-		virtual Matrix<Scalar> & operator=(const Matrix<Scalar> & m) = 0;
-		
+	
 		virtual const Scalar & operator()(unsigned int i, unsigned int j) const = 0;
 		virtual       Scalar & operator()(unsigned int i, unsigned int j) = 0;
 		virtual unsigned int nRows() const = 0;

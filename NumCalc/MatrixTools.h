@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright ou © ou Copr. Julien Dutheil, (17 Novembre 2004) 
+Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
 
 Julien.Dutheil@univ-montp2.fr
 
@@ -41,7 +41,7 @@ termes.
 */
 
 /*
-Copyright or © or Copr. Julien Dutheil, (November 17, 2004)
+Copyright or © or Copr. CNRS, (November 17, 2004)
 
 Julien.Dutheil@univ-montp2.fr
 
