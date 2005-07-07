@@ -114,7 +114,7 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 		RowMatrix(unsigned int nRow, unsigned int nCol): vector< vector<Scalar> >(nRow)
 		{
 			for(unsigned int i = 0; i < nRow; i++) {
-				operator[](i).resize(nCol);
+				vector< vector<Scalar> >::operator[](i).resize(nCol);
 			}
 		}
 
