@@ -243,7 +243,7 @@ class MatrixTools
 		}
 	
 		template<class Matrix>
-		static vector<unsigned int> maxIndexes(const Matrix & m)
+		static vector<unsigned int> posmax(const Matrix & m)
 		{
 			unsigned int nrows = m.nRows();
 			unsigned int ncols = m.nCols();
@@ -264,6 +264,30 @@ class MatrixTools
 			}
 			pos[0] = imax;
 			pos[1] = jmax;
+			return pos;
+		}
+
+		template<class Matrix>
+		static vector<unsigned int> posmin(const Matrix & m)
+		{
+			unsigned int nrows = m.nRows();
+			unsigned int ncols = m.nCols();
+			vector<unsigned int> pos(2);
+			unsigned int imin = 0;
+			unsigned int jmin = 0;
+			double currentMin = -log(0.);
+			for(unsigned int i = 0; i < nrows; i++) {
+				for(unsigned int j = 0; j < ncols; j++) {
+					double currentValue = m(i, j);
+					if(currentValue < currentMin) {
+						imin = i;
+						jmin = j;
+						currentMin = currentValue;
+					}
+				}
+			}
+			pos[0] = imin;
+			pos[1] = jmin;
 			return pos;
 		}
 
