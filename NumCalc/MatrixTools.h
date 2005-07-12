@@ -333,9 +333,9 @@ class MatrixTools
 	
 };
 
+/* DEPRECATED 
 namespace MatrixOperators {
 	
-	template<class MatrixA, class MatrixB>
 	MatrixB operator*(const MatrixA & A, const MatrixB & B) throw (DimensionException)
 	{
 		return MatrixTools::mult<MatrixA, MatrixB>(A, B);
@@ -397,5 +397,6 @@ namespace MatrixOperators {
 	}
 
 };
+*/
 
 #endif	//_MATRIXTOOLS_H_
