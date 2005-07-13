@@ -1,52 +1,14 @@
 //
 // File: MatrixTools.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Mon Jan 19 16:42:25 2004
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour le calcul numérique.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
 
-Julien.Dutheil@univ-montp2.fr
-
 This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+for numerical calculus. This file is part of the Bio++ project.
 
 This software is governed by the CeCILL  license under French law and
 abiding by the rules of distribution of free software.  You can  use, 
@@ -179,10 +141,10 @@ class MatrixTools
 		 * Since D is a diagonal matrix, this function is more efficient than doing
 		 * mult(mult(A, diag(D)), B), which involves two 0(n^3) operations.
 		 *
-		 * @param MatrixA A The first matrix.
-		 * @param vector<Scalar> D The diagonal matrix (only diagonal elements in a vector)
-		 * @param MatrixB B The second matrix.
-		 * @return MatrixB The result matrix.
+		 * @param A The first matrix.
+		 * @param D The diagonal matrix (only diagonal elements in a vector)
+		 * @param B The second matrix.
+		 * @return The result matrix.
 		 * @throw DimensionException If matrices have not the appropriate size.
 		 */
 		template<class MatrixA, class Scalar, class MatrixB>
@@ -209,8 +171,8 @@ class MatrixTools
 		/**
 		 * @brief Add matrix B to matrix A.
 		 *
-		 * @param MatrixA A Matrix A
-		 * @param MatrixB B Matrix B
+		 * @param A Matrix A
+		 * @param B Matrix B
 		 * @throw DimensionException If A and B have note the same size.
 		 */
 		template<class MatrixA, class MatrixB>

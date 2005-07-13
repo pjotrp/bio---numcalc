@@ -5,48 +5,10 @@
 //
 
 /*
-Copyright ou © ou Copr. Julien Dutheil, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour le calcul numérique.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. Julien Dutheil, (November 17, 2004)
 
-Julien.Dutheil@univ-montp2.fr
-
 This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+for numerical calculus. This file is part of the Bio++ project.
 
 This software is governed by the CeCILL  license under French law and
 abiding by the rules of distribution of free software.  You can  use, 
@@ -91,93 +53,104 @@ using namespace std;
 #include "Matrix.h"
 
 /** 
-
-    Computes eigenvalues and eigenvectors of a real (non-complex)
-    matrix. 
-<P>
-    If A is symmetric, then A = V*D*V' where the eigenvalue matrix D is
-    diagonal and the eigenvector matrix V is orthogonal. That is,
-		the diagonal values of D are the eigenvalues, and
-    V*V' = I, where I is the identity matrix.  The columns of V 
-    represent the eigenvectors in the sense that A*V = V*D.
-    
-<P>
-    If A is not symmetric, then the eigenvalue matrix D is block diagonal
-    with the real eigenvalues in 1-by-1 blocks and any complex eigenvalues,
-    a + i*b, in 2-by-2 blocks, [a, b; -b, a].  That is, if the complex
-    eigenvalues look like
-<pre>
-
-          u + iv     .        .          .      .    .
-            .      u - iv     .          .      .    .
-            .        .      a + ib       .      .    .
-            .        .        .        a - ib   .    .
-            .        .        .          .      x    .
-            .        .        .          .      .    y
-</pre>
-        then D looks like
-<pre>
-
-            u        v        .          .      .    .
-           -v        u        .          .      .    . 
-            .        .        a          b      .    .
-            .        .       -b          a      .    .
-            .        .        .          .      x    .
-            .        .        .          .      .    y
-</pre>
-    This keeps V a real matrix in both symmetric and non-symmetric
-    cases, and A*V = V*D.
-    
-    
-    
-    <p>
-    The matrix V may be badly
-    conditioned, or even singular, so the validity of the equation
-    A = V*D*inverse(V) depends upon the condition number of V.
-
-   <p>
-	(Adapted from JAMA, a Java Matrix Library, developed by jointly 
-	by the Mathworks and NIST; see  http://math.nist.gov/javanumerics/jama).
-**/
-
+ * @brief Computes eigenvalues and eigenvectors of a real (non-complex) matrix. 
+ * 
+ * If A is symmetric, then A = V*D*V' where the eigenvalue matrix D is
+ * diagonal and the eigenvector matrix V is orthogonal. That is,
+ * the diagonal values of D are the eigenvalues, and
+ * V*V' = I, where I is the identity matrix.  The columns of V 
+ * represent the eigenvectors in the sense that A*V = V*D.
+ *
+ * If A is not symmetric, then the eigenvalue matrix D is block diagonal
+ * with the real eigenvalues in 1-by-1 blocks and any complex eigenvalues,
+ * a + i*b, in 2-by-2 blocks, [a, b; -b, a].  That is, if the complex
+ * eigenvalues look like
+ * <pre>
+ * 
+ *         u + iv     .        .          .      .    .
+ *           .      u - iv     .          .      .    .
+ *           .        .      a + ib       .      .    .
+ *           .        .        .        a - ib   .    .
+ *           .        .        .          .      x    .
+ *           .        .        .          .      .    y
+ * </pre>
+ * then D looks like
+ * <pre>
+ * 
+ *           u        v        .          .      .    .
+ *          -v        u        .          .      .    . 
+ *           .        .        a          b      .    .
+ *           .        .       -b          a      .    .
+ *           .        .        .          .      x    .
+ *           .        .        .          .      .    y
+ * </pre>
+ * This keeps V a real matrix in both symmetric and non-symmetric
+ *  cases, and A*V = V*D.
+ *
+ *
+ * The matrix V may be badly
+ * conditioned, or even singular, so the validity of the equation
+ * A = V*D*inverse(V) depends upon the condition number of V.
+ *
+ * (Adapted from JAMA, a Java Matrix Library, developed by jointly 
+ *	by the Mathworks and NIST; see  http://math.nist.gov/javanumerics/jama).
+ * 
+ * (Adapted from the C++ JAMA port).
+ */
 template <class Real>
 class EigenValue
 {
 
-
-   /** Row and column dimension (square matrix).  */
+   /** 
+		* @brief Row and column dimension (square matrix).
+		*/
    int n;
 
-   bool issymmetric; /* boolean*/
+   /**
+		* @brief Tell if the matrix is symmetric.
+		*/
+	 bool issymmetric;
 
-   /** Arrays for internal storage of eigenvalues. */
+   /**
+		* @name Arrays for internal storage of eigenvalues.
+		*
+		* @{
+		*/
 
    vector<Real> d;         /* real part */
    vector<Real> e;         /* img part */
-
-   /** Array for internal storage of eigenvectors. */
+	 /** @} */
+	 
+   /**
+		* @brief Array for internal storage of eigenvectors.
+		*/
    RowMatrix<Real> V;
 
-   /** Array for internal storage of nonsymmetric Hessenberg form.
-   @serial internal storage of nonsymmetric Hessenberg form.
-   */
+   /**
+		* @brief Array for internal storage of nonsymmetric Hessenberg form.
+		*
+		* @serial internal storage of nonsymmetric Hessenberg form.
+    */
    RowMatrix<Real> H;
    
 
-   /** Working storage for nonsymmetric algorithm.
-   @serial working storage for nonsymmetric algorithm.
-   */
+   /**
+		* @brief Working storage for nonsymmetric algorithm.
+		*
+		* @serial working storage for nonsymmetric algorithm.
+    */
    vector<Real> ort;
 
 
-   // Symmetric Householder reduction to tridiagonal form.
-
+   /**
+		* @brief Symmetric Householder reduction to tridiagonal form.
+    *
+		* This is derived from the Algol procedures tred2 by
+    * Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
+    * Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
+    * Fortran subroutine in EISPACK.
+		*/
    void tred2() {
-
-   //  This is derived from the Algol procedures tred2 by
-   //  Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
-   //  Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
-   //  Fortran subroutine in EISPACK.
 
       for (int j = 0; j < n; j++) {
          d[j] = V(n-1,j);
@@ -287,14 +260,15 @@ class EigenValue
       e[0] = 0.0;
    } 
 
-   // Symmetric tridiagonal QL algorithm.
-   
+   /**
+		* @brief Symmetric tridiagonal QL algorithm.
+		*
+    * This is derived from the Algol procedures tql2, by
+    * Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
+    * Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
+    * Fortran subroutine in EISPACK.
+		*/
    void tql2 () {
-
-   //  This is derived from the Algol procedures tql2, by
-   //  Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
-   //  Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
-   //  Fortran subroutine in EISPACK.
    
       for (int i = 1; i < n; i++) {
          e[i-1] = e[i];
@@ -410,14 +384,15 @@ class EigenValue
       }
    }
 
-   // Nonsymmetric reduction to Hessenberg form.
-
+   /**
+		* @brief Nonsymmetric reduction to Hessenberg form.
+		*
+		* This is derived from the Algol procedures orthes and ortran,
+    * by Martin and Wilkinson, Handbook for Auto. Comp.,
+    * Vol.ii-Linear Algebra, and the corresponding
+    * Fortran subroutines in EISPACK.
+		*/
    void orthes () {
-   
-      //  This is derived from the Algol procedures orthes and ortran,
-      //  by Martin and Wilkinson, Handbook for Auto. Comp.,
-      //  Vol.ii-Linear Algebra, and the corresponding
-      //  Fortran subroutines in EISPACK.
    
       int low = 0;
       int high = n-1;
@@ -968,11 +943,14 @@ class EigenValue
 public:
 
 
-   /** Check for symmetry, then construct the eigenvalue decomposition
-   @param A    Square real (non-complex) matrix
-   */
+   /**
+		* @brief Check for symmetry, then construct the eigenvalue decomposition
+		*
+		* @param A    Square real (non-complex) matrix
+    */
 
-   EigenValue(Matrix<Real> &A) {
+   EigenValue(Matrix<Real> &A)
+	 {
       n = A.nCols();
       V = RowMatrix<Real>(n,n);
       d = vector<Real>(n);
@@ -1017,66 +995,62 @@ public:
    }
 
 
-   /** Return the eigenvector matrix
-   @return     V
+   /**
+		* @brief Return the eigenvector matrix
+		*
+		* @return V
+    */
+   RowMatrix<Real> getV() const { return V; }
+
+   /**
+		* @brief Return the real parts of the eigenvalues
+		*
+		* @return real(diag(D))
+    */
+   vector<Real> getRealEigenValues() const { return d; }
+
+   /**
+		* @brief Return the imaginary parts of the eigenvalues in parameter e.
+		*
+		* @return e: new matrix with imaginary parts of the eigenvalues.
    */
-
-   RowMatrix<Real> getV() const {
-      return V;
-   }
-
-   /** Return the real parts of the eigenvalues
-   @return     real(diag(D))
-   */
-
-   vector<Real> getRealEigenValues() const {
-      return d;
-   }
-
-   /** Return the imaginary parts of the eigenvalues
-   in parameter e_.
-
-   @pararm e_: new matrix with imaginary parts of the eigenvalues.
-   */
-   vector<Real> getImagEigenValues() const {
-      return e;
-   }
-
+   vector<Real> getImagEigenValues() const { return e; }
    
-/** 
-	Computes the block diagonal eigenvalue matrix.
-    If the original matrix A is not symmetric, then the eigenvalue 
-	matrix D is block diagonal with the real eigenvalues in 1-by-1 
-	blocks and any complex eigenvalues,
-    a + i*b, in 2-by-2 blocks, [a, b; -b, a].  That is, if the complex
-    eigenvalues look like
-<pre>
-
-          u + iv     .        .          .      .    .
-            .      u - iv     .          .      .    .
-            .        .      a + ib       .      .    .
-            .        .        .        a - ib   .    .
-            .        .        .          .      x    .
-            .        .        .          .      .    y
-</pre>
-        then D looks like
-<pre>
-
-            u        v        .          .      .    .
-           -v        u        .          .      .    . 
-            .        .        a          b      .    .
-            .        .       -b          a      .    .
-            .        .        .          .      x    .
-            .        .        .          .      .    y
-</pre>
-    This keeps V a real matrix in both symmetric and non-symmetric
-    cases, and A*V = V*D.
-
-	@param D: upon return, the matrix is filled with the block diagonal 
-	eigenvalue matrix.
-	
-*/
-   Matrix<Real> getD() const {
+	/**
+	 * @brief Computes the block diagonal eigenvalue matrix.
+   * 
+	 * If the original matrix A is not symmetric, then the eigenvalue 
+	 * matrix D is block diagonal with the real eigenvalues in 1-by-1 
+	 * blocks and any complex eigenvalues,
+   * a + i*b, in 2-by-2 blocks, [a, b; -b, a].  That is, if the complex
+   * eigenvalues look like
+   * <pre>
+   *
+   *       u + iv     .        .          .      .    .
+   *         .      u - iv     .          .      .    .
+   *         .        .      a + ib       .      .    .
+   *         .        .        .        a - ib   .    .
+   *         .        .        .          .      x    .
+   *         .        .        .          .      .    y
+   * </pre>
+   *     then D looks like
+   * <pre>
+   *
+   *         u        v        .          .      .    .
+   *        -v        u        .          .      .    . 
+   *         .        .        a          b      .    .
+   *         .        .       -b          a      .    .
+   *         .        .        .          .      x    .
+   *         .        .        .          .      .    y
+   * </pre>
+   * This keeps V a real matrix in both symmetric and non-symmetric
+   * cases, and A*V = V*D.
+   *
+	 * @return D: upon return, the matrix is filled with the block diagonal 
+	 * eigenvalue matrix.
+	 */
+   Matrix<Real> getD() const
+	 {
       RowMatrix<Real> D(n, n);
       for (unsigned int i = 0; i < n; i++) {
          for (unsigned int j = 0; j < n; j++) {
