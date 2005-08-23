@@ -199,7 +199,7 @@ class MatrixTools
 			if(p == 0) return getId<Matrix>(n);
 			else {
 				Matrix result(n, n);
-				result = m * pow<Matrix>(m, p - 1);
+				result = mult(m, pow<Matrix>(m, p - 1));
 				return result;
 			}
 		}

@@ -1,0 +1,273 @@
+/*
+Copyright or © or Copr. CNRS, (November 17, 2004)
+
+This software is a computer program whose purpose is to provide classes
+for numerical calculus.
+
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
+*/
+
+#include "DataTable.h"
+#include "VectorTools.h"
+using namespace VectorOperators;
+
+//From Utils:
+#include <Utils/FileTools.h>
+#include <Utils/TextTools.h>
+#include <Utils/StringTokenizer.h>
+
+/******************************************************************************/
+
+DataTable::DataTable(unsigned int nRow, unsigned int nCol) :
+	_nRow(nRow), _nCol(nCol)
+{
+	_data.resize(nCol);
+	for(unsigned int i = 0; i < nCol; i++)
+		_data[i].resize(nRow);
+	_colNames = NULL;
+	_rowNames = NULL;
+}
+	
+DataTable::DataTable(unsigned int nCol) :
+	_nRow(0), _nCol(nCol)
+{
+	_data.resize(nCol);
+	_colNames = NULL;
+	_rowNames = NULL;
+}
+	
+/******************************************************************************/
+
+DataTable::~DataTable(){
+	if(_rowNames != NULL) delete _rowNames;
+	if(_colNames != NULL) delete _colNames;
+}
+
+/******************************************************************************/
+/*                             Cell access                                    */
+/******************************************************************************/
+
+string & DataTable::operator()(unsigned int rowIndex, unsigned int colIndex) throw (IndexOutOfBoundsException)
+{
+	if(colIndex >= _nCol) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, unsigned int).", colIndex, 0, _nCol - 1);
+	if(rowIndex >= _data[colIndex].size()) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, unsigned int).", rowIndex, 0, _data[colIndex].size() - 1);
+	return _data[colIndex][rowIndex];
+}
+
+const string & DataTable::operator()(unsigned int rowIndex, unsigned int colIndex) const throw (IndexOutOfBoundsException)
+{
+	if(colIndex >= _nCol) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, unsigned int).", colIndex, 0, _nCol - 1);
+	if(rowIndex >= _data[colIndex].size()) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, unsigned int).", rowIndex, 0, _data[colIndex].size() - 1);
+	return _data[colIndex][rowIndex];
+}
+
+/******************************************************************************/
+
+string & DataTable::operator()(const string & rowName, const string & colName)
+throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException, DimensionException)
+{
+	if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, const string &).");
+	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::operator(const string &, const string &).");
+	try {
+		unsigned int rowIndex = pos(*_rowNames, rowName);
+		unsigned int colIndex = pos(*_colNames, colName);
+		return (*this)(rowIndex, colIndex);
+	} catch(ElementNotFoundException<string> & ex) {
+		throw TableNameNotFoundException("DataTable::operator(const string &, const string &).", *ex.getElement());
+	}
+}
+
+const string & DataTable::operator()(const string & rowName, const string & colName) const
+throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException, DimensionException)
+{
+	if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, const string &).");
+	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::operator(const string &, const string &).");
+	try {
+		unsigned int rowIndex = pos(*_rowNames, rowName);
+		unsigned int colIndex = pos(*_colNames, colName);
+		return (*this)(rowIndex, colIndex);
+	} catch(ElementNotFoundException<string> & ex) {
+		throw TableNameNotFoundException("DataTable::operator(const string &, const string &).", *ex.getElement());
+	}
+}
+		
+/******************************************************************************/
+/*                             Work with names                                */
+/******************************************************************************/
+
+void DataTable::setRowNames(const vector<string> & rowNames) throw (DimensionException)
+{
+	if(rowNames.size() != _nRow) throw DimensionException("DataTable::setRowNames.", rowNames.size(), _nRow);
+	else {
+		if(_rowNames != NULL) delete _rowNames;
+		_rowNames = new vector<string>(rowNames.begin(), rowNames.end());
+	}
+}
+
+vector<string> DataTable::getRowNames() const throw (NoTableRowNamesException)
+{
+	if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::getRowNames().");
+	return * _rowNames;
+}
+
+/******************************************************************************/
+
+void DataTable::setColumnNames(const vector<string> & colNames) throw (DimensionException)
+{
+	if(colNames.size() != _nCol) throw DimensionException("DataTable::setColumnNames.", colNames.size(), _nCol);
+	else {
+		if(_colNames != NULL) delete _colNames;
+		_colNames = new vector<string>(colNames.begin(), colNames.end());
+	}
+}
+
+vector<string> DataTable::getColumnNames() const throw (NoTableColumnNamesException)
+{
+	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::getColumnNames().");
+	return *_colNames;
+}
+
+/******************************************************************************/
+/*                               Work on columns                              */
+/******************************************************************************/
+
+vector<string> & DataTable::getColumn(unsigned int index)
+	throw (IndexOutOfBoundsException)
+{
+	if(index >= _nCol) throw IndexOutOfBoundsException("DataTable::getColumn(unsigned int).", index, 0, _nCol - 1);
+	return _data[index];
+}
+
+const vector<string> & DataTable::getColumn(unsigned int index) const
+	throw (IndexOutOfBoundsException)
+{
+	if(index >= _nCol) throw IndexOutOfBoundsException("DataTable::getColumn(unsigned int).", index, 0, _nCol - 1);
+	return _data[index];
+}	
+
+void DataTable::deleteColumn(unsigned int index)
+	throw (IndexOutOfBoundsException)
+{
+	if(index >= _nCol) throw IndexOutOfBoundsException("DataTable::deleteColumn(unsigned int).", index, 0, _nCol - 1);
+	_data.erase(_data.begin()+index);
+	if(_colNames != NULL) _colNames->erase(_colNames->begin()+index);
+}
+
+/******************************************************************************/
+/*                               Work on rows                                 */
+/******************************************************************************/
+
+void DataTable::addRow(const vector<string> & newRow)
+	throw (DimensionException, TableRowNamesException)
+{
+	if(_rowNames != NULL) throw TableRowNamesException("DataTable::addRow. Table has row names.");
+	if(newRow.size() != _nCol) throw DimensionException("DataTable::addRow.", newRow.size(), _nCol);
+	for(unsigned int j = 0; j < _nCol; j++) {
+		_data[j].push_back(newRow[j]);
+	}
+	_nRow++;
+}
+
+void DataTable::addRow(const string & rowName, const vector<string> & newRow)
+	throw (DimensionException, NoTableRowNamesException)
+{
+	if(_rowNames == NULL) {
+		if(_nRow == 0) _rowNames = new vector<string>();
+		else throw NoTableRowNamesException("DataTable::addRow. Table has row names.");
+	}
+	if(newRow.size() != _nCol) throw DimensionException("DataTable::addRow.", newRow.size(), _nCol);
+	_rowNames->push_back(rowName);
+	for(unsigned int j = 0; j < _nCol; j++) {
+		_data[j].push_back(newRow[j]);
+	}
+	_nRow++;
+}
+
+
+/******************************************************************************/
+/*                               Read from a CSV file                         */
+/******************************************************************************/
+
+DataTable * DataTable::read(istream & in, const string & sep, bool header, int rowNames)
+	throw (DimensionException, IndexOutOfBoundsException)
+{
+	string firstLine  = FileTools::getNextLine(in);
+	StringTokenizer st1(firstLine, sep);
+	vector<string> row1(st1.getTokens().begin(), st1.getTokens().end());
+	string secondLine = FileTools::getNextLine(in);
+	StringTokenizer st2(secondLine, sep);
+	vector<string> row2(st2.getTokens().begin(), st2.getTokens().end());
+	unsigned int nCol;
+	bool hasRowNames;
+	DataTable * dt;
+	if(row1.size() == row2.size()) {
+		nCol = row1.size();
+		dt = new DataTable(nCol);
+		if(header) { //Use first line as header.
+			dt->setColumnNames(row1);
+		} else {
+			dt->addRow(row1);
+		}
+		dt->addRow(row2);
+		hasRowNames = false;
+	} else if(row1.size() == row2.size() - 1) {
+		nCol = row1.size();
+		cout << row1.size() << endl;
+		dt = new DataTable(nCol);
+		dt->setColumnNames(row1);
+		string rowName = *row2.begin();
+		dt->addRow(rowName, vector<string>(row2.begin()+1, row2.end()));
+		hasRowNames = true;
+	} else throw DimensionException("DataTable::read(...). Row 2 as not the correct number of columns.", row2.size(), nCol);
+
+	// Now read each line:
+	string line = FileTools::getNextLine(in);
+	while(TextTools::isEmpty(line)) {
+		StringTokenizer st(line, sep);
+		if(hasRowNames) {
+			string rowName = *st.getTokens().begin();
+			vector<string> row(st.getTokens().begin()+1, st.getTokens().end());
+			dt->addRow(rowName, row);
+		} else {
+			vector<string> row(st.getTokens().begin(), st.getTokens().end());
+			dt->addRow(row);
+		}
+		line = FileTools::getNextLine(in);
+	}
+
+	// Row names:
+	if(rowNames > -1) {
+		if((unsigned int)rowNames >= nCol) throw IndexOutOfBoundsException("DataTable::read(...). Invalid column specified for row names.", rowNames, 0, nCol-1);
+		dt->setRowNames(dt->getColumn((unsigned int)rowNames));
+		dt->deleteColumn(rowNames);
+	}
+	
+	return(dt);
+}
+
+/******************************************************************************/
+

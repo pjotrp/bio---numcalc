@@ -35,6 +35,7 @@ RandomFactory.h\
 Uniform01K.h\
 Uniform01QD.h\
 Uniform01WH.h\
+DataTable.h\
 parameters\
 optimizers\
 vectors\
@@ -72,7 +73,8 @@ VectorTools.cpp\
 VectorExceptions.cpp\
 Uniform01K.cpp\
 Uniform01QD.cpp\
-Uniform01WH.cpp
+Uniform01WH.cpp\
+DataTable.cpp
 
 lib_LTLIBRARIES = libnumcalc.la
 libnumcalc_la_SOURCES = $(H_FILES) $(CPP_FILES)

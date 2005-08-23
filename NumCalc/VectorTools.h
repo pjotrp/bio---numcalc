@@ -5,45 +5,7 @@
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour le calcul numérique.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -99,6 +61,23 @@ typedef vector<VVint> VVVint;
 typedef vector<VVVint> VVVVint;
 
 namespace VectorOperators {
+
+/**
+ * @brief Send the position of the first occurence of 'which'.
+ *
+ * Comparisons are performed using the == operator.
+ * Maximum complexity: O(v.size()).
+ *
+ * @param v The vector to search.
+ * @param which The element to search.
+ * @retrun The position of which in v.
+ */
+template<class T> unsigned int pos(const vector<T> & v, const T & which) throw (ElementNotFoundException<T>)
+{
+	for(unsigned int i = 0; i < v.size(); i++)
+		if(v[i] == which) return i;
+	throw ElementNotFoundException<T>("VectorTools::pos.", &v, &which);
+}
 
 template<class T> vector<T> operator+ (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
