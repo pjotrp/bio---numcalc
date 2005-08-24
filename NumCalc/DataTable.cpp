@@ -196,6 +196,30 @@ const vector<string> & DataTable::getColumn(unsigned int index) const
 	return _data[index];
 }	
 
+vector<string> & DataTable::getColumn(const string & colName)
+	throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
+{
+	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::getColumn(const string &).");
+	try {
+		unsigned int colIndex = pos(*_colNames, colName);
+		return _data[colIndex];
+	} catch(ElementNotFoundException<string> & ex) {
+		throw TableColumnNameNotFoundException("DataTable::operator(const string &, const string &).", colName);
+	}
+}
+
+const vector<string> & DataTable::getColumn(const string & colName) const
+	throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
+{
+	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::getColumn(const string &).");
+	try {
+		unsigned int colIndex = pos(*_colNames, colName);
+		return _data[colIndex];
+	} catch(ElementNotFoundException<string> & ex) {
+		throw TableColumnNameNotFoundException("DataTable::operator(const string &, const string &).", colName);
+	}
+}
+
 void DataTable::deleteColumn(unsigned int index)
 	throw (IndexOutOfBoundsException)
 {

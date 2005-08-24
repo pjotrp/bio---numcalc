@@ -59,6 +59,22 @@ class TableNameNotFoundException: public Exception
 		string getName() const { return _name; }		
 };
 
+class TableRowNameNotFoundException: public TableNameNotFoundException
+{
+	public:
+		TableRowNameNotFoundException(const string & text, const string & name) :
+			TableNameNotFoundException("RowNameNotFoundException: "+text, name) {}
+		~TableRowNameNotFoundException() throw() {}
+};
+
+class TableColumnNameNotFoundException: public TableNameNotFoundException
+{
+	public:
+		TableColumnNameNotFoundException(const string & text, const string & name) :
+			TableNameNotFoundException("ColumnNameNotFoundException: "+text, name) {}
+		~TableColumnNameNotFoundException() throw() {}
+};
+
 class NoTableRowNamesException: public Exception
 {
 	public:
@@ -177,6 +193,8 @@ class DataTable {
 		 */
 		      vector<string> & getColumn(unsigned int index)       throw (IndexOutOfBoundsException);
 		const vector<string> & getColumn(unsigned int index) const throw (IndexOutOfBoundsException);
+		      vector<string> & getColumn(const string & colName)       throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
+		const vector<string> & getColumn(const string & colName) const throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
 		void deleteColumn(unsigned int index) throw (IndexOutOfBoundsException);
 		void addColumn(const vector<string> & newColumn) throw (DimensionException, TableColumnNamesException);
 		void addColumn(const string & colName, const vector<string> & newColumn) throw (DimensionException, NoTableColumnNamesException, DuplicatedTableColumnNameException);
