@@ -48,6 +48,7 @@ using namespace NumTools;
 #include <vector>
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 typedef vector<double> Vdouble;
@@ -61,23 +62,6 @@ typedef vector<VVint> VVVint;
 typedef vector<VVVint> VVVVint;
 
 namespace VectorOperators {
-
-/**
- * @brief Send the position of the first occurence of 'which'.
- *
- * Comparisons are performed using the == operator.
- * Maximum complexity: O(v.size()).
- *
- * @param v The vector to search.
- * @param which The element to search.
- * @retrun The position of which in v.
- */
-template<class T> unsigned int pos(const vector<T> & v, const T & which) throw (ElementNotFoundException<T>)
-{
-	for(unsigned int i = 0; i < v.size(); i++)
-		if(v[i] == which) return i;
-	throw ElementNotFoundException<T>("VectorTools::pos.", &v, &which);
-}
 
 template<class T> vector<T> operator+ (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
@@ -263,6 +247,68 @@ void operator/= (Vdouble & v1, const double & c);
 /******************************************************************************/
 
 namespace VectorFunctions {
+
+/**
+ * @brief Send the position of the first occurence of 'which'.
+ *
+ * Comparisons are performed using the == operator.
+ * Maximum complexity: O(v.size()).
+ *
+ * @param v The vector to search.
+ * @param which The element to search.
+ * @retrun The position of which in v.
+ */
+template<class T> unsigned int pos(const vector<T> & v, const T & which) throw (ElementNotFoundException<T>)
+{
+	for(unsigned int i = 0; i < v.size(); i++)
+		if(v[i] == which) return i;
+	throw ElementNotFoundException<T>("VectorTools::pos.", &v, &which);
+}
+
+/**
+ * @brief Send a new vector with unique elements.
+ *
+ * The input vector is copied, and the copy is sorted using QuickSort algorithm.
+ * A one-pass loop then look for duplicates and copy unique element to a result vector.
+ * The output vector is hence sorted.
+ * 
+ * If v is empty, it is passed 'as is' in return (after being copied).
+ *
+ * @param v the vector to parse.
+ */
+template<class T> vector<T> unique(const vector<T> & v)
+{
+	if(v.size() == 0) return v;
+	vector<T> sortedV(v.begin(), v.end());
+	sort(sortedV.begin(), sortedV.end());
+	vector<T> uniq;
+	uniq.push_back(sortedV[0]);
+	for(unsigned int i = 1; i < sortedV.size(); i++) {
+		if(sortedV[i] != sortedV[i-1]) uniq.push_back(sortedV[i]);
+	}
+	return uniq;
+}
+
+/**
+ * @brief Tell if the vector as unique elements.
+ *
+ * The input vector is copied, and the copy is sorted using QuickSort algorithm.
+ * A one-pass loop then look for duplicates.
+ * 
+ * If v is empty, the method returns 'true'.
+ *
+ * @param v the vector to parse.
+ */
+template<class T> bool isUnique(const vector<T> & v)
+{
+	if(v.size() == 0) return true;
+	vector<T> sortedV(v.begin(), v.end());
+	sort(sortedV.begin(), sortedV.end());
+	for(unsigned int i = 1; i < sortedV.size(); i++) {
+		if(sortedV[i] == sortedV[i-1]) return false;
+	}
+	return true;
+}
 
 template<class T> T prod(const vector<T> & v1)
 {

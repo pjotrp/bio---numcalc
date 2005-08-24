@@ -33,7 +33,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "DataTable.h"
 #include "VectorTools.h"
-using namespace VectorOperators;
+using namespace VectorFunctions;
 
 //From Utils:
 #include <Utils/FileTools.h>
@@ -58,6 +58,15 @@ DataTable::DataTable(unsigned int nCol) :
 	_data.resize(nCol);
 	_colNames = NULL;
 	_rowNames = NULL;
+}
+	
+DataTable::DataTable(const vector<string> & colNames) throw (DuplicatedTableColumnNameException) :
+	_nRow(0), _nCol(colNames.size())
+{
+	_data.resize(_nCol);
+	_colNames = NULL;
+	_rowNames = NULL;
+	setColumnNames(colNames); //May throw an exception.	
 }
 	
 /******************************************************************************/
@@ -119,8 +128,10 @@ throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundE
 /*                             Work with names                                */
 /******************************************************************************/
 
-void DataTable::setRowNames(const vector<string> & rowNames) throw (DimensionException)
+void DataTable::setRowNames(const vector<string> & rowNames)
+throw (DimensionException, DuplicatedTableRowNameException)
 {
+	if(!isUnique(rowNames))      throw DuplicatedTableRowNameException("DataTable::setRowNames(...). Row names must be unique.");
 	if(rowNames.size() != _nRow) throw DimensionException("DataTable::setRowNames.", rowNames.size(), _nRow);
 	else {
 		if(_rowNames != NULL) delete _rowNames;
@@ -134,10 +145,19 @@ vector<string> DataTable::getRowNames() const throw (NoTableRowNamesException)
 	return * _rowNames;
 }
 
+string DataTable::getRowName(unsigned int index) const throw (NoTableRowNamesException, IndexOutOfBoundsException)
+{
+	if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::getRowName(unsigned int).");
+	if(index >= _nRow)    throw IndexOutOfBoundsException("DataTable::getRowName(unsigned int).", index, 0, _nRow - 1);
+	return (* _rowNames)[index];
+}
+
 /******************************************************************************/
 
-void DataTable::setColumnNames(const vector<string> & colNames) throw (DimensionException)
+void DataTable::setColumnNames(const vector<string> & colNames)
+throw (DimensionException, DuplicatedTableColumnNameException)
 {
+	if(!isUnique(colNames))      throw DuplicatedTableColumnNameException("DataTable::setColumnNames(...). Column names must be unique.");
 	if(colNames.size() != _nCol) throw DimensionException("DataTable::setColumnNames.", colNames.size(), _nCol);
 	else {
 		if(_colNames != NULL) delete _colNames;
@@ -149,6 +169,13 @@ vector<string> DataTable::getColumnNames() const throw (NoTableColumnNamesExcept
 {
 	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::getColumnNames().");
 	return *_colNames;
+}
+
+string DataTable::getColumnName(unsigned int index) const throw (NoTableColumnNamesException, IndexOutOfBoundsException)
+{
+	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::getColumnName(unsigned int).");
+	if(index >= _nCol)    throw IndexOutOfBoundsException("DataTable::getColumnName(unsigned int).", index, 0, _nCol - 1);
+	return (* _colNames)[index];
 }
 
 /******************************************************************************/
@@ -175,11 +202,50 @@ void DataTable::deleteColumn(unsigned int index)
 	if(index >= _nCol) throw IndexOutOfBoundsException("DataTable::deleteColumn(unsigned int).", index, 0, _nCol - 1);
 	_data.erase(_data.begin()+index);
 	if(_colNames != NULL) _colNames->erase(_colNames->begin()+index);
+	_nCol--;
+}
+
+void DataTable::addColumn(const vector<string> & newColumn)
+	throw (DimensionException, TableColumnNamesException)
+{
+	if(_colNames != NULL) throw TableColumnNamesException("DataTable::addColumn. Table has column names.");
+	if(newColumn.size() != _nRow) throw DimensionException("DataTable::addColumn.", newColumn.size(), _nRow);
+	for(unsigned int i = 0; i < _nRow; i++) {
+		_data[i].push_back(newColumn[i]);
+	}
+	_nCol++;
+}
+
+void DataTable::addColumn(const string & colName, const vector<string> & newColumn)
+	throw (DimensionException, NoTableColumnNamesException, DuplicatedTableColumnNameException)
+{
+	if(_colNames == NULL) {
+		if(_nCol == 0) _colNames = new vector<string>();
+		else throw NoTableColumnNamesException("DataTable::addColumn. Table has column names.");
+	}
+	if(newColumn.size() != _nRow) throw DimensionException("DataTable::addColumn.", newColumn.size(), _nRow);
+	if(_nCol > 0 && find(_colNames->begin(), _colNames->end(), colName) != _colNames->end())
+			throw DuplicatedTableColumnNameException("DataTable::addColumn(const string &, const vector<string> &). Column names must be unique.");
+	_colNames->push_back(colName);
+	_data.push_back(newColumn);
+	_nCol++;
 }
 
 /******************************************************************************/
 /*                               Work on rows                                 */
 /******************************************************************************/
+
+void DataTable::deleteRow(unsigned int index)
+	throw (IndexOutOfBoundsException)
+{
+	for(unsigned int j = 0; j < _nCol; j++) {
+		vector<string> * column = & _data[j];
+		if(index >= column->size()) throw IndexOutOfBoundsException("DataTable::deleteRow(unsigned int).", index, 0, column->size() - 1);
+		column->erase(column->begin()+index);
+	}
+	if(_rowNames != NULL) _rowNames->erase(_rowNames->begin()+index);
+	_nRow--;
+}
 
 void DataTable::addRow(const vector<string> & newRow)
 	throw (DimensionException, TableRowNamesException)
@@ -193,13 +259,15 @@ void DataTable::addRow(const vector<string> & newRow)
 }
 
 void DataTable::addRow(const string & rowName, const vector<string> & newRow)
-	throw (DimensionException, NoTableRowNamesException)
+	throw (DimensionException, NoTableRowNamesException, DuplicatedTableRowNameException)
 {
 	if(_rowNames == NULL) {
 		if(_nRow == 0) _rowNames = new vector<string>();
 		else throw NoTableRowNamesException("DataTable::addRow. Table has row names.");
 	}
 	if(newRow.size() != _nCol) throw DimensionException("DataTable::addRow.", newRow.size(), _nCol);
+	if(_nRow > 0 && find(_rowNames->begin(), _rowNames->end(), rowName) != _rowNames->end())
+			throw DuplicatedTableRowNameException("DataTable::addRow(const string &, const vector<string> &). Row names must be unique.");
 	_rowNames->push_back(rowName);
 	for(unsigned int j = 0; j < _nCol; j++) {
 		_data[j].push_back(newRow[j]);
@@ -267,6 +335,31 @@ DataTable * DataTable::read(istream & in, const string & sep, bool header, int r
 	}
 	
 	return(dt);
+}
+
+/******************************************************************************/
+
+void DataTable::write(const DataTable & data, ostream & out, const string & sep)
+{
+	unsigned int n = data.getNumberOfColumns();
+	if(n == 0) return;
+	if(data.hasColumnNames()) { //Write header
+		vector<string> colNames = data.getColumnNames();
+		out << colNames[0];
+		for(unsigned int i = 1; i < n; i++) {
+			out << sep << colNames[i];
+		}
+		out << endl;
+	}
+	//Now write each row:
+	for(unsigned int i = 0; i < data.getNumberOfRows(); i++) {
+		if(data.hasRowNames()) out << data.getRowName(i) << sep;
+		out << data(i, 0);
+		for(unsigned int j = 1; j < n; j++) {
+			out << sep << data(i, j);
+		}
+		out << endl;
+	}
 }
 
 /******************************************************************************/

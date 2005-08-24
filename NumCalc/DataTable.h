@@ -56,8 +56,7 @@ class TableNameNotFoundException: public Exception
 		~TableNameNotFoundException() throw() {}
 
 	public:
-		string getName() const { return _name; }
-		
+		string getName() const { return _name; }		
 };
 
 class NoTableRowNamesException: public Exception
@@ -92,6 +91,24 @@ class TableColumnNamesException: public Exception
 		~TableColumnNamesException() throw() {}
 };
 
+class DuplicatedTableRowNameException: public Exception
+{
+	public:
+		DuplicatedTableRowNameException(const string & text) :
+			Exception("DuplicatedTableRowNameException: "+text) {}
+		~DuplicatedTableRowNameException() throw() {}
+};
+
+class DuplicatedTableColumnNameException: public Exception
+{
+	public:
+		DuplicatedTableColumnNameException(const string & text) :
+			Exception("DuplicatedTableColumnNameException: "+text) {}
+		~DuplicatedTableColumnNameException() throw() {}
+};
+
+
+
 
 /**
  * @brief This class corresponds to a 'dataset', <i>i.e.</i> a table with data by rows and variable by columns.
@@ -108,6 +125,7 @@ class DataTable {
 		vector<string> * _colNames;
 
 	public:
+		
 		/**
 		 * @brief Builds a new void DataTable object with nRow rows and nCol columns.
 		 *
@@ -115,12 +133,21 @@ class DataTable {
 		 * @param nCol The number of columns of the DataTable.
 		 */
 		DataTable(unsigned int nRow, unsigned int nCol);
+		
 		/**
 		 * @brief Builds a new void DataTable object with nCol columns.
 		 *
 		 * @param nCol The number of columns of the DataTable.
 		 */
 		DataTable(unsigned int nCol);
+
+		/**
+		 * @brief Builds a new void DataTable object with named columns.
+		 *
+		 * @param colNames The names of the columns of the DataTable.
+		 * @throw DuplicatedTableColumnNameException Ifcolnames contains identical names.
+		 */
+		DataTable(const vector<string> & colNames) throw (DuplicatedTableColumnNameException);
 
 		~DataTable();
 
@@ -132,10 +159,16 @@ class DataTable {
 		const string & operator()(const string & rowName, const string & colName) const
 						throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException, DimensionException);
 		
-		void setRowNames(const vector<string> & rowNames) throw (DimensionException);
+		unsigned int getNumberOfRows() const { return _nRow; }
+		unsigned int getNumberOfColumns() const { return _nCol; }
+		void setRowNames(const vector<string> & rowNames) throw (DimensionException, DuplicatedTableRowNameException);
 		vector<string> getRowNames() const throw (NoTableRowNamesException);
-		void setColumnNames(const vector<string> & colNames) throw (DimensionException);
+		string getRowName(unsigned int index) const throw (NoTableRowNamesException, IndexOutOfBoundsException);
+		bool hasRowNames() const { return _rowNames!= NULL; }
+		void setColumnNames(const vector<string> & colNames) throw (DimensionException, DuplicatedTableColumnNameException);
 		vector<string> getColumnNames() const throw (NoTableColumnNamesException);
+		string getColumnName(unsigned int index) const throw (NoTableColumnNamesException, IndexOutOfBoundsException);
+		bool hasColumnNames() const { return _colNames!= NULL; }
 
     /**
 		 * @name Work on columns.
@@ -145,6 +178,8 @@ class DataTable {
 		      vector<string> & getColumn(unsigned int index)       throw (IndexOutOfBoundsException);
 		const vector<string> & getColumn(unsigned int index) const throw (IndexOutOfBoundsException);
 		void deleteColumn(unsigned int index) throw (IndexOutOfBoundsException);
+		void addColumn(const vector<string> & newColumn) throw (DimensionException, TableColumnNamesException);
+		void addColumn(const string & colName, const vector<string> & newColumn) throw (DimensionException, NoTableColumnNamesException, DuplicatedTableColumnNameException);
 		/** @} */
     
 		/**
@@ -152,8 +187,9 @@ class DataTable {
 		 *
 		 * @{
 		 */
+		void deleteRow(unsigned int index) throw (IndexOutOfBoundsException);
 		void addRow(const vector<string> & newRow) throw (DimensionException, TableRowNamesException);
-		void addRow(const string & rowName, const vector<string> & newRow) throw (DimensionException, NoTableRowNamesException);
+		void addRow(const string & rowName, const vector<string> & newRow) throw (DimensionException, NoTableRowNamesException, DuplicatedTableRowNameException);
 		/** @} */
 
 	public:
@@ -174,6 +210,8 @@ class DataTable {
 		 */
 		static DataTable * read(istream & in, const string & sep = "\t", bool header=true, int rowNames=-1)
 			throw (DimensionException, IndexOutOfBoundsException);
+
+		static void write(const DataTable & data, ostream & out, const string & sep = "\t");
 };
 
 #endif //_DataFrame_H_
