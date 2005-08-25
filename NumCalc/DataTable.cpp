@@ -328,7 +328,6 @@ DataTable * DataTable::read(istream & in, const string & sep, bool header, int r
 		hasRowNames = false;
 	} else if(row1.size() == row2.size() - 1) {
 		nCol = row1.size();
-		cout << row1.size() << endl;
 		dt = new DataTable(nCol);
 		dt->setColumnNames(row1);
 		string rowName = *row2.begin();
