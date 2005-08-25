@@ -337,7 +337,7 @@ DataTable * DataTable::read(istream & in, const string & sep, bool header, int r
 
 	// Now read each line:
 	string line = FileTools::getNextLine(in);
-	while(TextTools::isEmpty(line)) {
+	while(!TextTools::isEmpty(line)) {
 		StringTokenizer st(line, sep);
 		if(hasRowNames) {
 			string rowName = *st.getTokens().begin();
