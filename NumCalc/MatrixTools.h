@@ -291,6 +291,18 @@ class MatrixTools
 			RowMatrix<Real> I = getId<RowMatrix<Real> >(A.nRows());
 			return lu.solve(I);
 		}
+
+		template<class Real>
+		static RowMatrix<Real> transpose(const Matrix<Real> & A)
+		{
+			RowMatrix<Real> M(A.nCols(), A.nRows());
+			for(unsigned int i = 0; i < A.nCols(); i++) {
+				for(unsigned int j = 0; j < A.nRows(); j++) {
+					M(i, j) = A(j, i);
+				}
+			}
+			return M;
+		}
 	
 	
 };

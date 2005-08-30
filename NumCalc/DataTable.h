@@ -227,7 +227,7 @@ class DataTable {
 		 * @return         A pointer toward a new DataTable object.
 		 */
 		static DataTable * read(istream & in, const string & sep = "\t", bool header=true, int rowNames=-1)
-			throw (DimensionException, IndexOutOfBoundsException);
+			throw (DimensionException, IndexOutOfBoundsException, DuplicatedTableRowNameException);
 
 		static void write(const DataTable & data, ostream & out, const string & sep = "\t");
 };

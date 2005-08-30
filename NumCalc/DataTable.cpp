@@ -131,7 +131,10 @@ throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundE
 void DataTable::setRowNames(const vector<string> & rowNames)
 throw (DimensionException, DuplicatedTableRowNameException)
 {
-	if(!isUnique(rowNames))      throw DuplicatedTableRowNameException("DataTable::setRowNames(...). Row names must be unique.");
+	cout << 1 << endl;
+	if(!isUnique(rowNames))      {
+		throw DuplicatedTableRowNameException("DataTable::setRowNames(...). Row names must be unique.");
+	}
 	if(rowNames.size() != _nRow) throw DimensionException("DataTable::setRowNames.", rowNames.size(), _nRow);
 	else {
 		if(_rowNames != NULL) delete _rowNames;
@@ -305,7 +308,7 @@ void DataTable::addRow(const string & rowName, const vector<string> & newRow)
 /******************************************************************************/
 
 DataTable * DataTable::read(istream & in, const string & sep, bool header, int rowNames)
-	throw (DimensionException, IndexOutOfBoundsException)
+	throw (DimensionException, IndexOutOfBoundsException, DuplicatedTableRowNameException)
 {
 	string firstLine  = FileTools::getNextLine(in);
 	StringTokenizer st1(firstLine, sep);
@@ -353,7 +356,8 @@ DataTable * DataTable::read(istream & in, const string & sep, bool header, int r
 	// Row names:
 	if(rowNames > -1) {
 		if((unsigned int)rowNames >= nCol) throw IndexOutOfBoundsException("DataTable::read(...). Invalid column specified for row names.", rowNames, 0, nCol-1);
-		dt->setRowNames(dt->getColumn((unsigned int)rowNames));
+		vector<string> col = dt->getColumn((unsigned int)rowNames);
+		dt->setRowNames(col);
 		dt->deleteColumn(rowNames);
 	}
 	
