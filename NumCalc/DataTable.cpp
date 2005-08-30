@@ -131,7 +131,6 @@ throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundE
 void DataTable::setRowNames(const vector<string> & rowNames)
 throw (DimensionException, DuplicatedTableRowNameException)
 {
-	cout << 1 << endl;
 	if(!isUnique(rowNames))      {
 		throw DuplicatedTableRowNameException("DataTable::setRowNames(...). Row names must be unique.");
 	}
