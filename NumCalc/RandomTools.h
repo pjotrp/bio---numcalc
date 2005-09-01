@@ -1,14 +1,43 @@
-/*
- * File RandomTools.h
- * Author : Julien Dutheil <julien.dutheil@ens-lyon.fr>
- * Last modification : Friday September 24 2004
-*/
+//
+// File RandomTools.h
+// Author : Julien Dutheil
+//          Sylvain Gaillard
+// Last modification : Friday September 24 2004
+//
 
 /*
- * This code is adapted from Tal Pupko's SEMPHY library.
+Copyright or © or Copr. CNRS, (November 17, 2004)
+
+This software is a computer program whose purpose is to provide classes
+for numerical calculus.
+
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
 */
 
-// Secured inclusion of header's file
 #ifndef _RANDOMTOOLS_H_
 #define _RANDOMTOOLS_H_
 
@@ -27,35 +56,40 @@ class RandomTools
 		// Class destructor
 		~RandomTools();
 	
-// Old Tal's class:
-//	public:
-//		class RandInt {
-//	
-//			protected:
-//				unsigned long randx;
-//
-//			public:
-//				RandInt(long s = 0) { randx = s; }
-//				void setSeed(long s) { randx = s; }
-//				int abs(int x) { return x & 0x7fffffff; }
-//				static double getMaxNumber() { return 2147483648.0; }
-//				int drawNumber() { return randx = randx * 1103515245 + 12345; }
-//				double drawFloatNumber() { return abs(drawNumber()) / getMaxNumber(); } //random number between zero and 1
-//		};
 
 	public:
 		static RandomFactory * DEFAULT_GENERATOR;
-		// Method to get a double random value (between 0 and specified range)
-		// Note : the number you get is between 0 and entry not including entry !
+		
+		/**
+		 * @brief Get a double random value (between 0 and specified range).
+		 *
+		 * Note : the number you get is between 0 and entry not including entry !
+		 * @param entry Max number to reach.
+		 * @param generator Random number generator to use.
+		 */
 		static double giveRandomNumberBetweenZeroAndEntry(double entry, const RandomFactory * generator = DEFAULT_GENERATOR);
 
-		// Method to get a boolean random value
+		/**
+		 * @brief Get a boolean random value.
+		 *
+		 * @param generator Random number generator to use.
+		 */
 		static bool flipCoin(const RandomFactory * generator = DEFAULT_GENERATOR);
 
-		// Method to get a integer random value (between 0 and specified range)
-		// Note : the number you get is between 0 and entry not including entry !
+		/**
+		 * @brief Get an integer random value (between 0 and specified range).
+		 *
+		 * Note : the number you get is between 0 and entry not including entry !
+		 * @param entry Max number to reach.
+		 * @param generator Random number generator to use.
+		 */
 		static int giveIntRandomNumberBetweenZeroAndEntry(int entry, const RandomFactory * generator = DEFAULT_GENERATOR);
 
+		/**
+		 * @brief Set the default generator seed.
+		 *
+		 * @param seed New seed.
+		 */
 		static void setSeed(long seed);
 
 		static double randGaussian(double mean, double variance, const RandomFactory * generator = DEFAULT_GENERATOR);
@@ -65,10 +99,8 @@ class RandomTools
 
 		static double randGamma(double alpha, double beta, const RandomFactory * generator = DEFAULT_GENERATOR);
 	
-		// Added by jdutheil on 08 11 2002.
-  		static double randExponential(double mean, const RandomFactory * generator = DEFAULT_GENERATOR);
+  	static double randExponential(double mean, const RandomFactory * generator = DEFAULT_GENERATOR);
 
-		// Added by Sylvain Gaillard on 09 24 2004
 		/**
 		 * @brief Get a sample of a vector.
 		 *
@@ -95,7 +127,6 @@ class RandomTools
 		}
 
 	private:
-//		static RandInt r;
 		static double DblGammaGreaterThanOne(double dblAlpha, const RandomFactory * generator);
 		static double DblGammaLessThanOne(double dblAlpha, const RandomFactory * generator);
 };
