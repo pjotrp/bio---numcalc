@@ -48,8 +48,8 @@ RandomFactory * RandomTools::DEFAULT_GENERATOR = new Uniform01K(time(NULL));
 // Initiate random seed :
 //RandomTools::RandInt RandomTools::r = time(NULL) ;
 
-void RandomTools::setSeed(long seed) {
-	//r.setSeed(seed);
+void RandomTools::setSeed(long seed)
+{
 	DEFAULT_GENERATOR -> setSeed(seed);
 }
 
