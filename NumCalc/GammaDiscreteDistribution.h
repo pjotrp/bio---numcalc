@@ -43,8 +43,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AbstractDiscreteDistribution.h"
 #include "Constraints.h"
 
-#define PointGamma(prob,alpha,beta) PointChi2(prob,2.0*(alpha))/(2.0*(beta))
-
 class GammaDiscreteDistribution : public AbstractDiscreteDistribution
 {
 	protected:
@@ -68,12 +66,8 @@ class GammaDiscreteDistribution : public AbstractDiscreteDistribution
 		static vector<double> computeBounds(unsigned int nbClasses, double alfa, double beta);
 		static vector<double> computeValues(unsigned int nbClasses, double alfa, double beta, bool median);
 		
-	//From Yang's PAML package:
-		static double PointNormal (double prob);
-		static double LnGamma (double alpha);
-		static double IncompleteGamma (double x, double alpha, double ln_gamma_alpha);
-		static double PointChi2(double prob, double v);
 };
 
 
 #endif	//_GAMMADISCRETEDISTRIBUTION_H_
+

@@ -126,6 +126,92 @@ class RandomTools
 			return sample;
 		}
 
+		/**
+		 * @name Probability functions.
+		 *
+		 * Adapted from Yang's PAML package.
+		 *
+		 * @{
+		 */
+		/**
+		 * @brief Normal quantile function.
+		 *
+		 * Returns z so that Prob{x<z}=prob where x ~ N(0,1) and (1e-12)<prob<1-(1e-12)
+     * returns (-9999) if in error
+     * Odeh RE & Evans JO (1974) The percentage points of the normal distribution.
+     * Applied Statistics 22: 96-97 (AS70)
+     *
+     * Newer methods:
+     *  Wichura MJ (1988) Algorithm AS 241: the percentage points of the
+     *    normal distribution.  37: 477-484.
+     *  Beasley JD & Springer SG  (1977).  Algorithm AS 111: the percentage 
+     *    points of the normal distribution.  26: 118-121.
+		 *
+		 * @param prob The probability.
+		 * @return The quantile corresponding to prob.
+     */
+		static double qNorm(double prob);
+		
+		/**
+		 * @brief Computes \f$ln\left(\Gamma\left(\alpha\right)\right)\f$ given \f$\alpha\f$.
+		 * 
+		 * Returns ln(gamma(alpha)) for alpha>0, accurate to 10 decimal places.  
+     * Stirling's formula is used for the central polynomial part of the procedure.
+     * Pike MC & Hill ID (1966) Algorithm 291: Logarithm of the gamma function.
+     * Communications of the Association for Computing Machinery, 9:684
+		 *
+		 * @param alpha Alpha parameter.
+		 * @return \f$ln\left(\Gamma\left(\alpha\right)\right)\f$
+     */
+		static double lnGamma (double alpha);
+
+		/**
+		 * @brief Returns the incomplete gamma ratio I(x,alpha).
+		 *
+		 * X is the upper limit of the integration and alpha is the shape parameter.
+     * returns (-1) if in error
+     * ln_gamma_alpha = ln(Gamma(alpha)), is almost redundant.
+     * (1) series expansion     if (alpha>x || x<=1)
+     * (2) continued fraction   otherwise
+     * RATNEST FORTRAN by
+     * Bhattacharjee GP (1970) The incomplete gamma integral.  Applied Statistics,
+     * 19: 285-287 (AS32)
+		 *
+		 * @param x the upper limit of the integration.
+		 * @param alpha the shape parameter.
+		 * @param ln_gamma_alpha ln(Gamma(alpha)).
+     */
+		static double incompleteGamma (double x, double alpha, double ln_gamma_alpha);
+
+		/**
+		 * @brief \f$\chi^2\f$ quantile function.
+		 * 
+     * returns z so that Prob{x<z}=prob where x is Chi2 distributed with df=v
+     * returns -1 if in error.   0.000002<prob<0.999998
+     * RATNEST FORTRAN by
+     * Best DJ & Roberts DE (1975) The percentage points of the 
+     * Chi2 distribution.  Applied Statistics 24: 385-388.  (AS91)
+     * Converted into C by Ziheng Yang, Oct. 1993.
+		 *
+		 * @param prob The probability.
+		 * @param v number of degree of freedom.
+		 * @return The quantile corresponding to prob.
+     */
+		static double qChisq(double prob, double v);
+
+		/**
+		 * @brief The Gamma quantile function.
+		 *
+		 * @param prob The probability.
+		 * @param alpha Alpha parameter.
+		 * @param beta  Beta parameter.
+		 * @return The quantile corresponding to prob.
+		 */
+		static double qGamma(double prob, double alpha, double beta) { return qChisq(prob,2.0*(alpha))/(2.0*(beta)); }
+
+		/** @} */
+		
+
 	private:
 		static double DblGammaGreaterThanOne(double dblAlpha, const RandomFactory * generator);
 		static double DblGammaLessThanOne(double dblAlpha, const RandomFactory * generator);
