@@ -64,3 +64,4 @@ class RandomFactory {
 };
 
 #endif // _RANDOMFACTORY_H_
+

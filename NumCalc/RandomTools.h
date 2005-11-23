@@ -50,12 +50,22 @@ using namespace std;
 
 #include "RandomFactory.h"
 
+/**
+ * @brief Utilitary function dealing with random numbers.
+ *
+ * This class uses Uniform01K generator by default.
+ * It is possible to change this by setting the DEFAULT_GENERATOR variable.
+ *
+ * This class is adapted from Pupko's SEMPHY library.
+ * It also borrow some code from Yang's PAML package.
+ *
+ * @see RandomFactory
+ */
 class RandomTools
 {
 	public:
-		// Class destructor
-		~RandomTools();
-	
+		RandomTools() {}
+		virtual ~RandomTools() {}
 
 	public:
 		static RandomFactory * DEFAULT_GENERATOR;
@@ -92,17 +102,38 @@ class RandomTools
 		 */
 		static void setSeed(long seed);
 
+		/**
+		 * @return A random number drawn from a normal distribution.
+		 * @param mean The mean of the law.
+		 * @param variance The variance of the law.
+		 * @param generator The uniform generator to use.
+		 */
 		static double randGaussian(double mean, double variance, const RandomFactory * generator = DEFAULT_GENERATOR);
 		
-		// Routine to generate a gamma random variable with unit scale (beta = 1)
+		/**
+		 * @return A random number drawn from a gamma distribution with unit scale (beta=1).
+		 * @param dblAlpha The alpha parameter.
+		 * @param generator The uniform generator to use.
+		 */
 		static double randGamma(double dblAlpha, const RandomFactory * generator = DEFAULT_GENERATOR);
 
+		/**
+		 * @return A random number drawn from a gamma distribution.
+		 * @param alpha The alpha parameter.
+		 * @param beta The beta parameter.
+		 * @param generator The uniform generator to use.
+		 */
 		static double randGamma(double alpha, double beta, const RandomFactory * generator = DEFAULT_GENERATOR);
 	
+		/**
+		 * @return A random number drawn from an exponential distribution.
+		 * @param mean The mean of the distribution.
+		 * @param generator The uniform generator to use.
+		 */
   	static double randExponential(double mean, const RandomFactory * generator = DEFAULT_GENERATOR);
 
 		/**
-		 * @brief Get a sample of a vector.
+		 * @brief Sample a vector.
 		 *
 		 * The sample is a new vector of the specified size.
 		 * If the size of the sample is identical to the original vector,
@@ -112,7 +143,9 @@ class RandomTools
 		 * @param size The size of the sample.
 		 * @return A vector which is a sample of v.
 		 */
-		template<class T> static vector<T> getSample(const vector<T> & v, unsigned int size) {
+		template<class T> 
+		static vector<T> getSample(const vector<T> & v, unsigned int size)
+		{
 			vector<unsigned int> hat;
 			for (unsigned int i = 0 ; i < v.size() ; i++)
 				hat.push_back(i);

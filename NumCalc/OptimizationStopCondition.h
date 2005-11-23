@@ -5,45 +5,7 @@
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (19 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour le calcul numérique.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 19, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -84,11 +46,24 @@ class Optimizer;
 	
 /******************************************************************************/
 
+/**
+ * @brief Interface for otimization stop condition objet.
+ *
+ * Classes implementing the OptimizationStopCondition interface
+ * provides the isToleranceReached() function that tells when
+ * the optimization process reached a given tolerance parameter.
+ * This parameter may be set or retrieve using the setTolerance()
+ * and getTolerance() functions.
+ *
+ * OptimizationStopCondition implementations may be general and work on
+ * parameter (@see ParametersStopCondition) or function (@see FunctionStopCondition) values,
+ * or be specific to a given optimization method.
+ */
 class OptimizationStopCondition
 {
 	public:
-		OptimizationStopCondition();
-		virtual ~OptimizationStopCondition();
+		OptimizationStopCondition() {}
+		virtual ~OptimizationStopCondition() {}
 	
 	public:
 
@@ -125,6 +100,15 @@ class OptimizationStopCondition
 
 /******************************************************************************/
 
+/**
+ * @brief Partial implementation of the OptimizationStopCondition interface.
+ *
+ * This class provides:
+ * - A pointer toward the Optimizer this objet deals with,
+ * - A tolerance value,
+ * - A counter of the number of calls toward the isToleranceReached() function,
+ * - A burnin function, that prohibe the optimization to stop prematurely.
+ */   
 class AbstractOptimizationStopCondition: public virtual OptimizationStopCondition
 {
 	protected:
@@ -160,9 +144,17 @@ class AbstractOptimizationStopCondition: public virtual OptimizationStopConditio
 	
 /******************************************************************************/
 
+/**
+ * @brief Stop condition on parameters.
+ *
+ * This stops the optimization when \f$\forall i\; |\lambda_{i,t}-\lambda_{i,t-1}| \leq \mbox{tolerance}\f$,
+ * where \f$\lambda_{i, t}\f$ is the value of the ith parameter at iteration \f$t\f$,
+ * and \f$\lambda_{i, t-1}\f$ is the value of the ith parameter at iteration \f$t-1\f$.
+ */
 class ParametersStopCondition: public virtual AbstractOptimizationStopCondition
 {
 	protected:
+
 		/**
 		 * @brief The last estimates of the parameters.
 		 *
@@ -183,7 +175,7 @@ class ParametersStopCondition: public virtual AbstractOptimizationStopCondition
 		ParametersStopCondition(const Optimizer * optimizer, int burnin);
 		ParametersStopCondition(const Optimizer * optimizer, double tolerance, int burnin);
 		
-		~ParametersStopCondition();
+		~ParametersStopCondition() {}
 	
 	public:
 		void init();
@@ -193,6 +185,13 @@ class ParametersStopCondition: public virtual AbstractOptimizationStopCondition
 
 /******************************************************************************/
 
+/**
+ * @brief Stop condition on function value.
+ *
+ * This stops the optimization when \f$|f\left(\left\{\lambda_{i,t}\right\}\right)-f\left(\left\{\lambda_{i,t-1}\right\}\right)| \leq \mbox{tolerance}\f$,
+ * where \f$f\left(\left\{\lambda_{i, t}\right\}\right)\f$ is the value of the function given the parameter values at iteration \f$t\f$,
+ * and \f$f\left(\left\{\lambda_{i, t-1}\right\}\right)\f$ is the value of the function given the parameter velues at iteration \f$t-1\f$.
+ */
 class FunctionStopCondition: public virtual AbstractOptimizationStopCondition
 {
 	protected:
@@ -227,3 +226,4 @@ class FunctionStopCondition: public virtual AbstractOptimizationStopCondition
 /******************************************************************************/
 
 #endif	//_OPTIMIZATIONSTOPCONDITION_H_
+

@@ -1,3 +1,9 @@
+//
+// File: DataTable.h
+// Created by: Julien Dutheil
+// Created on: Aug 2005
+//
+
 /*
 Copyright or © or Copr. CNRS, (November 17, 2004)
 
@@ -31,10 +37,11 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _DataFrame_H_
-#define _DataFrame_H_
+#ifndef _DataTable_H_
+#define _DataTable_H_
 
 #include "VectorTools.h"
+#include "DataTableExceptions.h"
 
 // From Utils:
 #include <Utils/Exceptions.h>
@@ -45,92 +52,13 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <map>
 using namespace std;
 
-class TableNameNotFoundException: public Exception
-{
-	protected:
-		string _name;
-		
-	public:
-		TableNameNotFoundException(const string & text, const string & name) :
-			Exception("NameNotFoundException: "+text), _name(name) {}
-		~TableNameNotFoundException() throw() {}
-
-	public:
-		string getName() const { return _name; }		
-};
-
-class TableRowNameNotFoundException: public TableNameNotFoundException
-{
-	public:
-		TableRowNameNotFoundException(const string & text, const string & name) :
-			TableNameNotFoundException("RowNameNotFoundException: "+text, name) {}
-		~TableRowNameNotFoundException() throw() {}
-};
-
-class TableColumnNameNotFoundException: public TableNameNotFoundException
-{
-	public:
-		TableColumnNameNotFoundException(const string & text, const string & name) :
-			TableNameNotFoundException("ColumnNameNotFoundException: "+text, name) {}
-		~TableColumnNameNotFoundException() throw() {}
-};
-
-class NoTableRowNamesException: public Exception
-{
-	public:
-		NoTableRowNamesException(const string & text) :
-			Exception("NoTableRowNamesException: "+text) {}
-		~NoTableRowNamesException() throw() {}
-};
-
-class NoTableColumnNamesException: public Exception
-{
-	public:
-		NoTableColumnNamesException(const string & text) :
-			Exception("NoTableColumnNamesException: "+text) {}
-		~NoTableColumnNamesException() throw() {}
-};
-
-class TableRowNamesException: public Exception
-{
-	public:
-		TableRowNamesException(const string & text) :
-			Exception("TableRowNamesException: "+text) {}
-		~TableRowNamesException() throw() {}
-};
-
-class TableColumnNamesException: public Exception
-{
-	public:
-		TableColumnNamesException(const string & text) :
-			Exception("TableColumnNamesException: "+text) {}
-		~TableColumnNamesException() throw() {}
-};
-
-class DuplicatedTableRowNameException: public Exception
-{
-	public:
-		DuplicatedTableRowNameException(const string & text) :
-			Exception("DuplicatedTableRowNameException: "+text) {}
-		~DuplicatedTableRowNameException() throw() {}
-};
-
-class DuplicatedTableColumnNameException: public Exception
-{
-	public:
-		DuplicatedTableColumnNameException(const string & text) :
-			Exception("DuplicatedTableColumnNameException: "+text) {}
-		~DuplicatedTableColumnNameException() throw() {}
-};
-
-
-
-
 /**
- * @brief This class corresponds to a 'dataset', <i>i.e.</i> a table with data by rows and variable by columns.
+ * @brief This class corresponds to a 'dataset', <i>i.e.</i> a table with data by rows
+ * and variable by columns.
  *
- * Data are stored as string, by column.
+ * Data are stored as string objects, by column.
  * A DataTable object is hence similar to a ColMatrix<string>.object.
+ * (NB: for now, only the RowMatrix class is defined!)
  */
 class DataTable {
 	
@@ -143,7 +71,7 @@ class DataTable {
 	public:
 		
 		/**
-		 * @brief Builds a new void DataTable object with nRow rows and nCol columns.
+		 * @brief Build a new void DataTable object with nRow rows and nCol columns.
 		 *
 		 * @param nRow The number of rows of the DataTable.
 		 * @param nCol The number of columns of the DataTable.
@@ -151,52 +79,162 @@ class DataTable {
 		DataTable(unsigned int nRow, unsigned int nCol);
 		
 		/**
-		 * @brief Builds a new void DataTable object with nCol columns.
+		 * @brief Build a new void DataTable object with nCol columns.
 		 *
 		 * @param nCol The number of columns of the DataTable.
 		 */
 		DataTable(unsigned int nCol);
 
 		/**
-		 * @brief Builds a new void DataTable object with named columns.
+		 * @brief Build a new void DataTable object with named columns.
 		 *
 		 * @param colNames The names of the columns of the DataTable.
-		 * @throw DuplicatedTableColumnNameException Ifcolnames contains identical names.
+		 * @throw DuplicatedTableColumnNameException If colnames contains identical names.
 		 */
 		DataTable(const vector<string> & colNames) throw (DuplicatedTableColumnNameException);
 
 		~DataTable();
 
 	public:
-		      string & operator()(unsigned int rowIndex, unsigned int colIndex)       throw (IndexOutOfBoundsException);
-		const string & operator()(unsigned int rowIndex, unsigned int colIndex) const throw (IndexOutOfBoundsException);
-		      string & operator()(const string & rowName, const string & colName)
-						throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException, DimensionException);
-		const string & operator()(const string & rowName, const string & colName) const
-						throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException, DimensionException);
-		
-		unsigned int getNumberOfRows() const { return _nRow; }
-		unsigned int getNumberOfColumns() const { return _nCol; }
-		void setRowNames(const vector<string> & rowNames) throw (DimensionException, DuplicatedTableRowNameException);
-		vector<string> getRowNames() const throw (NoTableRowNamesException);
-		string getRowName(unsigned int index) const throw (NoTableRowNamesException, IndexOutOfBoundsException);
-		bool hasRowNames() const { return _rowNames!= NULL; }
-		void setColumnNames(const vector<string> & colNames) throw (DimensionException, DuplicatedTableColumnNameException);
-		vector<string> getColumnNames() const throw (NoTableColumnNamesException);
-		string getColumnName(unsigned int index) const throw (NoTableColumnNamesException, IndexOutOfBoundsException);
-		bool hasColumnNames() const { return _colNames!= NULL; }
 
+		/**
+		 * @return The element at a given position.
+		 * @param rowIndex Row number.
+		 * @param colIndex Column number.
+		 * @throw IndexOutOfBoundsException If one of the index is greater or equal to the corresponding number of columns/rows. 
+		 */
+		string & operator()(unsigned int rowIndex, unsigned int colIndex) throw (IndexOutOfBoundsException);
+		/**
+		 * @return The element at a given position.
+		 * @param rowIndex Row number.
+		 * @param colIndex Column number.
+		 * @throw IndexOutOfBoundsException If one of the index is greater or equal to the corresponding number of columns/rows. 
+		 */
+		const string & operator()(unsigned int rowIndex, unsigned int colIndex) const throw (IndexOutOfBoundsException);
+		/**
+		 * @return The element at a given position.
+		 * @param rowName Row name.
+		 * @param colName Column name.
+		 * @throw NoTableRowNamesException If the table does not have names associated to rows. 
+		 * @throw NoTableColumnNamesException If the table does not have names associated to columns. 
+		 * @throw TableNameNotFoundException If one of rowName or colName do not match existing names. 
+		 */
+		string & operator()(const string & rowName, const string & colName)
+						throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException);
+		/**
+		 * @return The element at a given position.
+		 * @param rowName Row name.
+		 * @param colName Column name.
+		 * @throw NoTableRowNamesException If the table does not have names associated to rows. 
+		 * @throw NoTableColumnNamesException If the table does not have names associated to columns. 
+		 * @throw TableNameNotFoundException If one of rowName or colName do not match existing names. 
+		 */
+		const string & operator()(const string & rowName, const string & colName) const
+						throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException);
+		
     /**
 		 * @name Work on columns.
 		 *
 		 * @{
 		 */
-		      vector<string> & getColumn(unsigned int index)       throw (IndexOutOfBoundsException);
+
+		/**
+		 * @return The number of columns in this table.
+		 */
+		unsigned int getNumberOfColumns() const { return _nCol; }
+
+		/**
+		 * @brief Set the column names of this table.
+		 * 
+		 * @param colNames The row names.
+		 * @throw DimensionException If the number of names do not match the number of columns in the table.
+		 * @throw DuplicatedTableColumnNameException If names are not unique.
+		 */
+		void setColumnNames(const vector<string> & colNames) throw (DimensionException, DuplicatedTableColumnNameException);
+		/**
+		 * @brief Get the column names of this table.
+		 * 
+		 * @return The column names of this table.
+		 * @throw NoTableColumnNamesException If no column names are associated to this table.
+		 */
+		vector<string> getColumnNames() const throw (NoTableColumnNamesException);
+		/**
+		 * @brief Get a given column name.
+		 * 
+		 * @param index The index of the column.
+		 * @return The column name associated to the given column.
+		 * @throw NoTableColumnNamesException If no column names are associated to this table.
+		 * @throw IndexOutOfBoundsException If index is >= number of columns.
+		 */
+		string getColumnName(unsigned int index) const throw (NoTableColumnNamesException, IndexOutOfBoundsException);
+		
+		/**
+		 * @return true If column names are associated to this table.
+		 */
+		bool hasColumnNames() const { return _colNames!= NULL; }
+
+		/**
+		 * @return The values in the given column.
+		 * @param index The index of the column.
+		 * @throw IndexOutOfBoundsException If index is >= number of columns.
+		 */
+		vector<string> & getColumn(unsigned int index) throw (IndexOutOfBoundsException);
+		/**
+		 * @return The values in the given column.
+		 * @param index The index of the column.
+		 * @throw IndexOutOfBoundsException If index is >= number of columns.
+		 */
 		const vector<string> & getColumn(unsigned int index) const throw (IndexOutOfBoundsException);
-		      vector<string> & getColumn(const string & colName)       throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
+		
+		/**
+		 * @return The values in the given column.
+		 * @param colName The name of the column.
+		 * @throw NoTableColumnNamesException If no column names are associated to this table.
+		 * @throw TableColumnNameNotFoundException If colName do not match existing column names. 
+		 */
+		vector<string> & getColumn(const string & colName) throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
+		/**
+		 * @return The values in the given column.
+		 * @param colName The name of the column.
+		 * @throw NoTableColumnNamesException If no column names are associated to this table.
+		 * @throw TableColumnNameNotFoundException If colName do not match existing column names. 
+		 */
 		const vector<string> & getColumn(const string & colName) const throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
+
+		/**
+		 * @brief Delete the given column.
+		 * 
+		 * @param index The index of the column.
+		 * @throw IndexOutOfBoundsException If index is >= number of columns.
+		 */
 		void deleteColumn(unsigned int index) throw (IndexOutOfBoundsException);
+		
+		/**
+		 * @brief Delete the given column.
+		 * 
+		 * @param colName The name of the column.
+		 * @throw NoTableColumnNamesException If no column names are associated to this table.
+		 * @throw TableColumnNameNotFoundException If colName do not match existing column names. 
+		 */
+		void deleteColumn(const string & colName) throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
+	
+		/**
+		 * @brief Add a new column.
+		 *
+		 * @param newColumn The new column values.
+		 * @throw DimensionException If the number of values does not match the number of rows.
+		 * @throw TableColumnNamesException If the table has row names.
+		 */
 		void addColumn(const vector<string> & newColumn) throw (DimensionException, TableColumnNamesException);
+		/**
+		 * @brief Add a new column.
+		 *
+		 * @param colName   The name of the column.
+		 * @param newColumn The new column values.
+		 * @throw DimensionException If the number of values does not match the number of rows.
+		 * @throw NoTableColumnNamesException If the table does not have row names.
+		 * @throw DuplicatedTableColumnNameException If colName is already used.
+		 */
 		void addColumn(const string & colName, const vector<string> & newColumn) throw (DimensionException, NoTableColumnNamesException, DuplicatedTableColumnNameException);
 		/** @} */
     
@@ -205,14 +243,85 @@ class DataTable {
 		 *
 		 * @{
 		 */
+		
+		/**
+		 * @return The number of rows in this table.
+		 */
+		unsigned int getNumberOfRows() const { return _nRow; }
+
+		/**
+		 * @brief Set the row names of this table.
+		 * 
+		 * @param rowNames The row names.
+		 * @throw DimensionException If the number of names do not match the number of rows in the table.
+		 * @throw DuplicatedTableRowNameException If names are not unique.
+		 */
+		void setRowNames(const vector<string> & rowNames) throw (DimensionException, DuplicatedTableRowNameException);
+
+		/**
+		 * @brief Get the row names of this table.
+		 * 
+		 * @return The row names of this table.
+		 * @throw NoTableRowNamesException If no row names are associated to this table.
+		 */
+		vector<string> getRowNames() const throw (NoTableRowNamesException);
+
+		/**
+		 * @brief Get a given row name.
+		 * 
+		 * @param index The index of the row.
+		 * @return The row name associated to the given row.
+		 * @throw NoTableRowNamesException If no row names are associated to this table.
+		 * @throw IndexOutOfBoundsException If index is >= number of rows.
+		 */
+		string getRowName(unsigned int index) const throw (NoTableRowNamesException, IndexOutOfBoundsException);
+
+		/**
+		 * @return true If row names are associated to this table.
+		 */
+		bool hasRowNames() const { return _rowNames!= NULL; }
+
+		/**
+		 * @brief Delete the given row.
+		 * 
+		 * @param index The index of the row.
+		 * @throw IndexOutOfBoundsException If index is >= number of row.
+		 */
 		void deleteRow(unsigned int index) throw (IndexOutOfBoundsException);
+
+		/**
+		 * @brief Delete the given row.
+		 * 
+		 * @param rowName The name of the row.
+		 * @throw NoTableRowNamesException If no row names are associated to this table.
+		 * @throw TableRowNameNotFoundException If rowName do not match existing column names. 
+		 */
+		void deleteRow(const string & rowName) throw (NoTableRowNamesException, TableRowNameNotFoundException);
+		
+		/**
+		 * @brief Add a new row.
+		 *
+		 * @param newRow The new row values.
+		 * @throw DimensionException If the number of values does not match the number of columns.
+		 * @throw TableRowNamesException If the table has column names.
+		 */
 		void addRow(const vector<string> & newRow) throw (DimensionException, TableRowNamesException);
+		/**
+		 * @brief Add a new row.
+		 *
+		 * @param rowName   The name of the row.
+		 * @param newRow    The new row values.
+		 * @throw DimensionException If the number of values does not match the number of columns.
+		 * @throw NoTableRowNamesException If the table does not have column names.
+		 * @throw DuplicatedTableRowNameException If rowName is already used.
+		 */
 		void addRow(const string & rowName, const vector<string> & newRow) throw (DimensionException, NoTableRowNamesException, DuplicatedTableRowNameException);
 		/** @} */
 
 	public:
+
 		/**
-		 * @brief Read a table form a CSV file.
+		 * @brief Read a table form a stream in CSV-like format.
 		 *
 		 * The number of rows is given by the second line in the file.
 		 * By default, if the first line as one column less than the second one,
@@ -229,7 +338,15 @@ class DataTable {
 		static DataTable * read(istream & in, const string & sep = "\t", bool header=true, int rowNames=-1)
 			throw (DimensionException, IndexOutOfBoundsException, DuplicatedTableRowNameException);
 
-		static void write(const DataTable & data, ostream & out, const string & sep = "\t");
+		/**
+		 * @brief Write a DataTable object to stream in CVS-like format.
+		 * 
+		 * @param data     The table to write.
+		 * @param out      The output stream.
+		 * @param sep      The column delimiter.
+		 */
+			static void write(const DataTable & data, ostream & out, const string & sep = "\t");
 };
 
-#endif //_DataFrame_H_
+#endif //_DataTable_H_
+

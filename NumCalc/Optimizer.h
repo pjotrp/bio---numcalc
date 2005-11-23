@@ -50,9 +50,9 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 
 /**
- * @brief This is the base interface for all optimization methods.
+ * @brief This is the basal interface for all optimization methods.
  * 
- * An optimizer will deal with object that implement the Optimizable interface.
+ * An optimizer deals with Function objects.
  */
 class Optimizer
 {
@@ -66,29 +66,30 @@ class Optimizer
 		 * @brief Set the initial values of the parameters.
 		 *
 		 * @param params The initial values of parameters.
+		 * @throw Exception If a problem occured during initialization.
 		 */
 		virtual void init(const ParameterList & params) throw (Exception) = 0;
 
 		/**
-		 * @brief Perform a step optimization.
+		 * @brief Perform an optimization step.
 		 *
 		 * @return the value of the function after this step.
+		 * @throw Exception If a problem occured during optimization.
 		 */
 		virtual double step() throw (Exception) = 0;
 
 		/**
-		 * @brief Get the current parameters.
-		 *
-		 * @return The current parameters.
+		 * @return The parameters with their current values.
 		 */
 		virtual ParameterList getParameters() const = 0;
 		
 		/**
-		 * @brief Get the corresponding function evaluation.
+		 * @brief Get the current function value.
 		 *
 		 * @return The value of the function at the point specified by _parameters.
+		 * @throw NullPointerException If no function is associated with this optimizer.
 		 */
-		virtual double getFunctionValue() const = 0;
+		virtual double getFunctionValue() const throw (NullPointerException) = 0;
 		
 		/**
 		 * @brief Perform as many optimization steps untill the stop condition is met.
@@ -105,11 +106,18 @@ class Optimizer
 		virtual void setFunction(Function * function) = 0;
 		
 		/**
-		 * @brief Get the whole Optimizable object.
+		 * @brief Get the current function being optimized.
 		 *
-		 * @return A const pointer toward the object to be optimized.
+		 * @return A const pointer toward the function being optimized.
 		 */
 		virtual const Function * getFunction() const = 0;
+
+		/**
+		 * @brief Get the current function being optimized.
+		 *
+		 * @return A const pointer toward the function being optimized.
+		 */
+		virtual Function * getFunction() = 0;
 
 		/**
 		 * @brief Set the message handler for this optimizer.
@@ -117,6 +125,8 @@ class Optimizer
 		 * The message handler keeps all messages that the optimizer may send.
 		 * The default handler is set to standard output, but you can pass any
 		 * ostream object (cerr, ofstream, etc.).
+		 *
+		 * A NULL pointer disables message output.
 		 *
 		 * @param mh The message handler to use.
 		 */
@@ -129,38 +139,55 @@ class Optimizer
 		 * The default profiler is set to standard output, but you can pass any
 		 * ostream object (cerr, ofstream, etc.).
 		 *
+		 * A NULL pointer disables message output.
+		 * 
 		 * @param profiler The profiler to use.
 		 */
 		virtual void setProfiler(ostream * profiler) = 0;
 		
 		/**
-		 * @brief Get the number of function evaluation done since call of
-		 * the init function.
+		 * @brief Get the number of function evaluations performed since the
+		 * call of the init function.
 		 *
-		 * @return the number of function evaluations.
+		 * @return The number of function evaluations.
 		 */
 		virtual	int getNumberOfEvaluations() const = 0;
 		
 		/**
-		 * @brief Set the stopping condition of the optimization algorithm.
+		 * @brief Set the stop condition of the optimization algorithm.
 		 *
-		 * @param stopCondition The stoping condition to use while optimizing.
+		 * @param stopCondition The stop condition to use while optimizing.
+		 * @see OptimizationStopCondition.
 		 */
 		virtual void setStopCondition(OptimizationStopCondition * stopCondition) = 0;
 
 		/**
-		 * @brief Get the stopping condition of the optimization algorithm.
+		 * @brief Get the stop condition of the optimization algorithm.
 		 *
-		 * @return The stopping condition used while optimizing.
+		 * @return The stop condition used while optimizing.
 		 */
 		virtual OptimizationStopCondition * getStopCondition() = 0;
 
 		/**
-		 * @brief Get the default stopping condition of the optimization algorithm.
+		 * @brief Get the stop condition of the optimization algorithm.
 		 *
-		 * @return The default stopping condition used while optimizing.
+		 * @return The stop condition used while optimizing.
+		 */
+		virtual const OptimizationStopCondition * getStopCondition() const = 0;
+
+		/**
+		 * @brief Get the default stop condition of the optimization algorithm.
+		 *
+		 * @return The default stop condition used while optimizing.
 		 */
 		virtual OptimizationStopCondition * getDefaultStopCondition() = 0;
+		
+		/**
+		 * @brief Get the default stop condition of the optimization algorithm.
+		 *
+		 * @return The default stop condition used while optimizing.
+		 */
+		virtual const OptimizationStopCondition * getDefaultStopCondition() const = 0;
 		
 		/**
 		 * @brief Tell if the tolerance level is reached.
@@ -176,6 +203,13 @@ class Optimizer
 		 * @return Whether the maximum number of function evaluations is reached or not.
 		 */
 		virtual bool isMaximumNumberOfEvaluationsReached() const = 0;
+
+		/**
+		 * @brief Set the maximum number of function evaluation to perform during optimization.
+		 *
+		 * @param max The maximum number of evaluations to perform.
+		 */
+		virtual void setMaximumNumberOfEvaluations(unsigned int max) = 0;
 
 		/**
 		 * @brief Set the verbose level.
@@ -215,3 +249,4 @@ class Optimizer
 };
 
 #endif	//_OPTIMIZER_H_
+

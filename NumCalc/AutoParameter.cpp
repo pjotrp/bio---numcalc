@@ -1,5 +1,5 @@
 //
-// File: AutoParameter.h
+// File: AutoParameter.cpp
 // Created by: Julien Dutheil
 // Created on: Tue Nov 11 22:15:16 2003
 //
@@ -66,10 +66,11 @@ AutoParameter::AutoParameter(const AutoParameter & p): Parameter(p)
 	_messageHandler = p._messageHandler;
 }
 
-AutoParameter & AutoParameter::operator=(const Parameter & p) {
-	name       = p.getName();
-	value      = p.getValue();
-	constraint = p.getConstraint();
+AutoParameter & AutoParameter::operator=(const Parameter & p)
+{
+	_name       = p.getName();
+	_value      = p.getValue();
+	_constraint = p.getConstraint();
 	try {
 		_messageHandler = dynamic_cast<const AutoParameter &>(p)._messageHandler;
 	} catch(exception e) {
@@ -78,28 +79,21 @@ AutoParameter & AutoParameter::operator=(const Parameter & p) {
 	return * this;	
 }
 
-/** Destructor: ***************************************************************/
-
-AutoParameter::~AutoParameter() {}
-
-/** Clonable interface: *******************************************************/
-
-Clonable * AutoParameter::clone() const { return new AutoParameter(* this); }
-
 /******************************************************************************/
 	
-void AutoParameter::setValue(double value) throw (ConstraintException) {
+void AutoParameter::setValue(double value) throw (ConstraintException)
+{
 	try { // First we try to assign this value:
 		Parameter::setValue(value);
 	} catch (ConstraintException & ce) { // Aie, there's a pb here...
 		if(_messageHandler != NULL) {
 			(* _messageHandler) << "Constraint match at parameter ";
-			(* _messageHandler) << name;
+			(* _messageHandler) << _name;
 			(* _messageHandler) << ", badValue = ";
 			(* _messageHandler) << ce.getBadValue();
 			(* _messageHandler) << endl;
 		}
-		double limit = constraint -> getLimit(value);
+		double limit = _constraint -> getLimit(value);
 		try { // We try to assign the limit then.
 			Parameter::setValue(limit);
 		} catch(ConstraintException & ce2) { // Aie, the limit is not reachable, so we perform a smaller step...
@@ -117,6 +111,3 @@ void AutoParameter::setValue(double value) throw (ConstraintException) {
 
 /******************************************************************************/
 
-void AutoParameter::setMessageHandler(ostream * mh) { _messageHandler = mh; }
-
-/******************************************************************************/

@@ -62,8 +62,8 @@ GammaDiscreteDistribution::GammaDiscreteDistribution(unsigned int n, double alph
 	applyParameters(n);
 }
 
-
-GammaDiscreteDistribution::~GammaDiscreteDistribution() {
+GammaDiscreteDistribution::~GammaDiscreteDistribution()
+{
 	delete _alphaConstraint;
 }
 

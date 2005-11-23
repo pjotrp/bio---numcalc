@@ -1,49 +1,11 @@
 //
 // File: AbstractOptimizer.cpp
-// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Mon Dec 22 12:18:09 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour le calcul numérique.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -97,63 +59,13 @@ AbstractOptimizer::AbstractOptimizer(Function * function): _function(function)
 }
 
 /******************************************************************************/
-
-AbstractOptimizer::~AbstractOptimizer() {}
 	
-/******************************************************************************/
-	
-void AbstractOptimizer::init(const ParameterList & params) throw (Exception) {
+void AbstractOptimizer::init(const ParameterList & params) throw (Exception)
+{
 	_parameters = params;
 	     if(_constraintPolicy == CONSTRAINTS_AUTO)   autoParameter();
 	else if(_constraintPolicy == CONSTRAINTS_IGNORE) ignoreConstraints();
 	_tolIsReached = false;
-}
-
-/******************************************************************************/
-
-ParameterList AbstractOptimizer::getParameters() const { return _parameters; }
-
-/******************************************************************************/
-
-void AbstractOptimizer::setMessageHandler(ostream * mh) { _messageHandler = mh; }
-
-/******************************************************************************/
-
-void AbstractOptimizer::setProfiler(ostream * profiler) { _profiler = profiler; }
-
-/******************************************************************************/
-
-void AbstractOptimizer::setStopCondition(
-	OptimizationStopCondition * stopCondition)
-{
-	_stopCondition = stopCondition;
-}
-
-/******************************************************************************/
-
-OptimizationStopCondition * AbstractOptimizer::getStopCondition()
-{
-	return _stopCondition;
-}
-
-/******************************************************************************/
-
-OptimizationStopCondition * AbstractOptimizer::getDefaultStopCondition()
-{
-	return _defaultStopCondition;
-}
-
-/******************************************************************************/
-
-bool AbstractOptimizer::isToleranceReached() const
-{
-	return _tolIsReached;
-}
-
-/******************************************************************************/
-
-bool AbstractOptimizer::isMaximumNumberOfEvaluationsReached() const {
-	return _nbEval >= _nbEvalMax;
 }
 
 /******************************************************************************/
@@ -225,24 +137,11 @@ void AbstractOptimizer::ignoreConstraints()
 	}
 }
 
-/** Constraint policy: ********************************************************/
-
-void AbstractOptimizer::setConstraintPolicy(const string & constraintPolicy)
-{ _constraintPolicy = constraintPolicy; }
-
-string AbstractOptimizer::getConstraintPolicy() const { return _constraintPolicy; }
+/******************************************************************************/
 
 string AbstractOptimizer::CONSTRAINTS_AUTO   = "auto";
 string AbstractOptimizer::CONSTRAINTS_IGNORE = "ignore";
 string AbstractOptimizer::CONSTRAINTS_KEEP   = "keep";
-
-/******************************************************************************/
-
-void AbstractOptimizer::setMaximumNumberOfEvaluations(int max) { _nbEvalMax = max; }
-
-/******************************************************************************/
-
-int AbstractOptimizer::getNumberOfEvaluations() const { return _nbEval; }
 
 /******************************************************************************/
 

@@ -5,45 +5,7 @@
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (19 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour le calcul numérique.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 19, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -86,6 +48,22 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <iostream>
 using namespace std;
 
+/**
+ * @brief Interface for discret distribution objects.
+ *
+ * A discrete distribution usually contains a finite set of
+ * categories and a probability associated to each.
+ * 
+ * Each category (or class) is defined by two bounds, and sometimes by
+ * a mean or a median value.
+ *
+ * A discrete distribution may contain one or several parameters.
+ * The probabilities associated to each class usually depends on
+ * the parameter values.
+ * In some cases, the number and/or bounds of the classes may also 
+ * depend on the parameters values, depending on the kind of
+ * discretization used.
+ */
 class DiscreteDistribution: public virtual Parametrizable
 {
 	public:
@@ -93,29 +71,104 @@ class DiscreteDistribution: public virtual Parametrizable
 		virtual ~DiscreteDistribution() {}
 	
 	public:
+		
+		/**
+		 * @return The number of categories.
+		 */
 		virtual unsigned int getNumberOfCategories() const = 0;
+		
+		/**
+		 * @param categoryIndex Class index.
+		 * @return The value associated to a given class.
+		 */
 		virtual double getCategory(unsigned int categoryIndex) const = 0;
+		
+		/**
+		 * @param categoryIndex Class index.
+		 * @return The probability associated to a given class.
+		 */
 		virtual double getProbability(unsigned int categoryIndex) const = 0;
-		virtual double getProbability(double category) const = 0;
-		virtual Vdouble getCategories() const = 0;
-		virtual Vdouble getProbabilities() const = 0;
-		virtual void set(double category, double probability) = 0;
-		virtual void add(double category, double probability) = 0;
-		//Pr(x < category):
-		virtual double  getInfCumulativeProbability(double category) const = 0;
-		//Pr(x <= category):
-		virtual double getIInfCumulativeProbability(double category) const = 0;
-		//Pr(x > category):
-		virtual double  getSupCumulativeProbability(double category) const = 0;
-		//Pr(x >= category):
-		virtual double getSSupCumulativeProbability(double category) const = 0;
-	
-		virtual double rand() const = 0;
-
-    virtual Domain getDomain() const = 0;
 
 		/**
-		 * @brief Print the distribution (categories and corresponding probabilities).
+		 * @param category The value associated to the class.
+		 * @return The probability associated to a given class.
+		 */
+		virtual double getProbability(double category) const = 0;
+
+		/**
+		 * @return A vector with all classes values.
+		 */
+		virtual Vdouble getCategories() const = 0;
+		/**
+		 * @return A vector with all probabilities.
+		 */
+		virtual Vdouble getProbabilities() const = 0;
+
+		/**
+		 * @brief Set the probability associated to a class.
+		 *
+		 * If the category does not exist, a new category is created
+		 * with the corresponding probability.
+		 * If the category already exist, its probability is set to 'probability'.
+		 * The sum of all probabilities is not checked.
+		 * 
+		 * @param category The class value.
+		 * @param probability The class probability.
+		 */
+		virtual void set(double category, double probability) = 0;
+		
+		/**
+		 * @brief Modify the probability associated to a class.
+		 *
+		 * If the category does not exist, a new category is created
+		 * with the corresponding probability.
+		 * if the category exists, add 'probability' to the existing probability.
+		 * The sum of all probabilities is not checked.
+		 * 
+		 * @param category The class value.
+		 * @param probability The class probability.
+		 */
+		virtual void add(double category, double probability) = 0;
+
+		/**
+		 * @return \f$Pr(x < \mbox{category})\f$.
+		 * @param category The class value.
+		 */
+		virtual double  getInfCumulativeProbability(double category) const = 0;
+		/**
+		 * @return \f$Pr(x \leq \mbox{category})\f$.
+		 * @param category The class value.
+		 */
+		virtual double getIInfCumulativeProbability(double category) const = 0;
+		/**
+		 * @return \f$Pr(x > \mbox{category})\f$.
+		 * @param category The class value.
+		 */
+		virtual double  getSupCumulativeProbability(double category) const = 0;
+		/**
+		 * @return \f$Pr(x \geq \mbox{category})\f$.
+		 * @param category The class value.
+		 */
+		virtual double getSSupCumulativeProbability(double category) const = 0;
+	
+		/**
+		 * @brief Draw a random number from this distribution.
+		 *
+		 * This number will be one of the class values, drawn according
+		 * to the class probabilities.
+		 * 
+		 * @return A random number according to this distribution.
+		 */
+		virtual double rand() const = 0;
+
+    /**
+		 * @return The domain associated to classes of this distribution.
+		 * @see Domain
+		 */
+		virtual Domain getDomain() const = 0;
+
+		/**
+		 * @brief Print the distribution (categories and corresponding probabilities) to a stream.
 		 *
 		 * @param out The outstream where to print the distribution.
 		 */
@@ -124,3 +177,4 @@ class DiscreteDistribution: public virtual Parametrizable
 };
 
 #endif	//_DISCRETEDISTRIBUTION_H_
+

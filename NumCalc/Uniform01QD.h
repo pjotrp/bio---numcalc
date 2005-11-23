@@ -4,6 +4,7 @@
 // Last modification : Friday September 24 2004
 //
 //
+
 /*
 Copyright or © or Copr. CNRS, (November 17, 2004)
 
@@ -79,4 +80,6 @@ class Uniform01QD : public RandomFactory {
 	protected:
 		mutable long _seed;
 };
+
 #endif // _UNIFORM01QD_H_
+

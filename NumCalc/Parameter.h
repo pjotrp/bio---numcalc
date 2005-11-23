@@ -1,6 +1,6 @@
 //
 // File: Parameter.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Wed Oct 15 15:40:47 2003
 //
 
@@ -52,19 +52,19 @@ knowledge of the CeCILL license and that you accept its terms.
 /**
  * @brief This class is designed to facilitate the manipulation of parameters.
  *
- * A parameter contains a <i>value</i> stored as a double.
- * It also contains a <i>name</i> and optionaly a Constraint.
- * The constraint object allows to apply restriction on the value of the parameter,
+ * A parameter object contains a <i>value</i> stored as a double.
+ * It also contains a <i>name</i> and optionaly a constraint.
+ * Constraint objects allows to apply restriction on the value of the parameter,
  * for instance positive number, or a particular interval and so on.
  *
- * @see ParameterList, Parametrizable
+ * @see ParameterList, Parametrizable, Constraint.
  */
 class Parameter: public Clonable
 {
 	protected:
-		string name;					//Parameter name
-		double value;					//Parameter value
-		const Constraint * constraint; 	//A constraint on the value
+		string _name;					//Parameter name
+		double _value;					//Parameter value
+		const Constraint * _constraint; 	//A constraint on the value
 	
 	public: // Class constructors and destructors:
 		
@@ -90,19 +90,20 @@ class Parameter: public Clonable
 		virtual Parameter & operator=(const Parameter & param);
 	
 		//Destructor:
-		virtual ~Parameter();
+		virtual ~Parameter() {}
 		
-	public: // The clonable interface is implemented here:
+	public:
 		
-		Clonable * clone() const;
+		Clonable * clone() const { return new Parameter(* this); }
 
 	public:
+
 		/**
 		 * @brief Set the name of this parameter.
 		 *
 		 * @param name the new parameter name.
 		 */
-		virtual void setName(const string & name);
+		virtual void setName(const string & name) { _name = name; }
 	
 		/**
 		 * @brief Set the value of this parameter.
@@ -116,31 +117,33 @@ class Parameter: public Clonable
 		 *
 		 * @return The parameter name.
 		 */
-		virtual string getName() const;
+		virtual string getName() const { return _name; }
 	
 		/**
 		 * @brief Get the value of this parameter.
 		 *
 		 * @return The parameter value.
 		 */
-		virtual double getValue() const;
+		virtual double getValue() const { return _value; }
 		
 		/**
 		 * @brief Return the constraint associated to this parameter if there is one.
 		 *
 		 * @return A pointer toward the constraint, or NULL if there is no constraint.
 		 */
-		virtual const Constraint * getConstraint() const;
+		virtual const Constraint * getConstraint() const { return _constraint; }
 
 		/**
 		 * @brief Tells if this parameter has a constraint.
 		 *
 		 * @return True if this parameter has a contraint.
 		 */
-		virtual bool hasConstraint() const;
+		virtual bool hasConstraint() const { return _constraint != NULL; }
 		
 		/**
-		 * @brief Remove the constraint assoviated to this parameter.
+		 * @brief Remove the constraint associated to this parameter.
+		 *
+		 * Warning! The contraint objet is not deleted.
 		 *
 		 * @return A pointer toward the formerly used contraint.
 		 */
@@ -152,3 +155,4 @@ class Parameter: public Clonable
 };
 
 #endif	//_PARAMETER_H_
+

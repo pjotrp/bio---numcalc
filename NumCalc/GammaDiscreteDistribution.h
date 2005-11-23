@@ -1,6 +1,6 @@
 //
 // File: GammaDiscreteDistribution.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Sun Oct 26 20:36:12 2003
 //
 
@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AbstractDiscreteDistribution.h"
 #include "Constraints.h"
 
+/**
+ * @brief Discretized Gamma distribution.
+ */
 class GammaDiscreteDistribution : public AbstractDiscreteDistribution
 {
 	protected:
@@ -67,7 +70,6 @@ class GammaDiscreteDistribution : public AbstractDiscreteDistribution
 		static vector<double> computeValues(unsigned int nbClasses, double alfa, double beta, bool median);
 		
 };
-
 
 #endif	//_GAMMADISCRETEDISTRIBUTION_H_
 

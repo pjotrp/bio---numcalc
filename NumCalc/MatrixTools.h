@@ -37,8 +37,6 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-
-
 #ifndef _MATRIXTOOLS_H_
 #define _MATRIXTOOLS_H_
 
@@ -50,6 +48,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <iostream>
 using namespace std;
 
+/**
+ * @brief Functions dealing with matrices.
+ */
 class MatrixTools
 {
 	public:
@@ -58,12 +59,20 @@ class MatrixTools
 
 	public:
 
+		/**
+		 * @return A copy of the given matrix.
+		 * @param A original matrix.
+		 */
 		template<class Matrix>
 		static Matrix copy(const Matrix & A)
 		{
 			return Matrix(A);
 		}
 	
+		/**
+		 * @return A identity matrix of size n.
+		 * @param n the size of the matrix.
+		 */
 		template<class Matrix>
 		static Matrix getId(unsigned int n)
 		{
@@ -74,6 +83,10 @@ class MatrixTools
 			return id;
 		}
 
+		/**
+		 * @return A diagonal matrix with diagonal elements taken from a vector.
+		 * @param d A vector of diagonal elements.
+		 */
 		template<class Matrix, class T>
 		static Matrix diag(const vector<T> & d)
 		{
@@ -85,6 +98,11 @@ class MatrixTools
 			return diago;
 		}
 
+		/**
+		 * @return The diagonal elements of a square matrix as a vector.
+		 * @param M The matrix.
+		 * @throw DimensionException If M is not a square matrix.
+		 */
 		template<class Matrix, class T>
 		static vector<T> diag(const Matrix & M) throw (DimensionException)
 		{
@@ -96,6 +114,11 @@ class MatrixTools
 			return diago;
 		}
 
+		/**
+		 * @brief Set all elements in M to value x.
+		 * @param M A matrix.
+		 * @param x The value to use.
+		 */
 		template<class Matrix, class Scalar>
 		static void fill(Matrix & M, Scalar x)
 		{
@@ -106,6 +129,15 @@ class MatrixTools
 			}
 		}
 
+		/**
+		 * @brief Multiply all elements of a matrix by a given value, and add a constant.
+		 *
+		 * Performs \f$\forall i \forall j m_{i,j} = a.m_{i,j}+b\f$.
+		 * 
+		 * @param X A matrix.
+		 * @param a Multiplicator.
+		 * @param b Constant.
+		 */
 		template<class Matrix, class Scalar>
 		static void scale(Matrix & X, Scalar a, Scalar b = 0) {
 			for(unsigned int i = 0; i < X.nRows(); i++) {
@@ -115,6 +147,11 @@ class MatrixTools
 			}
 		}
 
+		/**
+		 * @return The dot product of two matrices.
+		 * @param A First matrix.
+		 * @param B Second matrix.
+		 */
 		template<class MatrixA, class MatrixB>
 		static MatrixB mult(const MatrixA & A, const MatrixB & B) throw (DimensionException)
 		{
@@ -191,8 +228,15 @@ class MatrixTools
 			}
 		}		
 	
+		/**
+		 * @return \f$\prod_{i=1}^p m\f$.
+		 * @param m The matrix.
+		 * @param p The number of multiplications.
+		 * If p = 0, sends the identity matrix.
+		 * @throw DimensionException If m is not a square matrix.
+		 */
 		template<class Matrix>
-		static Matrix pow(const Matrix & m, int p) throw (DimensionException)
+		static Matrix pow(const Matrix & m, unsigned int p) throw (DimensionException)
 		{
 			unsigned int n = m.nRows();
 			if(n != m.nCols()) throw DimensionException("MatrixTools::pow(). nrows != ncols.", m.nCols(), m.nRows()); 
@@ -204,8 +248,12 @@ class MatrixTools
 			}
 		}
 	
+		/**
+		 * @return The position of the maximum value in the matrix.
+		 * @param m The matrix.
+		 */
 		template<class Matrix>
-		static vector<unsigned int> posmax(const Matrix & m)
+		static vector<unsigned int> whichmax(const Matrix & m)
 		{
 			unsigned int nrows = m.nRows();
 			unsigned int ncols = m.nCols();
@@ -229,8 +277,12 @@ class MatrixTools
 			return pos;
 		}
 
+		/**
+		 * @return The position of the minimum value in the matrix.
+		 * @param m The matrix.
+		 */
 		template<class Matrix>
-		static vector<unsigned int> posmin(const Matrix & m)
+		static vector<unsigned int> whichmin(const Matrix & m)
 		{
 			unsigned int nrows = m.nRows();
 			unsigned int ncols = m.nCols();
@@ -253,6 +305,12 @@ class MatrixTools
 			return pos;
 		}
 
+		/**
+		 * @brief Print a matrix to a stream.
+		 * 
+		 * @param m The matrix to print.
+		 * @param out The stream to use.
+		 */
 		template<class Matrix>
 		static void print(const Matrix & m, ostream & out = cout)
 		{
@@ -268,6 +326,12 @@ class MatrixTools
 			out << "]" << endl;
 		}
 		
+		/**
+		 * @brief Print a vector to a stream.
+		 * 
+		 * @param v The vector to print.
+		 * @param out The stream to use.
+		 */
 		template<class Real>
 		static void print(const vector<Real> & v, ostream & out = cout)
 		{
@@ -280,11 +344,20 @@ class MatrixTools
 			out << "]" << endl;
 		}
 
+		/**
+		 * @return True if the matrix is a square matrix.
+		 * @param A A matrix.
+		 */
 		template<class Matrix>
 		static bool isSquare(const Matrix & A) { return A.nRows() == A.nCols(); }
 
+		/**
+		 * @return The inverse matrix of A.
+		 * @param A The matrix to inverse.
+		 * @throw DimensionException If A is not a square matrix.
+		 */
 		template<class Real>
-		static RowMatrix<Real> inv(const Matrix<Real> & A)
+		static RowMatrix<Real> inv(const Matrix<Real> & A) throw (DimensionException)
 		{
 			if(! isSquare(A)) throw DimensionException("MatrixTools::inv(). Matrix A is not a square matrix.", A.nRows(), A.nCols());
 			LUDecomposition<Real> lu(A);
@@ -292,6 +365,10 @@ class MatrixTools
 			return lu.solve(I);
 		}
 
+		/**
+		 * @return The transposition of A.
+		 * @param A The matrix.
+		 */
 		template<class Real>
 		static RowMatrix<Real> transpose(const Matrix<Real> & A)
 		{

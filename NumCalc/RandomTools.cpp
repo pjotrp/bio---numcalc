@@ -40,9 +40,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "RandomTools.h"
 #include "Uniform01K.h"
 
-// Class destructor
-RandomTools::~RandomTools() {}
-
 RandomFactory * RandomTools::DEFAULT_GENERATOR = new Uniform01K(time(NULL));
 
 // Initiate random seed :

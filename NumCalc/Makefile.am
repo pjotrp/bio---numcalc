@@ -29,13 +29,13 @@ EigenValue.h\
 LUDecomposition.h\
 Parameter.h\
 Domain.h\
-MultiDimensionsOptimizationTools.h\
 ParameterList.h\
 RandomFactory.h\
 Uniform01K.h\
 Uniform01QD.h\
 Uniform01WH.h\
 DataTable.h\
+DataTableExceptions.h\
 parameters\
 optimizers\
 vectors\
@@ -45,8 +45,6 @@ random
 
 CPP_FILES = \
 AbstractOptimizer.cpp\
-Functions.cpp\
-Optimizer.cpp\
 AutoParameter.cpp\
 GammaDiscreteDistribution.cpp\
 Parameter.cpp\
@@ -56,9 +54,6 @@ ParameterExceptions.cpp\
 ConstantDistribution.cpp\
 IntervalData.cpp\
 ParameterList.cpp\
-Constraints.cpp\
-MultiDimensionsOptimizationTools.cpp\
-Parametrizable.cpp\
 AbstractDiscreteDistribution.cpp\
 SimpleDiscreteDistribution.cpp\
 SimpleMultiDimensions.cpp\
@@ -70,7 +65,6 @@ RandomTools.cpp\
 DownhillSimplexMethod.cpp\
 OptimizationStopCondition.cpp\
 VectorTools.cpp\
-VectorExceptions.cpp\
 Uniform01K.cpp\
 Uniform01QD.cpp\
 Uniform01WH.cpp\

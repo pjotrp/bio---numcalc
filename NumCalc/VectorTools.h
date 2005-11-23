@@ -61,9 +61,13 @@ typedef vector<Vint> VVint;
 typedef vector<VVint> VVVint;
 typedef vector<VVVint> VVVVint;
 
+/**
+ * @name Element-wise operations.
+ */
 namespace VectorOperators {
 
-template<class T> vector<T> operator+ (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
+template<class T> vector<T>
+	operator+ (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
 	unsigned int size;
 	if(v1.size() != v2.size()) {
@@ -78,7 +82,8 @@ template<class T> vector<T> operator+ (const vector<T> & v1, const vector<T> & v
 	return result;
 }
 
-template<class T> vector<T> operator- (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
+template<class T> vector<T>
+operator- (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
 	unsigned int size;
 	if(v1.size() != v2.size()) {
@@ -93,7 +98,8 @@ template<class T> vector<T> operator- (const vector<T> & v1, const vector<T> & v
 	return result;
 }
 
-template<class T> vector<T> operator* (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
+template<class T> vector<T>
+operator* (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
 	unsigned int size;
 	if(v1.size() != v2.size()) {
@@ -108,7 +114,8 @@ template<class T> vector<T> operator* (const vector<T> & v1, const vector<T> & v
 	return result;
 }
 
-template<class T> vector<T> operator/ (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
+template<class T> vector<T>
+operator/ (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
 	unsigned int size;
 	if(v1.size() != v2.size()) {
@@ -125,7 +132,8 @@ template<class T> vector<T> operator/ (const vector<T> & v1, const vector<T> & v
 
 
 
-template<class T, class C> vector<T> operator+ (const vector<T> & v1, const C & c)
+template<class T, class C>
+vector<T> operator+ (const vector<T> & v1, const C & c)
 {
 	vector<T> result(v1.size());
 	for(unsigned int i = 0; i < result.size(); i++) {
@@ -134,7 +142,8 @@ template<class T, class C> vector<T> operator+ (const vector<T> & v1, const C & 
 	return result;
 }
 
-template<class T, class C> vector<T> operator- (const vector<T> & v1, const C & c)
+template<class T, class C>
+vector<T> operator- (const vector<T> & v1, const C & c)
 {
 	vector<T> result(v1.size());
 	for(unsigned int i = 0; i < result.size(); i++) {
@@ -143,7 +152,8 @@ template<class T, class C> vector<T> operator- (const vector<T> & v1, const C & 
 	return result;
 }
 
-template<class T, class C> vector<T> operator* (const vector<T> & v1, const C & c)
+template<class T, class C>
+vector<T> operator* (const vector<T> & v1, const C & c)
 {
 	vector<T> result(v1.size());
 	for(unsigned int i = 0; i < result.size(); i++) {
@@ -152,7 +162,8 @@ template<class T, class C> vector<T> operator* (const vector<T> & v1, const C & 
 	return result;
 }
 
-template<class T, class C> vector<T> operator/ (const vector<T> & v1, const C & c)
+template<class T, class C>
+vector<T> operator/ (const vector<T> & v1, const C & c)
 {
 	vector<T> result(v1.size());
 	for(unsigned int i = 0; i < result.size(); i++) {
@@ -163,28 +174,32 @@ template<class T, class C> vector<T> operator/ (const vector<T> & v1, const C & 
 
 
 
-template<class T> void operator+= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
+template<class T>
+void operator+= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
 		v1[i] += v2[i];
 	}
 }
 
-template<class T> void operator-= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
+template<class T>
+void operator-= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
 		v1[i] -= v2[i];
 	}
 }
 
-template<class T> void operator*= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
+template<class T>
+void operator*= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
 		v1[i] *= v2[i];
 	}
 }
 
-template<class T> void operator/= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
+template<class T>
+void operator/= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
 		v1[i] /= v2[i];
@@ -193,28 +208,32 @@ template<class T> void operator/= (vector<T> & v1, const vector<T> & v2) throw (
 
 
 
-template<class T, class C> void operator+= (vector<T> & v1, const C & c)
+template<class T, class C>
+void operator+= (vector<T> & v1, const C & c)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
 		v1[i] += c;
 	}
 }
 
-template<class T, class C> void operator-= (vector<T> & v1, const C & c)
+template<class T, class C>
+void operator-= (vector<T> & v1, const C & c)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
 		v1[i] -= c;
 	}
 }
 
-template<class T, class C> void operator*= (vector<T> & v1, const C & c)
+template<class T, class C>
+void operator*= (vector<T> & v1, const C & c)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
 		v1[i] *= c;
 	}
 }
 
-template<class T, class C> void operator/= (vector<T> & v1, const C & c)
+template<class T, class C> 
+void operator/= (vector<T> & v1, const C & c)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
 		v1[i] /= c;
@@ -256,9 +275,9 @@ namespace VectorFunctions {
  *
  * @param v The vector to search.
  * @param which The element to search.
- * @retrun The position of which in v.
+ * @return The position of which in v.
  */
-template<class T> unsigned int pos(const vector<T> & v, const T & which) throw (ElementNotFoundException<T>)
+template<class T> unsigned int which(const vector<T> & v, const T & which) throw (ElementNotFoundException<T>)
 {
 	for(unsigned int i = 0; i < v.size(); i++)
 		if(v[i] == which) return i;
@@ -310,29 +329,54 @@ template<class T> bool isUnique(const vector<T> & v)
 	return true;
 }
 
+/**
+ * @return The product of all elements in a vector.
+ * @param v1 A vector.
+ */
 template<class T> T prod(const vector<T> & v1)
 {
 	T p = 1;
 	for(unsigned int i = 0; i < v1.size(); i++) p *= v1[i];
 	return p;
 }
+/**
+ * @return The product of all elements in a vector.
+ * @param v1 A vector.
+ */
 double prod(const Vdouble & v1);
 
-template<class T> T sum(const vector<T> & v1)
+/**
+ * @return The sum of all elements in a vector.
+ * @param v1 A vector.
+ */
+template<class T>
+T sum(const vector<T> & v1)
 {
 	T p = 0;
 	for(unsigned int i = 0; i < v1.size(); i++) p += v1[i];
 	return p;
 }
+/**
+ * @return The sum of all elements in a vector.
+ * @param v1 A vector.
+ */
 double sum(const Vdouble & v1);
 
-template<class T> vector<double> log(const vector<T> & v1)
+/**
+ * @name These methods apply the corresponding function to each element
+ * and return the result in a new vector.
+ *
+ * @{
+ */
+template<class T>
+vector<double> log(const vector<T> & v1)
 {
 	vector<double> v2(v1.size());
 	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::log(v1[i]);
 	return v2;
 }
-template<class T> vector<double> log(const vector<T> & v1, double base)
+template<class T>
+vector<double> log(const vector<T> & v1, double base)
 {
 	vector<double> v2(v1.size());
 	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::log(v1[i]) / std::log(base);
@@ -340,7 +384,8 @@ template<class T> vector<double> log(const vector<T> & v1, double base)
 }
 Vdouble log(const Vdouble & v1);
 
-template<class T> vector<double> exp(const vector<T> & v1)
+template<class T>
+vector<double> exp(const vector<T> & v1)
 {
 	vector<double> v2(v1.size());
 	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::exp(v1[i]);
@@ -348,7 +393,8 @@ template<class T> vector<double> exp(const vector<T> & v1)
 }
 Vdouble exp(const Vdouble & v1);
 
-template<class T> vector<double> log10(const vector<T> & v1)
+template<class T>
+vector<double> log10(const vector<T> & v1)
 {
 	vector<double> v2(v1.size());
 	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = std::log10(v1[i]);
@@ -356,29 +402,56 @@ template<class T> vector<double> log10(const vector<T> & v1)
 }
 Vdouble log10(const Vdouble & v1);
 
-template<class T> vector<T> fact(const vector<T> & v1)
+template<class T>
+vector<T> fact(const vector<T> & v1)
 {
 	vector<T> v2(v1.size());
 	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::fact<T>(v1[i]);
 	return v2;
 }
+/** @} */
 
-template<class T> void display(const vector<T> & v1)
+/**
+ * @brief Print a vector to a stream.
+ * @param v1 A vector.
+ * @param out A stream.
+ */
+template<class T>
+void print(const vector<T> & v1, ostream & out = cout)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
-		cout << v1[i] << " ";
+		out << v1[i] << " ";
 	}
-	cout << endl;
+	out << endl;
 }
-void display(const Vdouble & v1);
 
-//Scalar product:
+/**
+ * @brief Print a vector to a stream.
+ * @param v1 A vector.
+ * @param out A stream.
+ */
+void print(const Vdouble & v1, ostream & out = cout);
+
+/**
+ * @return The scalar product of two vectors.
+ * @param v1 First vector.
+ * @param v2 Second vector.
+ * @throw DimensionException If the two vector do not have the same length.
+ */
 double scalar(const Vdouble & v1, const Vdouble & v2) throw (DimensionException);
 
-//Norm of vector:
+/**
+ * @return The norm of a vector (\f$\sqrt{\sum_i^n x_i^2}\f$).
+ * @param v1 A vector.
+ */
 double norm(const Vdouble & v1);
 
-//Cosinus of angle:
+/**
+ * @return The cosinus of the angle of two vectors.
+ * @param v1 First vector.
+ * @param v2 Second vector.
+ * @throw DimensionException If the two vector do not have the same length.
+ */
 double cos(const Vdouble & v1, const Vdouble & v2) throw (DimensionException);
 
 /**
@@ -396,7 +469,9 @@ double cos(const Vdouble & v1, const Vdouble & v2) throw (DimensionException);
  * @return The minimum value in the vector.
  * @throw EmptyVectorException If the input vector is empty.
  */
-template<class T> T min(const vector<T> & v) throw (EmptyVectorException<T>) {
+template<class T> T
+min(const vector<T> & v) throw (EmptyVectorException<T>)
+{
 	if(v.size() == 0) throw EmptyVectorException<T>("VectorFunctions::min()", & v);
 	T mini = v[0];
 	for(unsigned int i = 1; i < v.size(); i++)
@@ -413,7 +488,9 @@ template<class T> T min(const vector<T> & v) throw (EmptyVectorException<T>) {
  * @return The maximum value in the vector.
  * @throw EmptyVectorException If the input vector is empty.
  */
-template<class T> T max(const vector<T> & v) throw (EmptyVectorException<T>) {
+template<class T> T
+max(const vector<T> & v) throw (EmptyVectorException<T>)
+{
 	if(v.size() == 0) throw EmptyVectorException<T>("VectorFuntions::max()", & v);
 	T maxi = v[0];
 	for(unsigned int i = 1; i < v.size(); i++)
@@ -431,12 +508,14 @@ template<class T> T max(const vector<T> & v) throw (EmptyVectorException<T>) {
  * @return The position of the minimum value in the vector.
  * @throw EmptyVectorException If the input vector is empty.
  */
-template<class T> int posmin(const vector<T> & v) throw (EmptyVectorException<T>) {
+template<class T>
+unsigned int posmin(const vector<T> & v) throw (EmptyVectorException<T>)
+{
 	T mini = min(v);
 	for(unsigned int i = 0; i < v.size(); i++)
 		if(v[i] == mini) return i;
-	// This can't happen:
-	return -1;
+	// This is never reached but must be here, otherwise a warning is issued:
+	return 0;
 }
 
 /**
@@ -449,12 +528,14 @@ template<class T> int posmin(const vector<T> & v) throw (EmptyVectorException<T>
  * @return The position of the maximum value in the vector.
  * @throw EmptyVectorException If the input vector is empty.
  */
-template<class T> int posmax(const vector<T> & v) throw (EmptyVectorException<T>) {
+template<class T>
+unsigned int whichmax(const vector<T> & v) throw (EmptyVectorException<T>)
+{
 	T maxi = max(v);
 	for(unsigned int i = 0; i < v.size(); i++)
 		if(v[i] == maxi) return i;
-	// This can't happen:
-	return -1;
+	// This is never reached but must be here, otherwise a warning is issued:
+	return 0;
 }
 
 /** @} */
@@ -462,26 +543,81 @@ template<class T> int posmax(const vector<T> & v) throw (EmptyVectorException<T>
 
 /******************************************************************************/
 
+/**
+ * @brief Statistical functions dealing with vectors.
+ *
+ * Template functions are provided, and functions for the Vdouble type.
+ */
 namespace VectorStatTools {
 
+/**
+ * @return The mean value of the vector.
+ * @param v1 A vector.
+ */
 template<class T> double mean(const vector<T> & v1) { return sum(v1) / v1.size(); }
+
+/**
+ * @return The mean value of the vector.
+ * @param v1 A vector.
+ */
 double mean(const Vdouble & v1);
 
-template<class T> double center(const vector<T> & v1) { return v1 - mean(v1); }
+/**
+ * @brief Set the mean of a vector to be 0.
+ * 
+ * @return A vector with mean 0.
+ * @param v1 A vector.
+ */
+template<class T>
+double center(const vector<T> & v1) { return v1 - mean(v1); }
+
+/**
+ * @brief Set the mean of a vector to be 0.
+ * 
+ * @return A vector with mean 0.
+ * @param v1 A vector.
+ */
 Vdouble center(const Vdouble & v1);
 
+/**
+ * @return The covariance of two vectors.
+ * To have a population estimate you have to multiply by \f$\frac{n}{n-1}\f$.
+ * @param v1 First vector.
+ * @param v2 Second vector.
+ * @throw DimensionException If the two vector do not have the same length.
+ */
 double cov(const Vdouble & v1, const Vdouble & v2) throw (DimensionException);
 
+/**
+ * @return The variance of the vector.
+ * To have a population estimate you have to multiply by \f$\frac{n}{n-1}\f$.
+ * @param v1 The sample vector.
+ */
 double var(const Vdouble & v1);
 
+/**
+ * @return The variance of the vector.
+ * To have a population estimate you have to multiply by \f$\sqrt{\frac{n}{n-1}}\f$.
+ * @param v1 The sample vector.
+ */
 double sd(const Vdouble & v1);
 
+/**
+ * @return The Pearson correlation coefficient of two vectors.
+ * @param v1 First vector.
+ * @param v2 Second vector.
+ * @throw DimensionException If the two vector do not have the same length.
+ */
 double cor(const Vdouble & v1, const Vdouble & v2) throw (DimensionException);
 
+/**
+ * @return The Shannon entropy indice of the vector.
+ * @param v1 The vector.
+ * @param base The base of the logarithm to use.
+ */
 double shannon(const Vdouble & v1, double base = 2.7182818);
 
 }
 
-/******************************************************************************/
-
 #endif	//_VECTORTOOLS_H_
+

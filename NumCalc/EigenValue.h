@@ -55,6 +55,8 @@ using namespace std;
 /** 
  * @brief Computes eigenvalues and eigenvectors of a real (non-complex) matrix. 
  * 
+ * [This class and its documentation is adpated from the C++ port of the JAMA library.]
+ * 
  * If A is symmetric, then A = V*D*V' where the eigenvalue matrix D is
  * diagonal and the eigenvector matrix V is orthogonal. That is,
  * the diagonal values of D are the eigenvalues, and
@@ -94,8 +96,6 @@ using namespace std;
  *
  * (Adapted from JAMA, a Java Matrix Library, developed by jointly 
  *	by the Mathworks and NIST; see  http://math.nist.gov/javanumerics/jama).
- * 
- * (Adapted from the C++ JAMA port).
  */
 template <class Real>
 class EigenValue
@@ -940,7 +940,7 @@ class EigenValue
       }
    }
 
-public:
+	public:
 
 
    /**
@@ -948,7 +948,6 @@ public:
 		*
 		* @param A    Square real (non-complex) matrix
     */
-
    EigenValue(Matrix<Real> &A)
 	 {
       n = A.nCols();

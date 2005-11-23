@@ -1,49 +1,11 @@
 //
 // File: DownhillSimplexMethod.h
-// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Tue Nov  4 17:10:05 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour l'analyse de données phylogénétiques.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for phylogenetic data analysis.
@@ -86,6 +48,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 /**
  * @brief This implements the Downhill Simplex method in multidimensions.
+ *
  * The code is an adaptation of the one discribed in:
  * <pre>
  * NUMERICAL RECIPES IN C: THE ART OF SCIENTIFIC COMPUTING
@@ -125,7 +88,7 @@ class DownhillSimplexMethod: public AbstractOptimizer
 		ParameterList _pSum;
 		int _iHighest, _iNextHighest, _iLowest;
 	
-	public: // constructor and destructor:
+	public:
 
 		/**
 		 * @brief Build a new Downhill Simplex optimizer.
@@ -134,9 +97,14 @@ class DownhillSimplexMethod: public AbstractOptimizer
 		 */
 		DownhillSimplexMethod(Function * function);
 	
-		virtual ~DownhillSimplexMethod();
+		virtual ~DownhillSimplexMethod() { delete _defaultStopCondition; }
 	
-	public: // The Optimizer interface:
+	public:		
+		/**
+		 * @name The Optimizer interface.
+		 *
+		 * @{
+		 */
 		
 		void init(const ParameterList & params) throw (Exception); //redefinition
 	
@@ -146,17 +114,26 @@ class DownhillSimplexMethod: public AbstractOptimizer
 		 * @brief Multidimensional minimization of the function _function by the
 		 * downhill simplex method of Nelder and Mead.
 		 *
-		 * The simplex <i>p</i>[1..nDim+1][1..nDim]
-		 * is input. Its <i>nDim+1</i> rows are nDim-dimensional vectors which are the vertices
-		 * of the starting simplex. Also input is the vector <i>y</i>[1..nDim+1], whose components
-		 * must be preinitialized to the values of _function evaluated at the <i>nDim + 1</i>
-		 * vertices (rows). On output, <i>p</i> and <i>y</i> will have been reset to <i>nDim + 1</i>
-		 * new points all within <i>fTol</i> of a minimum function value.
+		 * The simplex \f$p_{1..nDim+1,1..nDim}\f$.
+		 * is input. Its \f$nDim+1\f$ rows are nDim-dimensional vectors which are the vertices
+		 * of the starting simplex.
+		 * Also input is the vector \f$y_{1..nDim+1}\f$, whose components
+		 * must be preinitialized to the values of _function evaluated at the \f$nDim + 1\f$
+		 * vertices (rows).
+		 * On output, \f$p\f$ and \f$y\f$ will have been reset to \f$nDim + 1\f$
+		 * new points all within @c fTol of a minimum function value.
 		 */
 		double optimize() throw (Exception);
-		double getFunctionValue() const throw (Exception);
+		double getFunctionValue() const throw (NullPointerException);
+		/** @} */
 	
 	protected:
+		
+		/**
+		 * @name Specific inner methods
+		 *
+		 * @{
+		 */
 		
 		/**
 		 * @brief Update the _pSum variable.
@@ -171,7 +148,9 @@ class DownhillSimplexMethod: public AbstractOptimizer
 		 * @return The value of the function for the new point.
 		 */
 		double amotry(double fac);
+
+		/** @} */
 };
 
-
 #endif	//_DOWNHILLSIMPLEXMETHOD_H_
+

@@ -308,12 +308,12 @@ Vdouble VectorFunctions::log10(const Vdouble & v1)
 
 /******************************************************************************/
 
-void VectorFunctions::display(const Vdouble & v1)
+void VectorFunctions::print(const Vdouble & v1, ostream & out)
 {
 	for(unsigned int i = 0; i < v1.size(); i++) {
-		cout << v1[i] << " ";
+		out << v1[i] << " ";
 	}
-	cout << endl;
+	out << endl;
 }
 
 /******************************************************************************/
@@ -393,3 +393,4 @@ double VectorStatTools::shannon(const Vdouble & v1, double base)
 }
 
 /*****************************************************************************/
+

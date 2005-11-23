@@ -1,49 +1,11 @@
 //
 // File: AbstractOptimizer.h
-// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Mon Dec 22 12:18:09 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour le calcul numérique.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -81,7 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Optimizer.h"
 
 /**
- * @brief This class offers a basic implementation of the Optimizer interface.
+ * @brief Partial implementation of the Optimizer interface.
  */
 class AbstractOptimizer: public virtual Optimizer
 {
@@ -157,7 +119,7 @@ class AbstractOptimizer: public virtual Optimizer
 
 	public:
 		AbstractOptimizer(Function * function);
-		virtual ~AbstractOptimizer();
+		virtual ~AbstractOptimizer() {}
 	
 	public:
 		
@@ -167,27 +129,39 @@ class AbstractOptimizer: public virtual Optimizer
 		 * @{
 		 */
 		void init(const ParameterList & params) throw (Exception);
-		ParameterList getParameters() const;
+		ParameterList getParameters() const { return _parameters; }
 		void setFunction(Function * function) { _function = function; if(function != NULL) _stopCondition -> init(); }
 		const Function * getFunction() const { return _function; }
-		double getFunctionValue() const throw (Exception)
+		Function * getFunction() { return _function; }
+		double getFunctionValue() const throw (NullPointerException)
 		{
-			if(_function == NULL) throw Exception("AbstractOptimizer::getFunctionValue. No function associated to this optimizer.");
+			if(_function == NULL) throw NullPointerException("AbstractOptimizer::getFunctionValue. No function associated to this optimizer.");
 			return _function -> getValue();
 		}
-		void setMessageHandler(ostream * mh);
-		void setProfiler(ostream * profiler);
-		int getNumberOfEvaluations() const;
-		void setStopCondition(OptimizationStopCondition * stopCondition);
-		OptimizationStopCondition * getStopCondition();
-		OptimizationStopCondition * getDefaultStopCondition();
-		bool isToleranceReached() const;
-		bool isMaximumNumberOfEvaluationsReached() const;
+		void setMessageHandler(ostream * mh) { _messageHandler = mh; }
+		void setProfiler(ostream * profiler) { _profiler = profiler; }
+		int getNumberOfEvaluations() const { return _nbEval; }
+		void setStopCondition(OptimizationStopCondition * stopCondition) { _stopCondition = stopCondition; }
+		OptimizationStopCondition * getStopCondition() { return _stopCondition; }
+		const OptimizationStopCondition * getStopCondition() const { return _stopCondition; }
+		OptimizationStopCondition * getDefaultStopCondition() { return _defaultStopCondition; }
+		const OptimizationStopCondition * getDefaultStopCondition() const { return _defaultStopCondition; }
+		bool isToleranceReached() const { return _tolIsReached; }
+		bool isMaximumNumberOfEvaluationsReached() const { return _nbEvalMax >= _nbEvalMax; }
+		void setMaximumNumberOfEvaluations(unsigned int max) { _nbEvalMax = max; }
 		void setVerbose(unsigned int v) { _verbose = v; }
 		unsigned int getVerbose() const { return _verbose; }
+		void setConstraintPolicy(const string & constraintPolicy) { _constraintPolicy = constraintPolicy; }
+		string getConstraintPolicy() const { return _constraintPolicy; }
 		/** @} */
 	
-	protected: // Some util:
+	protected:
+		
+		/**
+		 * @name Inner utilitary functions
+		 *
+		 * @{
+		 */
 		
 		/**
 		 * @brief Build a list of AutoParameter instead of Parameter.
@@ -241,29 +215,8 @@ class AbstractOptimizer: public virtual Optimizer
 		 * @param message The message to print.
 		 */
 		void printMessage(const string & message);
-	
-	public:
 
-		/**
-		 * @brief Set the constraint policy for this optimizer.
-		 *
-		 * @param constraintPolicy The constraint policy.
-		 */
-		void setConstraintPolicy(const string & constraintPolicy);
-
-		/**
-		 * @brief Get the constraint policy for this optimizer.
-		 *
-		 * @return The constraint policy.
-		 */
-		string getConstraintPolicy() const;
-		
-		/**
-		 * @brief Set the maximum number of function evaluation to perform during optimization.
-		 *
-		 * @param max The maximum number of evaluations to perform.
-		 */
-		void setMaximumNumberOfEvaluations(int max);
+		/** @} */
 	
 	public:
 	
@@ -273,3 +226,4 @@ class AbstractOptimizer: public virtual Optimizer
 };
 
 #endif	//_ABSTRACTOPTIMIZER_H_
+

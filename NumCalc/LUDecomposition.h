@@ -1,48 +1,11 @@
 //
 // File: LU.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Tue Apr 7 16:24 2004
 //
-/*
-Copyright ou © ou Copr. Julien Dutheil, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour le calcul numérique.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
 
 /*
-Copyright or © or Copr. Julien Dutheil, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
+Copyright or © or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -74,9 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-
-#ifndef _LU_H
-#define _LU_H
+#ifndef _LU_H_
+#define _LU_H_
 
 #include "Matrix.h"
 #include "MatrixTools.h"
@@ -88,18 +50,21 @@ using namespace std;
 using namespace NumTools;
 
 
- /** LU Decomposition.
-   <P>
-   For an m-by-n matrix A with m >= n, the LU decomposition is an m-by-n
-   unit lower triangular matrix L, an n-by-n upper triangular matrix U,
-   and a permutation vector piv of length m so that A(piv,:) = L*U.
-   If m < n, then L is m-by-m and U is m-by-n.
-   <P>
-   The LU decompostion with pivoting always exists, even if the matrix is
-   singular, so the constructor will never fail.  The primary use of the
-   LU decomposition is in the solution of square systems of simultaneous
-   linear equations.  This will fail if isNonsingular() returns false.
-   */
+ /** 
+	* @brief LU Decomposition.
+	*
+	* [This class and its documentation is adpated from the C++ port of the JAMA library.]
+	* 
+	* For an m-by-n matrix A with m >= n, the LU decomposition is an m-by-n
+  * unit lower triangular matrix L, an n-by-n upper triangular matrix U,
+  * and a permutation vector piv of length m so that A(piv,:) = L*U.
+  * If m < n, then L is m-by-m and U is m-by-n.
+	*
+	* The LU decompostion with pivoting always exists, even if the matrix is
+  * singular, so the constructor will never fail.  The primary use of the
+  * LU decomposition is in the solution of square systems of simultaneous
+  * linear equations. This will fail if isNonsingular() returns false.
+  */
 template <class Real>
 class LUDecomposition
 {
@@ -228,7 +193,6 @@ class LUDecomposition
 
 	  LUDecomposition (const Matrix<Real> &A) : LU(A), m(A.nRows()), n(A.nCols()), piv(A.nRows())
 		{
-
 			for (unsigned int i = 0; i < m; i++) {
       	piv[i] = i;
     	}
@@ -266,7 +230,7 @@ class LUDecomposition
     /**
 	   * @brief Is the matrix nonsingular?
      *
-	   * @return 1 (true)  if upper triangular factor U (and hence A) is nonsingular, 0 otherwise.
+	   * @return True if upper triangular factor U (and hence A) is nonsingular, 0 otherwise.
      */
     bool isNonsingular () const
 		{
@@ -279,10 +243,9 @@ class LUDecomposition
 
 	  /**
 		 * @brief Return lower triangular factor
-	 	* 
-   	* @return L
-   	*/
-
+	 	 * 
+   	 * @return L
+   	 */
   	RowMatrix<Real> getL () const
 		{
 	    RowMatrix<Real> L_(m,n);
@@ -305,7 +268,6 @@ class LUDecomposition
 	   * 
      * @return U portion of LU factorization.
 	   */
-
  		RowMatrix<Real> getU () const {
 	    RowMatrix<Real> U_(n,n);
    		for (unsigned int i = 0; i < n; i++) {
@@ -325,7 +287,6 @@ class LUDecomposition
   	 *
 		 * @return piv
   	 */
-
  		vector<unsigned int> getPivot () const {
 	    return piv;
 	  }
@@ -336,7 +297,6 @@ class LUDecomposition
 		 * 
   	 * @return determinant of A, or 0 if A is not square.
 		 */
-
  		Real det () const {
     	if (m != n) {
       	return Real(0);
@@ -354,7 +314,6 @@ class LUDecomposition
 		 * @param  B   A Matrix with as many rows as A and any number of columns.
   	 * @return     X so that L*U*X = B(piv,:), if B is nonconformant, returns 0x0 (null) array.
   	 */
-
  		RowMatrix<Real> solve (const Matrix<Real> &B) const 
 	  {
 	    /* Dimensions: A is mxn, X is nxk, B is mxk */
@@ -403,7 +362,6 @@ class LUDecomposition
 		 * @param  b   a vector (Array1D> of length equal to the first dimension	of A.
 		 * @return x a vector (Array1D> so that L*U*x = b(piv), if B is nonconformant, returns 0x0 (null) array.
      */
-
     vector<Real> solve (const vector<Real> &b) const 
     {
 
@@ -438,4 +396,5 @@ class LUDecomposition
 
 }; /* class LU */
 
-#endif //_LU_H 
+#endif //_LU_H_
+

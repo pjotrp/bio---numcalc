@@ -1,49 +1,11 @@
 //
 // File: BrentOneDimension.h
-// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Mon Nov 17 11:45:58 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour le calcul numérique.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -80,6 +42,15 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractOptimizer.h"
 
+/**
+ * @brief Brent's optimization for one parameter.
+ *
+ * The code is an adaptation of the one discribed in:
+ * <pre>
+ * NUMERICAL RECIPES IN C: THE ART OF SCIENTIFIC COMPUTING
+ * (ISBN 0-521-43108-5)
+ * </pre>
+ */
 class BrentOneDimension: public AbstractOptimizer
 {
 	
@@ -88,7 +59,7 @@ class BrentOneDimension: public AbstractOptimizer
 		{
 			public:
 				BODStopCondition(BrentOneDimension * bod);
-				~BODStopCondition();
+				~BODStopCondition() {}
 			
 			public:
 				void init() {}
@@ -103,14 +74,20 @@ class BrentOneDimension: public AbstractOptimizer
 
 	public:
 		BrentOneDimension(Function * function);
-		virtual ~BrentOneDimension();
+		virtual ~BrentOneDimension() { delete _defaultStopCondition; }
 	
-	public: // Optimizer interface implemented here:
+	public:		
+		
+		/**
+		 * @name The Optimizer interface.
+		 *
+		 * @{
+		 */
 		
 		/**
 		 * @brief Initialize optimizer.
 		 *
-		 * The golden section search needs 2 initial guesses, so you must call the
+		 * Brent's algorithm needs 2 initial guesses, so you must call the
 		 * setInitialInterval() method first. This function actually performs:
 		 * - Parameter list actualisation;
 		 * - Initial bracketting;
@@ -121,11 +98,25 @@ class BrentOneDimension: public AbstractOptimizer
 		void init(const ParameterList & params) throw (Exception); //redefinition
 		double step() throw (Exception);
 		double optimize() throw (Exception);
-		double getFunctionValue() const throw (Exception);
+		double getFunctionValue() const throw (NullPointerException);
+		/** @} */
 	
-	public: // Specific methods:
+	public:
+
+		/**
+		 * @name Specific method
+		 *
+		 * @{
+		 */
 		
+		/**
+		 * @brief Set intial search interval.
+		 *
+		 * @param inf Minimum value.
+		 * @param sup Maximum value.
+		 */
 		void setInitialInterval(double inf, double sup);
+		/** @} */
 	
 	public:
 		
@@ -134,5 +125,5 @@ class BrentOneDimension: public AbstractOptimizer
 
 };
 
-
 #endif	//_BRENTONEDIMENSION_H_
+

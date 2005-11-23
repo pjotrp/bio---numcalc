@@ -58,15 +58,51 @@ class Matrix: public Clonable {
 
 	public:
 	
+		/**
+		 * @return \f$m_{i,j}\f$.
+		 * @param i row index.
+		 * @param j column index.
+		 */
 		virtual const Scalar & operator()(unsigned int i, unsigned int j) const = 0;
-		virtual       Scalar & operator()(unsigned int i, unsigned int j) = 0;
+		/**
+		 * @return \f$m_{i,j}\f$.
+		 * @param i row index.
+		 * @param j column index.
+		 */
+		virtual Scalar & operator()(unsigned int i, unsigned int j) = 0;
+		/**
+		 * @return The number of rows.
+		 */
 		virtual unsigned int nRows() const = 0;
+		/**
+		 * @return The number of columns.
+		 */
 		virtual unsigned int nCols() const = 0;
+		/**
+		 * @return the row at position i as a vector.
+		 * @param i The index of the row.
+		 */
 		virtual vector<Scalar> row(unsigned int i) const = 0;
+		/**
+		 * @return the column at position j as a vector.
+		 * @param j The index of the column.
+		 */
 		virtual vector<Scalar> col(unsigned int j) const = 0;
+		/**
+		 * @brief Resize the matrix.
+		 *
+		 * @param nRows The new number of rows.
+		 * @param nCols The new number of columns.
+		 */
 		virtual void resize(unsigned int nRows, unsigned int nCols) = 0;
 };
 
+/**
+ * @brief Matrix storage by row.
+ *
+ * This matrix is a vector of vector of Scalar.
+ * Row access is in \f$O(1)\f$ while column access is in \f$O(nRow)\f$.
+ */
 template<class Scalar>
 class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 

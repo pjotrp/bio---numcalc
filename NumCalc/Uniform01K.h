@@ -85,4 +85,6 @@ class Uniform01K : public RandomFactory {
 		mutable unsigned int _it1;
 		mutable unsigned int _it2;
 };
+
 #endif // _UNIFORM01K_H_
+

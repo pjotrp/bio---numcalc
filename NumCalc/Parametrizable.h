@@ -5,45 +5,7 @@
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (19 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour le calcul numérique.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 19, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -167,7 +129,7 @@ class Parametrizable
 };
 
 /**
- * @brief A low-level implementation of Parametrizable with void functions.
+ * @brief A low-level implementation of the Parametrizable interface with void functions.
  *
  * @see Parameter, ParameterList, Parametrizable
  */
@@ -199,6 +161,16 @@ class ParametrizableAdapter : public virtual Parametrizable
 
 };
 
+/**
+ * @brief A partial implementation of the Parametrizable interface.
+ *
+ * Parameters are stored in a protected ParameterList object.
+ *
+ * The abstract fireParameterChanged() method is provided so that the derived class
+ * know when a parameter has changed, and can be updated.
+ * All methods call the corresponding method in ParameterList and then call the
+ * fireParameterChanged() method.
+ */
 class AbstractParametrizable : public virtual Parametrizable
 {
 	protected:
@@ -246,9 +218,14 @@ class AbstractParametrizable : public virtual Parametrizable
 			fireParameterChanged(parameters);
 		}
 
+		/**
+		 * @brief Notify the class when one or several parameters have changed.
+		 *
+		 * @param parameters A ParameterList object with parameters that changed.
+		 */
 		virtual void fireParameterChanged(const ParameterList & parameters) = 0;
 
 };
 
-
 #endif	//_PARAMETRIZABLE_H_
+

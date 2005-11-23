@@ -85,8 +85,10 @@ double Uniform01K::drawNumber() const {
 
 	long tmp = _tab[_it1] - _tab[_it2];
 	if (tmp < ZERO) tmp += MAXNUMBER;
-	if (tmp < 0) return drawNumber(); // In case of negative numer, take next one in the serie.
+	double r = 1. * tmp / MAXNUMBER;
 	_tab[_it2] = tmp;
-	return 1. * tmp / MAXNUMBER;
+	if (r < 0.) return drawNumber(); // In case of negative number, take the next one in the serie.
+	if (r > 1.) return drawNumber(); // In case of number > 1, take the next one in the serie.
+	return r;
 }
 

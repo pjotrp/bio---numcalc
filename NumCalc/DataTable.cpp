@@ -1,3 +1,9 @@
+//
+// File: DataTable.cpp
+// Created by: Julien Dutheil
+// Created on: Aug 2005
+//
+
 /*
 Copyright or © or Copr. CNRS, (November 17, 2004)
 
@@ -71,7 +77,8 @@ DataTable::DataTable(const vector<string> & colNames) throw (DuplicatedTableColu
 	
 /******************************************************************************/
 
-DataTable::~DataTable(){
+DataTable::~DataTable()
+{
 	if(_rowNames != NULL) delete _rowNames;
 	if(_colNames != NULL) delete _colNames;
 }
@@ -97,13 +104,13 @@ const string & DataTable::operator()(unsigned int rowIndex, unsigned int colInde
 /******************************************************************************/
 
 string & DataTable::operator()(const string & rowName, const string & colName)
-throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException, DimensionException)
+throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException)
 {
 	if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, const string &).");
 	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::operator(const string &, const string &).");
 	try {
-		unsigned int rowIndex = pos(*_rowNames, rowName);
-		unsigned int colIndex = pos(*_colNames, colName);
+		unsigned int rowIndex = which(*_rowNames, rowName);
+		unsigned int colIndex = which(*_colNames, colName);
 		return (*this)(rowIndex, colIndex);
 	} catch(ElementNotFoundException<string> & ex) {
 		throw TableNameNotFoundException("DataTable::operator(const string &, const string &).", *ex.getElement());
@@ -111,13 +118,13 @@ throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundE
 }
 
 const string & DataTable::operator()(const string & rowName, const string & colName) const
-throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException, DimensionException)
+throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException)
 {
 	if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, const string &).");
 	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::operator(const string &, const string &).");
 	try {
-		unsigned int rowIndex = pos(*_rowNames, rowName);
-		unsigned int colIndex = pos(*_colNames, colName);
+		unsigned int rowIndex = which(*_rowNames, rowName);
+		unsigned int colIndex = which(*_colNames, colName);
 		return (*this)(rowIndex, colIndex);
 	} catch(ElementNotFoundException<string> & ex) {
 		throw TableNameNotFoundException("DataTable::operator(const string &, const string &).", *ex.getElement());
@@ -203,10 +210,10 @@ vector<string> & DataTable::getColumn(const string & colName)
 {
 	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::getColumn(const string &).");
 	try {
-		unsigned int colIndex = pos(*_colNames, colName);
+		unsigned int colIndex = which(*_colNames, colName);
 		return _data[colIndex];
 	} catch(ElementNotFoundException<string> & ex) {
-		throw TableColumnNameNotFoundException("DataTable::operator(const string &, const string &).", colName);
+		throw TableColumnNameNotFoundException("DataTable::getColumn(const string &, const string &).", colName);
 	}
 }
 
@@ -215,10 +222,10 @@ const vector<string> & DataTable::getColumn(const string & colName) const
 {
 	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::getColumn(const string &).");
 	try {
-		unsigned int colIndex = pos(*_colNames, colName);
+		unsigned int colIndex = which(*_colNames, colName);
 		return _data[colIndex];
 	} catch(ElementNotFoundException<string> & ex) {
-		throw TableColumnNameNotFoundException("DataTable::operator(const string &, const string &).", colName);
+		throw TableColumnNameNotFoundException("DataTable::getColumn(const string &).", colName);
 	}
 }
 
@@ -229,6 +236,20 @@ void DataTable::deleteColumn(unsigned int index)
 	_data.erase(_data.begin()+index);
 	if(_colNames != NULL) _colNames->erase(_colNames->begin()+index);
 	_nCol--;
+}
+
+void DataTable::deleteColumn(const string & colName)
+	throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
+{
+	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::deleteColumn(const string &).");
+	try {
+		unsigned int colIndex = which(*_colNames, colName);
+		_data.erase(_data.begin()+colIndex);
+		_colNames->erase(_colNames->begin()+colIndex);
+		_nCol--;
+	} catch(ElementNotFoundException<string> & ex) {
+		throw TableColumnNameNotFoundException("DataTable::deleteColumn(const string &).", colName);
+	}
 }
 
 void DataTable::addColumn(const vector<string> & newColumn)
@@ -273,6 +294,23 @@ void DataTable::deleteRow(unsigned int index)
 	_nRow--;
 }
 
+void DataTable::deleteRow(const string & rowName)
+	throw (NoTableRowNamesException, TableRowNameNotFoundException)
+{
+	if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::deleteRow(const string &).");
+	try {
+		unsigned int rowIndex = which(*_rowNames, rowName);
+		for(unsigned int j = 0; j < _nCol; j++) {
+			vector<string> * column = & _data[j];
+			column->erase(column->begin()+rowIndex);
+		}
+		_rowNames->erase(_rowNames->begin()+rowIndex);
+		_nRow--;
+	} catch(ElementNotFoundException<string> & ex) {
+		throw TableRowNameNotFoundException("DataTable::deleteRow(const string &).", rowName);
+	}
+}
+
 void DataTable::addRow(const vector<string> & newRow)
 	throw (DimensionException, TableRowNamesException)
 {
@@ -300,7 +338,6 @@ void DataTable::addRow(const string & rowName, const vector<string> & newRow)
 	}
 	_nRow++;
 }
-
 
 /******************************************************************************/
 /*                               Read from a CSV file                         */

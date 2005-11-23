@@ -83,4 +83,6 @@ class Uniform01WH : public RandomFactory {
 	protected:
 		mutable long ix, iy, iz;
 };
+
 #endif // _UNIFORM01WH_H_
+

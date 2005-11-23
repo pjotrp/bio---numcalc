@@ -1,49 +1,11 @@
 //
 // File: Functions.h
-// Created by: Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Sun Nov  9 23:11:00 2003
 //
 
 /*
-Copyright ou © ou Copr. CNRS, (17 Novembre 2004) 
-
-Julien.Dutheil@univ-montp2.fr
-
-Ce logiciel est un programme informatique servant à fournir des classes
-pour le calcul numérique.
-
-Ce logiciel est régi par la licence CeCILL soumise au droit français et
-respectant les principes de diffusion des logiciels libres. Vous pouvez
-utiliser, modifier et/ou redistribuer ce programme sous les conditions
-de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
-sur le site "http://www.cecill.info".
-
-En contrepartie de l'accessibilité au code source et des droits de copie,
-de modification et de redistribution accordés par cette licence, il n'est
-offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
-seule une responsabilité restreinte pèse sur l'auteur du programme,  le
-titulaire des droits patrimoniaux et les concédants successifs.
-
-A cet égard  l'attention de l'utilisateur est attirée sur les risques
-associés au chargement,  à l'utilisation,  à la modification et/ou au
-développement et à la reproduction du logiciel par l'utilisateur étant 
-donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
-manipuler et qui le réserve donc à des développeurs et des professionnels
-avertis possédant  des  connaissances  informatiques approfondies.  Les
-utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
-logiciel à leurs besoins dans des conditions permettant d'assurer la
-sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
-à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
-
-Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
-pris connaissance de la licence CeCILL, et que vous en avez accepté les
-termes.
-*/
-
-/*
 Copyright or © or Copr. CNRS, (November 17, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -88,6 +50,31 @@ using namespace std;
 
 /**
  * @brief This is the function abstract class.
+ *
+ * This class provides the interface for function objet
+ * and a default implementation of the f() function.
+ *
+ * The f() function sends the value of the function according to a
+ * given set of parameters.
+ *
+ * However for complexe function like likelihood for instance,
+ * computing the function value takes some time, and one do not want
+ * to perform several times the computation for an identical set of 
+ * parameters.
+ * The setParameters() method hence allows to set the parameter value
+ * for which the function is to be computed, perform the computation
+ * and store the results.
+ * The getValue() methods send the result of the computation.
+ * One may hence access to the result of the computation by calling the
+ * getvalue() method without re-computating the function.
+ * The f(parameters) function is a shortcut for
+ * @code
+ * setParameters(parameters);
+ * return getValue();
+ * @endcode
+ * for convinience.
+ *
+ * @see Parameter, ParameterList
  */
 class Function : public virtual Parametrizable
 {		
@@ -119,14 +106,17 @@ class Function : public virtual Parametrizable
 		 * @return The value of the function with the given parameter set.
 		 * @throw Exception If an error occured.
 		 */
-		virtual double f(const ParameterList & parameters) throw (Exception) {
+		virtual double f(const ParameterList & parameters) throw (Exception)
+		{
 			setParameters(parameters);
 			return getValue();
 		}
 };
 
 /**
- * @brief This is the interface for first order derivable functions.
+ * @brief This is the abstract class for first order derivable functions.
+ *
+ * This class adds the getFirstOrderDerivative() and df() shortcut functions.
  */
 class DerivableFirstOrder : public virtual Function
 {
@@ -154,14 +144,18 @@ class DerivableFirstOrder : public virtual Function
 		 * @return The value of the function with the given parameter set.
 		 * @throw Exception If an error occured.
 		 */
-		virtual double df(const string & variable, const ParameterList & parameters) throw (Exception) {
+		virtual double df(const string & variable, const ParameterList & parameters) throw (Exception)
+		{
 			setParameters(parameters);
 			return getFirstOrderDerivative(variable);
 		}
 };
 
 /**
- * @brief This is the interface for second order derivable functions.
+ * @brief This is the abstract class for second order derivable functions.
+ * 
+ * This class adds the getSecondOrderDerivative() and d2f() shortcut functions.
+ * Cross derivative functions are also provided.
  */
 class DerivableSecondOrder : public virtual DerivableFirstOrder
 {
@@ -223,7 +217,11 @@ class DerivableSecondOrder : public virtual DerivableFirstOrder
 
 
 
-
+/**
+ * @brief Wrapper class for optimization under constraints.
+ *
+ * Catch any ConstraintException thrown and send +inf.
+ */
 class InfinityFunctionWrapper : public virtual Function
 {
 	protected:
@@ -300,7 +298,11 @@ class InfinityFunctionWrapper : public virtual Function
 
 };
 
-
+/**
+ * @brief Wrapper class for optimization under constraints.
+ *
+ * Catch any ConstraintException thrown and send +inf.
+ */
 class InfinityDerivableFirstOrderWrapper : public virtual InfinityFunctionWrapper
 {
 	public:
@@ -319,7 +321,11 @@ class InfinityDerivableFirstOrderWrapper : public virtual InfinityFunctionWrappe
 		}
 };
 
-
+/**
+ * @brief Wrapper class for optimization under constraints.
+ *
+ * Catch any ConstraintException thrown and send +inf.
+ */
 class InfinityDerivableSecondOrderWrapper : public virtual InfinityDerivableFirstOrderWrapper
 {
 	public:
@@ -351,3 +357,4 @@ class InfinityDerivableSecondOrderWrapper : public virtual InfinityDerivableFirs
 };
 
 #endif	//_FUNCTIONS_H_
+

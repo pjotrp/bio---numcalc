@@ -49,7 +49,7 @@ Uniform01WH::Uniform01WH(long seed) {
 //** Class destructor: *******************************************************/
 Uniform01WH::~Uniform01WH() {}
 
-//** Other methodes: *********************************************************/
+//** Other methods: *********************************************************/
 void Uniform01WH::setSeed(long seed) {
 	setSeeds(seed);
 }
@@ -67,3 +67,4 @@ double Uniform01WH::drawNumber() const {
 	iz = (170 * iz) % 30323;
 	return modf((double) ix / 30269. + (double) iy / 30307. + (double) iz / 30323, &i);
 }
+

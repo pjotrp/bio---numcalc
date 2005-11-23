@@ -1,3 +1,9 @@
+//
+// File: VectorExceptions.h
+// Created by: Julien Dutheil
+// Created on: 2003
+//
+
 /*
 Copyright or © or Copr. CNRS, (November 17, 2004)
 
@@ -36,20 +42,23 @@ knowledge of the CeCILL license and that you accept its terms.
 
 //From utils:
 #include <Utils/Exceptions.h>
+#include <Utils/TextTools.h>
 
 //From the STL/
 #include <vector>
 using namespace std;
 
-/******************************************************************************/
-
-template<class T> class VectorException : public Exception {
+/**
+ * @brief General Exception dealing with vectors.
+ */
+template<class T>
+class VectorException : public Exception
+{
 
 	protected:
 		const vector<T> * _vect;
 			
 	public:
-		// Class constructor
 		VectorException(const char *   text, const vector<T> * vect = NULL) :
 			Exception("VectorException: " + string(text)),
 			_vect(vect) {};
@@ -57,53 +66,60 @@ template<class T> class VectorException : public Exception {
 		VectorException(const string & text, const vector<T> * vect = NULL) :
 			Exception("VectorException: " + text),
 			_vect(vect) {};
-
 	
-		// Class destructor
-		~VectorException() throw () {};
+		virtual ~VectorException() throw () {};
 		
 	public:
 		virtual const vector<T> * getVector() const { return _vect; }
 };
 
-/******************************************************************************/
-
-template<class T> class EmptyVectorException : public VectorException<T> {
+/**
+ * @brief Exception thrown when an empty vector was found.
+ */
+template<class T>
+class EmptyVectorException : public VectorException<T>
+{
 
 	public:
-		// Class constructor
 		EmptyVectorException(const char *   text, const vector<T> * vect = NULL) :
 			VectorException<T>("EmptyVectorException: " + string(text), vect) {};
 	
 		EmptyVectorException(const string & text, const vector<T> * vect = NULL) :
 			VectorException<T>("EmptyVectorException: " + text, vect) {};
 	
-		// Class destructor
-		~EmptyVectorException() throw () {}
+		virtual ~EmptyVectorException() throw () {}
 };
 
-/******************************************************************************/
-
-class DimensionException : public Exception {
-
+/**
+ * @brief Exception thrown when a dimension problem occured.
+ */
+class DimensionException : public Exception
+{
 	protected:
-		int dimension;
-		int correctDimension; 
+		unsigned int _dimension;
+		unsigned int _correctDimension; 
 			
 	public:
-		// Class constructor
-		DimensionException(const char *   text, int dimension, int correctDimension);
-		DimensionException(const string & text, int dimension, int correctDimension);
+		DimensionException(const char *   text, unsigned int dimension, unsigned int correctDimension) :
+			  Exception("DimensionException (found " + TextTools::toString(dimension) +", should be " + TextTools::toString(correctDimension) + string(text)),
+        _dimension(dimension),
+        _correctDimension(correctDimension) {}
+				
+		DimensionException(const string & text, unsigned int dimension, unsigned int correctDimension) :
+		    Exception("DimensionException (found " + TextTools::toString(dimension) + ", should be " + TextTools::toString(correctDimension) + text),
+        _dimension(dimension),
+        _correctDimension(correctDimension) {};
 	
-		// Class destructor
-		~DimensionException() throw ();
+		virtual ~DimensionException() throw () {}
+
 	public:
-		virtual int getDimension() const;
-		virtual int getCorrectDimension() const;
+		virtual unsigned int getDimension() const { return _dimension; }
+		virtual unsigned int getCorrectDimension() const { return _correctDimension; }
 };
 
-/******************************************************************************/
-
+/**
+ * @brief Exception thrown when a given element was not found in the vector.
+ */
 template<class T> class ElementNotFoundException : public VectorException<T>
 {
 
@@ -111,7 +127,6 @@ template<class T> class ElementNotFoundException : public VectorException<T>
 		const T * _element;
 			
 	public:
-		// Class constructor
 		ElementNotFoundException(const char *   text, const vector<T> * vect = NULL, const T * element = NULL) :
 			VectorException<T>("ElementNotFoundException: " + string(text), vect),
 			_element(element) {};
@@ -120,16 +135,11 @@ template<class T> class ElementNotFoundException : public VectorException<T>
 			VectorException<T>("ElementNotFoundException: " + text, vect),
 			_element(element) {};
 
-	
-		// Class destructor
-		~ElementNotFoundException() throw () {};
+		virtual ~ElementNotFoundException() throw () {};
 		
 	public:
 		virtual const T * getElement() const { return _element; }
 };
-
-
-/******************************************************************************/
 
 #endif //_VECTOREXCEPTIONS_H_
 
