@@ -352,11 +352,10 @@ DataTable * DataTable::read(istream & in, const string & sep, bool header, int r
 	string secondLine = FileTools::getNextLine(in);
 	StringTokenizer st2(secondLine, sep);
 	vector<string> row2(st2.getTokens().begin(), st2.getTokens().end());
-	unsigned int nCol;
+	unsigned int nCol = row1.size();
 	bool hasRowNames;
 	DataTable * dt;
 	if(row1.size() == row2.size()) {
-		nCol = row1.size();
 		dt = new DataTable(nCol);
 		if(header) { //Use first line as header.
 			dt->setColumnNames(row1);
@@ -366,7 +365,6 @@ DataTable * DataTable::read(istream & in, const string & sep, bool header, int r
 		dt->addRow(row2);
 		hasRowNames = false;
 	} else if(row1.size() == row2.size() - 1) {
-		nCol = row1.size();
 		dt = new DataTable(nCol);
 		dt->setColumnNames(row1);
 		string rowName = *row2.begin();

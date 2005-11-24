@@ -125,7 +125,7 @@ vector<double> GammaDiscreteDistribution::computeValues(unsigned int nbClasses, 
 */
    unsigned int K = nbClasses;
    vector<double> rK(K), freqK(K);
-	 int i;
+	 unsigned int i;
 	 double gap05=1.0/(2.0*K), t, factor=alfa/beta*K, lnga1;
 
    if (median) {
