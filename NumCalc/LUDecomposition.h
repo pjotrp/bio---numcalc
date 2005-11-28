@@ -69,16 +69,15 @@ template <class Real>
 class LUDecomposition
 {
 
-
-
   /* Array for internal storage of decomposition.  */
   RowMatrix<Real>  LU;
-  int m, n, pivsign; 
+  unsigned int m, n;
+	int pivsign; 
   vector<unsigned int> piv;
 
 	private:
 
-		static RowMatrix<Real> permuteCopy(const Matrix<Real> &A, const vector<unsigned int> &piv, int j0, int j1)
+		static RowMatrix<Real> permuteCopy(const Matrix<Real> &A, const vector<unsigned int> &piv, unsigned int j0, unsigned int j1)
 		{
 			unsigned int piv_length = piv.size();
 
@@ -99,7 +98,7 @@ class LUDecomposition
 
 			vector<Real> x(piv_length);
 
-    	for (int i = 0; i < piv_length; i++) 
+    	for (unsigned int i = 0; i < piv_length; i++) 
 	      x[i] = A[piv[i]];
 
 			return x;
@@ -327,7 +326,7 @@ class LUDecomposition
 
     	// Copy right hand side with pivoting
     	//int nx = B.dim2();
-    	int nx = B.nCols();
+    	unsigned int nx = B.nCols();
 
 	  	RowMatrix<Real> X = permuteCopy(B, piv, 0, nx-1);
 			//MatrixTools::print(X);
@@ -342,16 +341,19 @@ class LUDecomposition
       }
       // Solve U*X = Y;
 			// !!! Do not use unsigned int with -- loop!!!
-      for (int k = n-1; k >= 0; k--) {
-        for (int j = 0; j < nx; j++) {
+      //for (int k = n-1; k >= 0; k--) {
+			unsigned int k = n;
+			do {
+				k--;
+        for (unsigned int j = 0; j < nx; j++) {
           X(k,j) /= LU(k,k);
         }
-        for (int i = 0; i < k; i++) {
-          for (int j = 0; j < nx; j++) {
+        for (unsigned int i = 0; i < k; i++) {
+          for (unsigned int j = 0; j < nx; j++) {
             X(i,j) -= X(k,j) * LU(i,k);
           }
         }
-      }
+      } while(k > 0);
       return X;
 		}
 
@@ -384,12 +386,15 @@ class LUDecomposition
       }
       
 	    // Solve U*X = Y;
-      for (unsigned int k = n-1; k >= 0; k--) {
+      //for (unsigned int k = n-1; k >= 0; k--) {
+			unsigned int k = n;
+			do {
+				k--;
         x[k] /= LU(k,k);
     	  for (unsigned int i = 0; i < k; i++) {
           x[i] -= x[k] * LU(i,k);
         }
-		  }
+		  } while(k > 0);
      
       return x;
     }

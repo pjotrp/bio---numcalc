@@ -71,6 +71,18 @@ class Matrix: public Clonable {
 		 */
 		virtual Scalar & operator()(unsigned int i, unsigned int j) = 0;
 		/**
+		 * @return \f$m_{i,j}\f$.
+		 * @param i row index.
+		 * @param j column index.
+		 */
+		virtual const Scalar & operator()(int i, int j) const { return (*this)((unsigned int)i, (unsigned int)j); }
+		/**
+		 * @return \f$m_{i,j}\f$.
+		 * @param i row index.
+		 * @param j column index.
+		 */
+		virtual Scalar & operator()(int i, int j)  { return (*this)((unsigned int)i, (unsigned int)j); }
+		/**
 		 * @return The number of rows.
 		 */
 		virtual unsigned int nRows() const = 0;

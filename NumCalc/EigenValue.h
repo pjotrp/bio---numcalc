@@ -956,8 +956,8 @@ class EigenValue
       e = vector<Real>(n);
 
       issymmetric = 1;
-      for (unsigned int j = 0; (j < n) && issymmetric; j++) {
-         for (unsigned int i = 0; (i < n) && issymmetric; i++) {
+      for (int j = 0; (j < n) && issymmetric; j++) {
+         for (int i = 0; (i < n) && issymmetric; i++) {
             issymmetric = (A(i,j) == A(j,i));
          }
       }
@@ -979,8 +979,8 @@ class EigenValue
          H = RowMatrix<Real>(n,n);
          ort = vector<Real>(n);
          
-         for (unsigned int j = 0; j < n; j++) {
-            for (unsigned int i = 0; i < n; i++) {
+         for (int j = 0; j < n; j++) {
+            for (int i = 0; i < n; i++) {
                H(i,j) = A(i,j);
             }
          }
@@ -1051,8 +1051,8 @@ class EigenValue
    Matrix<Real> getD() const
 	 {
       RowMatrix<Real> D(n, n);
-      for (unsigned int i = 0; i < n; i++) {
-         for (unsigned int j = 0; j < n; j++) {
+      for (int i = 0; i < n; i++) {
+         for (int j = 0; j < n; j++) {
             D[i,j] = 0.0;
          }
          D[i,i] = d[i];
