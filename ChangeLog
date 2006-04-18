@@ -1,0 +1,6 @@
+18/04/06 -*- Version 1.0.1 -*-
+
+18/04/06 Julien Dutheil
+* Eigen: Bug fixed in header file.
+* RandomTools: Changed default generator for compatibility with x64.
+
