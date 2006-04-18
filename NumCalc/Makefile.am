@@ -72,7 +72,7 @@ DataTable.cpp
 
 lib_LTLIBRARIES = libbpp-numcalc.la
 libbpp_numcalc_la_SOURCES = $(H_FILES) $(CPP_FILES)
-libbpp_numcalc_la_LDFLAGS = -version-info 1:0:0
+libbpp_numcalc_la_LDFLAGS = -version-info 1:1:0
 
 library_includedir=$(includedir)/NumCalc
 library_include_HEADERS = $(H_FILES)

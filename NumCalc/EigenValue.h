@@ -1012,7 +1012,7 @@ class EigenValue
 		* @brief Return the imaginary parts of the eigenvalues in parameter e.
 		*
 		* @return e: new matrix with imaginary parts of the eigenvalues.
-   */
+    */
    vector<Real> getImagEigenValues() const { return e; }
    
 	/**
@@ -1053,13 +1053,13 @@ class EigenValue
       RowMatrix<Real> D(n, n);
       for (int i = 0; i < n; i++) {
          for (int j = 0; j < n; j++) {
-            D[i,j] = 0.0;
+            D(i,j) = 0.0;
          }
-         D[i,i] = d[i];
+         D(i,i) = d[i];
          if (e[i] > 0) {
-            D[i,i+1] = e[i];
+            D(i,i+1) = e[i];
          } else if (e[i] < 0) {
-            D[i,i-1] = e[i];
+            D(i,i-1) = e[i];
          }
       }
    }
