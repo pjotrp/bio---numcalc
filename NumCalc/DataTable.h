@@ -104,6 +104,7 @@ class DataTable {
 		 * @throw IndexOutOfBoundsException If one of the index is greater or equal to the corresponding number of columns/rows. 
 		 */
 		string & operator()(unsigned int rowIndex, unsigned int colIndex) throw (IndexOutOfBoundsException);
+    
 		/**
 		 * @return The element at a given position.
 		 * @param rowIndex Row number.
@@ -111,6 +112,7 @@ class DataTable {
 		 * @throw IndexOutOfBoundsException If one of the index is greater or equal to the corresponding number of columns/rows. 
 		 */
 		const string & operator()(unsigned int rowIndex, unsigned int colIndex) const throw (IndexOutOfBoundsException);
+    
 		/**
 		 * @return The element at a given position.
 		 * @param rowName Row name.
@@ -121,6 +123,7 @@ class DataTable {
 		 */
 		string & operator()(const string & rowName, const string & colName)
 						throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException);
+    
 		/**
 		 * @return The element at a given position.
 		 * @param rowName Row name.
@@ -132,6 +135,50 @@ class DataTable {
 		const string & operator()(const string & rowName, const string & colName) const
 						throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException);
 		
+		/**
+		 * @return The element at a given position.
+		 * @param rowName Row name.
+		 * @param colIndex Column number.
+		 * @throw NoTableRowNamesException If the table does not have names associated to rows. 
+		 * @throw IndexOutOfBoundsException If the index is greater or equal to the number of columns. 
+		 * @throw TableNameNotFoundException If rowName do not match existing names. 
+		 */
+		string & operator()(const string & rowName, unsigned int colIndex)
+						throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException);
+    
+		/**
+		 * @return The element at a given position.
+		 * @param rowName Row name.
+		 * @param colIndex Column number.
+		 * @throw NoTableRowNamesException If the table does not have names associated to rows. 
+		 * @throw IndexOutOfBoundsException If the index is greater or equal to the number of columns. 
+		 * @throw TableNameNotFoundException If rowName do not match existing names. 
+		 */
+		const string & operator()(const string & rowName, unsigned int colIndex) const
+						throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException);
+
+		/**
+		 * @return The element at a given position.
+		 * @param rowIndex Row number.
+		 * @param colName Column name.
+		 * @throw IndexOutOfBoundsException If the index is greater or equal to the number of rows. 
+		 * @throw NoTableColumnNamesException If the table does not have names associated to columns. 
+		 * @throw TableNameNotFoundException If colName do not match existing names. 
+		 */
+		string & operator()(unsigned int rowIndex, const string & colName)
+						throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException);
+		
+		/**
+		 * @return The element at a given position.
+		 * @param rowIndex Row number.
+		 * @param colName Column name.
+		 * @throw IndexOutOfBoundsException If the index is greater or equal to the number of rows. 
+		 * @throw NoTableColumnNamesException If the table does not have names associated to columns. 
+		 * @throw TableNameNotFoundException If colName do not match existing names. 
+		 */
+		const string & operator()(unsigned int rowIndex, const string & colName) const
+						throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException);
+    
     /**
 		 * @name Work on columns.
 		 *
@@ -201,7 +248,15 @@ class DataTable {
 		 */
 		const vector<string> & getColumn(const string & colName) const throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
 
-		/**
+    /**
+     * @brief Tell is a given column exists.
+     *
+     * @param colName The name of the column to look for.
+     * @return true if the column was found, false if not or if there are no column names.
+     */
+    bool hasColumn(const string & colName) const;
+
+    /**
 		 * @brief Delete the given column.
 		 * 
 		 * @param index The index of the column.
@@ -265,6 +320,14 @@ class DataTable {
 		 * @throw NoTableRowNamesException If no row names are associated to this table.
 		 */
 		vector<string> getRowNames() const throw (NoTableRowNamesException);
+
+    /**
+     * @brief Tell is a given row exists.
+     *
+     * @param rowName The name of the row to look for.
+     * @return true if the row was found, false if not or if there are no row names.
+     */
+    bool hasRow(const string & rowName) const;
 
 		/**
 		 * @brief Get a given row name.

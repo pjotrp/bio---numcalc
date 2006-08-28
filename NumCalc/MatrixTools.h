@@ -381,6 +381,105 @@ class MatrixTools
 			return M;
 		}
 	
+    /**
+     * @brief Compute the Kronecker product of two row matrices.
+     *
+     * @param A The first row matrix.
+     * @param B The second row matrix.
+     * @return The product \f$A \otimes B\f$.
+     */
+    template<class Scalar>
+    static RowMatrix<Scalar> kroneckerMult(const RowMatrix<Scalar> & A, const RowMatrix<Scalar> & B)
+    {
+			unsigned int ncA = A.nCols();
+			unsigned int nrA = A.nRows();
+			unsigned int nrB = B.nRows();
+			unsigned int ncB = B.nCols();
+      RowMatrix<Scalar> C(nrA*nrB, ncA*ncB);
+      for(unsigned int ia = 0; ia < nrA; ia++)
+      {
+        for(unsigned int ja = 0; ja < ncA; ja++)
+        {
+          Scalar aij = A(ia, ja);
+          for(unsigned int ib = 0; ib < nrB; ib++)
+          {
+            for(unsigned int jb = 0; jb < ncB; jb++)
+            {
+              C(ia*nrB+ib,ja*ncB+jb) = aij*B(ib,jb);
+            }
+          }
+        }
+      }
+      return C;
+    }
+
+    /**
+     * @brief Compute the Kronecker sum of two row matrices.
+     *
+     * @param A The first row matrix.
+     * @param B The second row matrix.
+     * @return The product \f$A \oplus B\f$.
+     */
+    template<class Scalar>
+    static RowMatrix<Scalar> kroneckerSum(const RowMatrix<Scalar> & A, const RowMatrix<Scalar> & B)
+    {
+			unsigned int ncA = A.nCols();
+			unsigned int nrA = A.nRows();
+			unsigned int nrB = B.nRows();
+			unsigned int ncB = B.nCols();
+      RowMatrix<Scalar> C(nrA+nrB,ncA+ncB);
+      for(unsigned int ia = 0; ia < nrA; ia++)
+      {
+        for(unsigned int ja = 0; ja < ncA; ja++)
+        {
+          C(ia,ja) = A(ia,ja);
+        }
+      }
+      for(unsigned int ib = 0; ib < nrB; ib++)
+      {
+        for(unsigned int jb = 0; jb < nrB; jb++)
+        {
+          C(nrA+ib,ncA+jb) = B(ib,jb);
+        }
+      }
+      return C;
+    }
+
+    /**
+     * @brief Compute the Kronecker sum of n row matrices.
+     *
+     * @param A A vector of row matrices of any size.
+     * @return The product \f$\bigoplus_i A_i\f$.
+     */
+    template<class Scalar>
+    static RowMatrix<Scalar> kroneckerSum(const vector< RowMatrix<Scalar> > & A)
+    {
+			unsigned int nr = 0;
+			unsigned int nc = 0;
+      for(unsigned int k = 0; k < A.size(); k++)
+      {
+        nr += A[k].nRows();
+        nc += A[k].nCols();
+      }
+      RowMatrix<Scalar> C(nr,nc);
+      unsigned int rk = 0; //Row counter
+      unsigned int ck = 0; //Col counter
+      for(unsigned int k = 0; k < A.size(); k++)
+      {
+        const RowMatrix<Scalar> * Ak = &A[k];
+        for(unsigned int i = 0; i < Ak->nRows(); i++)
+        {
+          for(unsigned int j = 0; j < Ak->nCols(); j++)
+          {
+            C(rk+i,ck+j) = (*Ak)(i,j);
+          }
+        }
+        rk+=Ak->nRows();
+        ck+=Ak->nCols();
+      }
+      return C;
+    }
+
 	
 };
 

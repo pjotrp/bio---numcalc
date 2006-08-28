@@ -55,6 +55,7 @@ AbstractOptimizer::AbstractOptimizer(Function * function): _function(function)
 	_profiler         = & cout;
 	_constraintPolicy = CONSTRAINTS_KEEP;	
 	_nbEvalMax = 1000000;
+  _nbEval = 0;
 	_verbose = true;
 }
 
@@ -119,10 +120,11 @@ void AbstractOptimizer::printMessage(const string & message)
 
 void AbstractOptimizer::autoParameter()
 {
-	for(unsigned int i = 0; i < _parameters.size(); i++) {
+	for(unsigned int i = 0; i < _parameters.size(); i++)
+  {
 		Parameter * p = _parameters[i];
 		AutoParameter * ap = new AutoParameter(* p);
-		ap -> setMessageHandler(_messageHandler);
+		ap->setMessageHandler(_messageHandler);
 		_parameters[i] = ap;
 		delete p;
 	}

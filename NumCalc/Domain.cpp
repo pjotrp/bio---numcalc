@@ -120,7 +120,7 @@ double Domain::getNearestValue(double x) const throw (OutOfRangeException)
 	return 0;
 }
 
-int Domain::getIndex(double x) const throw (OutOfRangeException)
+unsigned int Domain::getIndex(double x) const throw (OutOfRangeException)
 {
 	if(x < getLowerBound() || x >= getUpperBound())
 		throw OutOfRangeException("Domain::getIndex", x, getLowerBound(), getUpperBound());
@@ -128,6 +128,6 @@ int Domain::getIndex(double x) const throw (OutOfRangeException)
 		if(x < _bounds[i])
 			return i - 1;
 	// This line can't be reached:
-	return -1;
+	throw Exception("Unexpected error!");
 }
 

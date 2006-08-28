@@ -164,7 +164,7 @@ class Domain
 		 * @param x The value to check.
 		 * @throw OutOfRangeException if the value is not in the domain interval.
 		 */
-		virtual int getIndex(double x) const throw (OutOfRangeException);
+		virtual unsigned int getIndex(double x) const throw (OutOfRangeException);
 		
 };
 

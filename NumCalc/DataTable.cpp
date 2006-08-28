@@ -132,6 +132,62 @@ throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundE
 }
 		
 /******************************************************************************/
+
+string & DataTable::operator()(const string & rowName, unsigned int colIndex)
+throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException)
+{
+	if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, unsigned int).");
+	if(colIndex >= _nCol) throw IndexOutOfBoundsException("DataTable::operator(const string &, unsigned int).", colIndex, 0, _nCol - 1);
+	try {
+		unsigned int rowIndex = which(*_rowNames, rowName);
+		return (*this)(rowIndex, colIndex);
+	} catch(ElementNotFoundException<string> & ex) {
+		throw TableNameNotFoundException("DataTable::operator(const string &, unsigned int).", *ex.getElement());
+	}
+}
+
+const string & DataTable::operator()(const string & rowName, unsigned int colIndex) const
+throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException)
+{
+	if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, unsigned int).");
+	if(colIndex >= _nCol) throw IndexOutOfBoundsException("DataTable::operator(const string &, unsigned int).", colIndex, 0, _nCol - 1);
+	try {
+		unsigned int rowIndex = which(*_rowNames, rowName);
+		return (*this)(rowIndex, colIndex);
+	} catch(ElementNotFoundException<string> & ex) {
+		throw TableNameNotFoundException("DataTable::operator(const string &, unsigned int).", *ex.getElement());
+	}
+}
+
+/******************************************************************************/
+
+string & DataTable::operator()(unsigned int rowIndex, const string & colName)
+throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException)
+{
+	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::operator(unsigned int, const string &).");
+	try {
+		unsigned int colIndex = which(*_colNames, colName);
+	  if(rowIndex >= _data[colIndex].size()) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, const string &).", rowIndex, 0, _data[colIndex].size() - 1);
+		return (*this)(rowIndex, colIndex);
+	} catch(ElementNotFoundException<string> & ex) {
+		throw TableNameNotFoundException("DataTable::operator(const string &, const string &).", *ex.getElement());
+	}
+}
+
+const string & DataTable::operator()(unsigned int rowIndex, const string & colName) const
+throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException)
+{
+	if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::operator(unsigned int, const string &).");
+	try {
+		unsigned int colIndex = which(*_colNames, colName);
+	  if(rowIndex >= _data[colIndex].size()) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, const string &).", rowIndex, 0, _data[colIndex].size() - 1);
+		return (*this)(rowIndex, colIndex);
+	} catch(ElementNotFoundException<string> & ex) {
+		throw TableNameNotFoundException("DataTable::operator(const string &, const string &).", *ex.getElement());
+	}
+}
+
+/******************************************************************************/
 /*                             Work with names                                */
 /******************************************************************************/
 
@@ -229,6 +285,15 @@ const vector<string> & DataTable::getColumn(const string & colName) const
 	}
 }
 
+bool DataTable::hasColumn(const string & colName) const
+{ 
+  if(_colNames == NULL) return false;
+  for(unsigned int i = 0; i < _colNames->size(); i++) {
+    if((* _colNames)[i] == colName) return true;
+  }
+  return false;
+}
+
 void DataTable::deleteColumn(unsigned int index)
 	throw (IndexOutOfBoundsException)
 {
@@ -281,6 +346,15 @@ void DataTable::addColumn(const string & colName, const vector<string> & newColu
 /******************************************************************************/
 /*                               Work on rows                                 */
 /******************************************************************************/
+
+bool DataTable::hasRow(const string & rowName) const
+{ 
+  if(_rowNames == NULL) return false;
+  for(unsigned int i = 0; i < _rowNames->size(); i++) {
+    if((* _rowNames)[i] == rowName) return true;
+  }
+  return false;
+}
 
 void DataTable::deleteRow(unsigned int index)
 	throw (IndexOutOfBoundsException)

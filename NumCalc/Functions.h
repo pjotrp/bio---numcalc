@@ -77,40 +77,40 @@ using namespace std;
  * @see Parameter, ParameterList
  */
 class Function : public virtual Parametrizable
-{		
-	public:
-		Function() {}
-		virtual ~Function() {}
+{    
+  public:
+    Function() {}
+    virtual ~Function() {}
 
-	public:
+  public:
 
-		/**
-		 * @brief Set the point where the function must be computed.
-		 *
-		 * @param parameters The parameter set to pass to the function.
-		 */
-		virtual void setParameters(const ParameterList & parameters) throw (ParameterNotFoundException, ConstraintException) = 0;
+    /**
+     * @brief Set the point where the function must be computed.
+     *
+     * @param parameters The parameter set to pass to the function.
+     */
+    virtual void setParameters(const ParameterList & parameters) throw (ParameterNotFoundException, ConstraintException) = 0;
 
-		/**
-		 * @brief Get the value of the function at the current point.
-		 *
-		 * @return The value of the function.
-		 * @throw Exception If no point is specified or if an error occured.
-		 */
-		virtual double getValue() const throw (Exception) = 0;
-		
-		/**
-		 * @brief Get the value of the function according to a given set of parameters.
-		 * 
-		 * @param parameters The parameter set to pass to the function.
-		 * @return The value of the function with the given parameter set.
-		 * @throw Exception If an error occured.
-		 */
-		virtual double f(const ParameterList & parameters) throw (Exception)
-		{
-			setParameters(parameters);
-			return getValue();
-		}
+    /**
+     * @brief Get the value of the function at the current point.
+     *
+     * @return The value of the function.
+     * @throw Exception If no point is specified or if an error occured.
+     */
+    virtual double getValue() const throw (Exception) = 0;
+    
+    /**
+     * @brief Get the value of the function according to a given set of parameters.
+     * 
+     * @param parameters The parameter set to pass to the function.
+     * @return The value of the function with the given parameter set.
+     * @throw Exception If an error occured.
+     */
+    virtual double f(const ParameterList & parameters) throw (Exception)
+    {
+      setParameters(parameters);
+      return getValue();
+    }
 };
 
 /**
@@ -120,35 +120,35 @@ class Function : public virtual Parametrizable
  */
 class DerivableFirstOrder : public virtual Function
 {
-	public:
-		DerivableFirstOrder() {}
-		virtual ~DerivableFirstOrder() {}
+  public:
+    DerivableFirstOrder() {}
+    virtual ~DerivableFirstOrder() {}
 
-	public:
-		
-		/**
-		 * @brief Get the derivative of the function at the current point.
-		 *
-		 * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{df}{dx} @f$.
-		 * @return The value of the function.
-		 * @throw Exception If no point is specified or if an error occured.
-		 */
-		virtual double getFirstOrderDerivative(const string & variable) const throw (Exception) = 0;
-		
-		/**
-		 * @brief Get the value of the first derivative of the function
-		 * according to a given set of parameters.
-		 *
-		 * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{df}{dx} @f$.
-		 * @param parameters The parameter set to pass to the function.
-		 * @return The value of the function with the given parameter set.
-		 * @throw Exception If an error occured.
-		 */
-		virtual double df(const string & variable, const ParameterList & parameters) throw (Exception)
-		{
-			setParameters(parameters);
-			return getFirstOrderDerivative(variable);
-		}
+  public:
+    
+    /**
+     * @brief Get the derivative of the function at the current point.
+     *
+     * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{df}{dx} @f$.
+     * @return The value of the function.
+     * @throw Exception If no point is specified or if an error occured.
+     */
+    virtual double getFirstOrderDerivative(const string & variable) const throw (Exception) = 0;
+    
+    /**
+     * @brief Get the value of the first derivative of the function
+     * according to a given set of parameters.
+     *
+     * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{df}{dx} @f$.
+     * @param parameters The parameter set to pass to the function.
+     * @return The value of the function with the given parameter set.
+     * @throw Exception If an error occured.
+     */
+    virtual double df(const string & variable, const ParameterList & parameters) throw (Exception)
+    {
+      setParameters(parameters);
+      return getFirstOrderDerivative(variable);
+    }
 };
 
 /**
@@ -159,60 +159,60 @@ class DerivableFirstOrder : public virtual Function
  */
 class DerivableSecondOrder : public virtual DerivableFirstOrder
 {
-	public:
-		DerivableSecondOrder() {}
-		virtual ~DerivableSecondOrder() {}
+  public:
+    DerivableSecondOrder() {}
+    virtual ~DerivableSecondOrder() {}
 
-	public:
+  public:
 
-		/**
-		 * @brief Get the second order derivative of the function at the current point.
-		 *
-		 * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x^2} @f$.
-		 * @return The value of the function.
-		 * @throw Exception If no point is specified or if an error occured.
-		 */
-		virtual double getSecondOrderDerivative(const string & variable) const throw (Exception) = 0;
-	
-		/**
-		 * @brief Get the value of the second order derivative of the function
-		 * according to a given set of parameters.
-		 *
-		 * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x^2} @f$.
-		 * @param parameters The parameter set to pass to the function.
-		 * @return The value of the function with the given parameter set.
-		 * @throw Exception If an error occured.
-		 */
-		virtual double d2f(const string & variable, const ParameterList & parameters) throw (Exception) {
-			setParameters(parameters);
-			return getSecondOrderDerivative(variable);
-		}		
+    /**
+     * @brief Get the second order derivative of the function at the current point.
+     *
+     * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x^2} @f$.
+     * @return The value of the function.
+     * @throw Exception If no point is specified or if an error occured.
+     */
+    virtual double getSecondOrderDerivative(const string & variable) const throw (Exception) = 0;
+  
+    /**
+     * @brief Get the value of the second order derivative of the function
+     * according to a given set of parameters.
+     *
+     * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x^2} @f$.
+     * @param parameters The parameter set to pass to the function.
+     * @return The value of the function with the given parameter set.
+     * @throw Exception If an error occured.
+     */
+    virtual double d2f(const string & variable, const ParameterList & parameters) throw (Exception) {
+      setParameters(parameters);
+      return getSecondOrderDerivative(variable);
+    }    
 
-		/**
-		 * @brief Get the value of the cross derivative of the function
-		 * according to a given set of parameters.
-		 *
-		 * @param variable1  The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
-		 * @param variable2  The name of the @f$ y @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
-		 * @return The value of the function with the given parameter set.
-		 * @throw Exception If an error occured.
-		 */
-		virtual double getSecondOrderDerivative(const string & variable1, const string & variable2) const throw (Exception) = 0;	
-		
-		/**
-		 * @brief Get the value of the cross derivative of the function
-		 * according to a given set of parameters.
-		 *
-		 * @param variable1  The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
-		 * @param variable2  The name of the @f$ y @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
-		 * @param parameters The parameter set to pass to the function.
-		 * @return The value of the function with the given parameter set.
-		 * @throw Exception If an error occured.
-		 */
-		virtual double d2f(const string & variable1, const string & variable2, const ParameterList & parameters) throw (Exception) {
-			setParameters(parameters);
-			return getSecondOrderDerivative(variable1, variable2);
-		}
+    /**
+     * @brief Get the value of the cross derivative of the function
+     * according to a given set of parameters.
+     *
+     * @param variable1  The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
+     * @param variable2  The name of the @f$ y @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
+     * @return The value of the function with the given parameter set.
+     * @throw Exception If an error occured.
+     */
+    virtual double getSecondOrderDerivative(const string & variable1, const string & variable2) const throw (Exception) = 0;  
+    
+    /**
+     * @brief Get the value of the cross derivative of the function
+     * according to a given set of parameters.
+     *
+     * @param variable1  The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
+     * @param variable2  The name of the @f$ y @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
+     * @param parameters The parameter set to pass to the function.
+     * @return The value of the function with the given parameter set.
+     * @throw Exception If an error occured.
+     */
+    virtual double d2f(const string & variable1, const string & variable2, const ParameterList & parameters) throw (Exception) {
+      setParameters(parameters);
+      return getSecondOrderDerivative(variable1, variable2);
+    }
 };
 
 
@@ -224,77 +224,91 @@ class DerivableSecondOrder : public virtual DerivableFirstOrder
  */
 class InfinityFunctionWrapper : public virtual Function
 {
-	protected:
-		Function * _function;
-		mutable bool _constraintMatch;
-		
-	public:
-		InfinityFunctionWrapper(Function * function): _function(function), _constraintMatch(false) {}
-		virtual ~InfinityFunctionWrapper() {}
+  protected:
+    Function * _function;
+    mutable bool _constraintMatch;
+    
+  public:
+    InfinityFunctionWrapper(Function * function): _function(function), _constraintMatch(false) {}
+    virtual ~InfinityFunctionWrapper() {}
 
-	public:
+  public:
 
-		void setParameters(const ParameterList & parameters) throw (ParameterNotFoundException, ConstraintException) {
-			try {
-				_function -> setParameters(parameters);
-				_constraintMatch = false;
-			} catch(ConstraintException ce) {
-				_constraintMatch = true;
-			}
-		}
+    void setParameters(const ParameterList & parameters)
+      throw (ParameterNotFoundException, ConstraintException)
+    {
+      try {
+        _function->setParameters(parameters);
+        _constraintMatch = false;
+      } catch(ConstraintException ce) {
+        _constraintMatch = true;
+      }
+    }
 
-		ParameterList getParameters() const throw (Exception) {
-			return _function -> getParameters();	
-		}
+    ParameterList getParameters() const throw (Exception)
+    {
+      return _function->getParameters();  
+    }
 
-		double getValue() const throw (Exception) {
-			return _constraintMatch ? -log(0.) :	_function -> getValue();
-		}
-		
-		double f(const ParameterList & parameters) throw (Exception) {
-			setParameters(parameters);
-			return getValue();
-		}
-		
-		double getParameter(const string & name) const throw (ParameterNotFoundException) {
-			return _function -> getParameterValue(name);
-		}
-			
-		void setAllParametersValues(const ParameterList & parameters) throw (ParameterNotFoundException, ConstraintException) {
-			try {
-				_function -> setAllParametersValues(parameters);
-				_constraintMatch = false;
-			} catch(ConstraintException ce) {
-				_constraintMatch = true;
-			}
-		}
-		
-		void setParameterValue(const string & name, double value) throw (ParameterNotFoundException, ConstraintException) {
-			try {
-				_function -> setParameterValue(name, value);
-				_constraintMatch = false;
-			} catch(ConstraintException ce) {
-				_constraintMatch = true;
-			}
-		}
-		
-		void setParametersValues(const ParameterList & parameters) throw (ParameterNotFoundException, ConstraintException) {
-			try {
-				_function -> setParametersValues(parameters);
-				_constraintMatch = false;
-			} catch(ConstraintException ce) {
-				_constraintMatch = true;
-			}
-		}
-		
-		void matchParametersValues(const ParameterList & parameters) throw (ConstraintException) {
-			try {
-				_function -> matchParametersValues(parameters);
-				_constraintMatch = false;
-			} catch(ConstraintException ce) {
-				_constraintMatch = true;
-			}
-		}
+    double getValue() const throw (Exception)
+    {
+      return _constraintMatch ? -log(0.) :  _function->getValue();
+    }
+    
+    double f(const ParameterList & parameters) throw (Exception)
+    {
+      setParameters(parameters);
+      return getValue();
+    }
+    
+    double getParameterValue(const string & name) const throw (ParameterNotFoundException)
+    {
+      return _function->getParameterValue(name);
+    }
+      
+    void setAllParametersValues(const ParameterList & parameters)
+      throw (ParameterNotFoundException, ConstraintException)
+    {
+      try {
+        _function->setAllParametersValues(parameters);
+        _constraintMatch = false;
+      } catch(ConstraintException ce) {
+        _constraintMatch = true;
+      }
+    }
+    
+    void setParameterValue(const string & name, double value)
+      throw (ParameterNotFoundException, ConstraintException)
+    {
+      try {
+        _function->setParameterValue(name, value);
+        _constraintMatch = false;
+      } catch(ConstraintException ce) {
+        _constraintMatch = true;
+      }
+    }
+    
+    void setParametersValues(const ParameterList & parameters)
+      throw (ParameterNotFoundException, ConstraintException)
+    {
+      try {
+        _function->setParametersValues(parameters);
+        _constraintMatch = false;
+      } catch(ConstraintException ce) {
+        _constraintMatch = true;
+      }
+    }
+    
+    void matchParametersValues(const ParameterList & parameters)
+      throw (ConstraintException)
+    {
+      try {
+        _function->matchParametersValues(parameters);
+        _constraintMatch = false;
+      } catch(ConstraintException ce) {
+        _constraintMatch = true;
+      }
+    }
 
 };
 
@@ -305,20 +319,20 @@ class InfinityFunctionWrapper : public virtual Function
  */
 class InfinityDerivableFirstOrderWrapper : public virtual InfinityFunctionWrapper
 {
-	public:
-		InfinityDerivableFirstOrderWrapper(DerivableFirstOrder * function): InfinityFunctionWrapper(function) {}
-		virtual ~InfinityDerivableFirstOrderWrapper() {}
+  public:
+    InfinityDerivableFirstOrderWrapper(DerivableFirstOrder * function): InfinityFunctionWrapper(function) {}
+    virtual ~InfinityDerivableFirstOrderWrapper() {}
 
-	public:
-		
-		double getFirstOrderDerivative(const string & variable) const throw (Exception) {
-			return _constraintMatch ? -log(0.) :	(dynamic_cast<DerivableFirstOrder *>(_function) -> getFirstOrderDerivative(variable));		
-		}
-		
-		double df(const string & variable, const ParameterList & parameters) throw (Exception) {
-			setParameters(parameters);
-			return getFirstOrderDerivative(variable);
-		}
+  public:
+    
+    double getFirstOrderDerivative(const string & variable) const throw (Exception) {
+      return _constraintMatch ? -log(0.) :  (dynamic_cast<DerivableFirstOrder *>(_function)->getFirstOrderDerivative(variable));    
+    }
+    
+    double df(const string & variable, const ParameterList & parameters) throw (Exception) {
+      setParameters(parameters);
+      return getFirstOrderDerivative(variable);
+    }
 };
 
 /**
@@ -328,33 +342,33 @@ class InfinityDerivableFirstOrderWrapper : public virtual InfinityFunctionWrappe
  */
 class InfinityDerivableSecondOrderWrapper : public virtual InfinityDerivableFirstOrderWrapper
 {
-	public:
-		InfinityDerivableSecondOrderWrapper(DerivableFirstOrder * function):
-			InfinityFunctionWrapper(function),
-			InfinityDerivableFirstOrderWrapper(function) {}
-		virtual ~InfinityDerivableSecondOrderWrapper() {}
+  public:
+    InfinityDerivableSecondOrderWrapper(DerivableFirstOrder * function):
+      InfinityFunctionWrapper(function),
+      InfinityDerivableFirstOrderWrapper(function) {}
+    virtual ~InfinityDerivableSecondOrderWrapper() {}
 
-	public:
+  public:
 
-		double getSecondOrderDerivative(const string & variable) const throw (Exception) {
-			return _constraintMatch ? -log(0.) :	(dynamic_cast<DerivableSecondOrder *>(_function) -> getSecondOrderDerivative(variable));					
-		}
-	
-		double d2f(const string & variable, const ParameterList & parameters) throw (Exception) {
-			setParameters(parameters);
-			return getSecondOrderDerivative(variable);
-		}		
+    double getSecondOrderDerivative(const string & variable) const throw (Exception) {
+      return _constraintMatch ? -log(0.) :  (dynamic_cast<DerivableSecondOrder *>(_function)->getSecondOrderDerivative(variable));          
+    }
+  
+    double d2f(const string & variable, const ParameterList & parameters) throw (Exception) {
+      setParameters(parameters);
+      return getSecondOrderDerivative(variable);
+    }    
 
-	  double getSecondOrderDerivative(const string & variable1, const string & variable2) const throw (Exception) {
-			return _constraintMatch ? -log(0.) :	(dynamic_cast<DerivableSecondOrder *>(_function) -> getSecondOrderDerivative(variable1, variable2));			
-		}
-		
-		double d2f(const string & variable1, const string & variable2, const ParameterList & parameters) throw (Exception) {
-			setParameters(parameters);
-			return getSecondOrderDerivative(variable1, variable2);
-		}
+    double getSecondOrderDerivative(const string & variable1, const string & variable2) const throw (Exception) {
+      return _constraintMatch ? -log(0.) :  (dynamic_cast<DerivableSecondOrder *>(_function) -> getSecondOrderDerivative(variable1, variable2));      
+    }
+    
+    double d2f(const string & variable1, const string & variable2, const ParameterList & parameters) throw (Exception) {
+      setParameters(parameters);
+      return getSecondOrderDerivative(variable1, variable2);
+    }
 
 };
 
-#endif	//_FUNCTIONS_H_
+#endif  //_FUNCTIONS_H_
 

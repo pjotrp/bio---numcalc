@@ -62,7 +62,7 @@ class TableNameNotFoundException: public Exception
 		
 	public:
 		TableNameNotFoundException(const string & text, const string & name) :
-			Exception("NameNotFoundException: "+text), _name(name) {}
+			Exception("NameNotFoundException: " + name + ". " + text), _name(name) {}
 		~TableNameNotFoundException() throw() {}
 
 	public:
@@ -76,7 +76,7 @@ class TableRowNameNotFoundException: public TableNameNotFoundException
 {
 	public:
 		TableRowNameNotFoundException(const string & text, const string & name) :
-			TableNameNotFoundException("RowNameNotFoundException: "+text, name) {}
+			TableNameNotFoundException("RowNameNotFoundException: " + name + ". " + text, name) {}
 		~TableRowNameNotFoundException() throw() {}
 };
 
@@ -87,7 +87,7 @@ class TableColumnNameNotFoundException: public TableNameNotFoundException
 {
 	public:
 		TableColumnNameNotFoundException(const string & text, const string & name) :
-			TableNameNotFoundException("ColumnNameNotFoundException: "+text, name) {}
+			TableNameNotFoundException("ColumnNameNotFoundException: " + name + ". " + text, name) {}
 		~TableColumnNameNotFoundException() throw() {}
 };
 

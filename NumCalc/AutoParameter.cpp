@@ -93,7 +93,7 @@ void AutoParameter::setValue(double value) throw (ConstraintException)
 			(* _messageHandler) << ce.getBadValue();
 			(* _messageHandler) << endl;
 		}
-		double limit = _constraint -> getLimit(value);
+		double limit = _constraint->getLimit(value);
 		try { // We try to assign the limit then.
 			Parameter::setValue(limit);
 		} catch(ConstraintException & ce2) { // Aie, the limit is not reachable, so we perform a smaller step...

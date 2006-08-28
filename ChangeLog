@@ -1,3 +1,30 @@
+28/08/06 -*- Version 1.1.0 -*-
+
+17/08/06 Julien Dutheil
+* Corrected method name in InfinityWrapper function: getParameter->getParameterValue.
+* New classes for numerical derivative computations: 3 and 5 points methods.
+
+07/08/06 Julien Dutheil
+* New function kroneckerMult and kroneckerSum in MatrixTools.
+* New function kroneckerMult in VectorTools.
+* Namespaces VectorStatTools was merged with VectorFunctions.
+* All functions and operator in VectorTools are templates.
+  Removed overrding with Vdouble, and use template specialisation for
+  <InputType,OutputType> and <IntputType,OutputType=InputType>.
+* New operators "scalar [+-*/] vector" in VectorTools.
+
+01/06/06 Julien Dutheil
+* new operators (string,int) and (int,string) in DataTable.
+
+22/05/05 Julien Dutheil
+* [Row,Column,""]NameNotFoundException now displays the invalid name in what().
+
+07/05/06 Julien Dutheil
+* Domain.getIndex now has unsigned int return type.
+
+02/05/06 Julien Dutheil
+* Added methods hasColumn and hasRow in DataTable.
+
 18/04/06 -*- Version 1.0.1 -*-
 
 18/04/06 Julien Dutheil

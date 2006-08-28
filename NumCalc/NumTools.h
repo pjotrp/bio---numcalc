@@ -180,17 +180,20 @@ short  sqr(short  a);
 	
 /**************************************************************************/
 
-template<class T> void swap(T & a, T & b) {
+template<class T> void swap(T & a, T & b)
+{
 	T swap = a;
 	a = b;
 	b = swap;	
 }
 
-template<class T> void shift(T & a, T & b, T c) {
+template<class T> void shift(T & a, T & b, T c)
+{
 	a = b; b = c;
 }
 
-template<class T> void shift(T & a, T & b, T & c, T d) {
+template<class T> void shift(T & a, T & b, T & c, T d)
+{
 	a = b; b = c; c = d;
 }
 
@@ -199,6 +202,7 @@ template<class T> void shift(T & a, T & b, T & c, T d) {
 template<class T> T fact(T n) { return (n == 0) ? 1 : n * fact(n - 1); }
 
 /**************************************************************************/
+
 };
 
 #endif	//_NUMTOOLS_H_
