@@ -48,6 +48,31 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 #include <string>
 
+/**
+ * @brief Five points numerical derivative function wrapper.
+ *
+ * Numerical derivatives use three points to compute the derivatives.
+ * @f$x_0@f$ is the focus point, @f$x_{-2} = x_0-2h@f$, @f$x_{-1} = x_0-h@f$, @f$x_{+1}=x_0+h@f$ and @f$x_{+2} = x_0+2h@f$
+ * are other points, with function values @f$f_0@f$, @f$f_{-2}@f$, @f$f_{-1}@f$, @f$f_{+1}@f$ and @f$f_{+2}@f$ respectively.
+ * The derivatives are then computed using the central formulas:
+ * @f{eqnarray*}
+ * \dfrac{\partial   f}{\partial x  } &=& \dfrac{f_{-2}-8f_{-1}+8f_{+1}-f_{+2}}{12h}\\
+ * \dfrac{\partial^2 f}{\partial x^2} &=& \dfrac{-f_{-2}+16f_{-1}-30f_0+16f_{+1}-f_{+2}}{12h^2}\\
+ * @f}
+ * In case of border limit (when @f$x_{-2}@f$ or @f$x_{+2}@f$ are not computable), 
+ * the foreward and backward three points computations are performed, respectively:
+ * @f{eqnarray*}
+ * \dfrac{\partial   f}{\partial x  } &=& \dfrac{f_{+1}-f_0}{h}\\
+ * \dfrac{\partial^2 f}{\partial x^2} &=& \dfrac{f_{+2}-2f_{+1}+f_0}{h^2}\\
+ * @f}
+ * and
+ * @f{eqnarray*}
+ * \dfrac{\partial   f}{\partial x  } &=& \dfrac{f_0-f_{-1}}{h}\\
+ * \dfrac{\partial^2 f}{\partial x^2} &=& \dfrac{f_0-2f_{-1}+f_{-2}}{h^2}\\
+ * @f}
+ *
+ * @see AbstractNumericalDerivative
+ */
 class FivePointsNumericalDerivative: public AbstractNumericalDerivative
 {
   protected:

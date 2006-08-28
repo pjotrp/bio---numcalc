@@ -47,6 +47,18 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 #include <string>
 
+/**
+ * @brief Numerical derivative function wrapper, partial implementation.
+ *
+ * This class provides a wrapper for Function object, implementing the DerivableSecondOrder interface
+ * (Although no cross derivative is implemented for now).
+ * Derivations of this class can be used as full DerivableSecondOrder objects, with derivative functions.
+ * 
+ * Three kinds of constructors are provided: one with a Function object, another with a DerivableFirstOrder object, and one with a DerivableSecondOrder object.
+ * In the first case, all derivatives will be computed analytically.
+ * In the second case, first order derivative will be computed analytically only if no appropriate analytical derivative is available, second order derivative will always be computed numerically.
+ * In the last case, first and second order derivative will be computed analytically only if no appropriate analytical derivative is available.
+ */
 class AbstractNumericalDerivative: public DerivableSecondOrder
 {
   protected:
@@ -68,8 +80,20 @@ class AbstractNumericalDerivative: public DerivableSecondOrder
 		virtual ~AbstractNumericalDerivative() {}
 
   public:
+    /**
+     * @brief Set the interval value used in numerical approximation.
+     *
+     * Default value is 0.0001.
+     *
+     * @param h Interval value.
+     */
     void setInterval(double h) { _h = h; }
     
+    /**
+     * @brief Set the list of parameters to derivate.
+     *
+     * @param variables A list of all parameter names.
+     */
     void setParametersToDerivate(const vector<string> & variables)
     {
       _variables = variables;
@@ -77,6 +101,11 @@ class AbstractNumericalDerivative: public DerivableSecondOrder
       _der2.clear();
     }
     
+    /**
+     * @name The DerivableFirstOrder interface
+     *
+     * @{
+     */
     double getFirstOrderDerivative(const string & variable) const
       throw (Exception)
     {
@@ -90,7 +119,13 @@ class AbstractNumericalDerivative: public DerivableSecondOrder
       if(it != _der1.end()) return it->second;
       else throw Exception("First order derivative not computed for variable " + variable + "."); 
     }
+    /** @} */
 		
+    /**
+     * @name The DerivableSecondOrder interface
+     *
+     * @{
+     */
     double getSecondOrderDerivative(const string & variable) const
       throw (Exception)
     {
@@ -115,7 +150,14 @@ class AbstractNumericalDerivative: public DerivableSecondOrder
     {
 			return _function->getParameters();	
 		}
+    /** @} */
 		
+    
+    /**
+     * @name The Function interface
+     *
+     * @{
+     */
 		double getParameterValue(const string & name) const
       throw (ParameterNotFoundException)
     {
@@ -145,6 +187,7 @@ class AbstractNumericalDerivative: public DerivableSecondOrder
     {
 			_function -> matchParametersValues(parameters);
 		}
+    /** @} */
     
 };
 
