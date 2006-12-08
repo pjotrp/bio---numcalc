@@ -98,6 +98,7 @@ class AbstractDiscreteDistribution: public virtual DiscreteDistribution, public 
 		double  getSupCumulativeProbability(double category) const;
 		double getSSupCumulativeProbability(double category) const;
 		double rand() const;
+		double randC() const throw (Exception) { throw Exception("AbstractDiscreteDistribution::randC. No continuous version available for this distribution."); }
 		void print(ostream & out) const;
 		/** @} */
 		

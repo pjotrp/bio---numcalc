@@ -59,6 +59,7 @@ class ConstantDistribution : public AbstractDiscreteDistribution
 	public:
     Domain getDomain() const;
 		void fireParameterChanged(const ParameterList & parameters) {}
+    double randC() const throw (Exception) { return _value; }
 	
 };
 

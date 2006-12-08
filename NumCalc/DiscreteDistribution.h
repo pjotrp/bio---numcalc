@@ -161,6 +161,16 @@ class DiscreteDistribution: public virtual Parametrizable
 		 */
 		virtual double rand() const = 0;
 
+		/**
+		 * @brief Draw a random number from the continuous version of this distribution, if it exists.
+		 *
+		 * Uses the continuous version of this distribution to draw a random number.
+		 * 
+		 * @return A random number according to this distribution.
+     * @throw Exception If there is no continuous version of this distribution.
+		 */
+		virtual double randC() const throw (Exception) = 0;
+
     /**
 		 * @return The domain associated to classes of this distribution.
 		 * @see Domain

@@ -615,6 +615,30 @@ InputType mean(const vector<InputType> & v1)
 }
 
 /**
+ * @return The median value of the vector.
+ * @param v1 A vector.
+ */
+template<class InputType>
+InputType median(const vector<InputType> & v1)
+{
+  InputType med = 0;
+  sort(v1.begin(), v1.end());
+  double size = (double)v1.size() / 2.;
+  unsigned int i = v1.size() / 2;
+  if (i == size)
+  {
+    //Vector size is pair
+    med = double((v1[i-1] + v1[i]) / 2);
+  }
+  else
+  {
+    //Vector size is impair
+    med = v1[i-1];
+  }
+  return med;
+}
+
+/**
  * @brief Set the mean of a vector to be 0.
  * 
  * @return A vector with mean 0.

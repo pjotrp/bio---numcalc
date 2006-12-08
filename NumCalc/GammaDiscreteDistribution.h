@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractDiscreteDistribution.h"
 #include "Constraints.h"
+#include "RandomTools.h"
 
 /**
  * @brief Discretized Gamma distribution.
@@ -49,7 +50,6 @@ knowledge of the CeCILL license and that you accept its terms.
 class GammaDiscreteDistribution : public AbstractDiscreteDistribution
 {
 	protected:
-		//double _alpha;
 		vector<double> _bounds;
 		IncludingPositiveReal * _alphaConstraint;
 	
@@ -63,8 +63,13 @@ class GammaDiscreteDistribution : public AbstractDiscreteDistribution
     Domain getDomain() const;
 		void fireParameterChanged(const ParameterList & parameters);
 	
+  public:
+    double randC() const throw (Exception)
+    {
+      return RandomTools::randGamma(_parameters.getParameter("alpha")->getValue());
+    }
+    
 	protected:
-	
 		void applyParameters(unsigned int numberOfCategories);
 		static vector<double> computeBounds(unsigned int nbClasses, double alfa, double beta);
 		static vector<double> computeValues(unsigned int nbClasses, double alfa, double beta, bool median);

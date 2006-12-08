@@ -429,32 +429,43 @@ DataTable * DataTable::read(istream & in, const string & sep, bool header, int r
 	unsigned int nCol = row1.size();
 	bool hasRowNames;
 	DataTable * dt;
-	if(row1.size() == row2.size()) {
+	if(row1.size() == row2.size())
+  {
 		dt = new DataTable(nCol);
-		if(header) { //Use first line as header.
+		if(header)
+    { //Use first line as header.
 			dt->setColumnNames(row1);
-		} else {
+		}
+    else
+    {
 			dt->addRow(row1);
 		}
 		dt->addRow(row2);
 		hasRowNames = false;
-	} else if(row1.size() == row2.size() - 1) {
+	}
+  else if(row1.size() == row2.size() - 1)
+  {
 		dt = new DataTable(nCol);
 		dt->setColumnNames(row1);
 		string rowName = *row2.begin();
 		dt->addRow(rowName, vector<string>(row2.begin()+1, row2.end()));
 		hasRowNames = true;
-	} else throw DimensionException("DataTable::read(...). Row 2 as not the correct number of columns.", row2.size(), nCol);
+	}
+  else throw DimensionException("DataTable::read(...). Row 2 has not the correct number of columns.", row2.size(), nCol);
 
 	// Now read each line:
 	string line = FileTools::getNextLine(in);
-	while(!TextTools::isEmpty(line)) {
+	while(!TextTools::isEmpty(line))
+  {
 		StringTokenizer st(line, sep);
-		if(hasRowNames) {
+		if(hasRowNames)
+    {
 			string rowName = *st.getTokens().begin();
 			vector<string> row(st.getTokens().begin()+1, st.getTokens().end());
 			dt->addRow(rowName, row);
-		} else {
+		}
+    else
+    {
 			vector<string> row(st.getTokens().begin(), st.getTokens().end());
 			dt->addRow(row);
 		}
@@ -462,7 +473,8 @@ DataTable * DataTable::read(istream & in, const string & sep, bool header, int r
 	}
 
 	// Row names:
-	if(rowNames > -1) {
+	if(rowNames > -1)
+  {
 		if((unsigned int)rowNames >= nCol) throw IndexOutOfBoundsException("DataTable::read(...). Invalid column specified for row names.", rowNames, 0, nCol-1);
 		vector<string> col = dt->getColumn((unsigned int)rowNames);
 		dt->setRowNames(col);

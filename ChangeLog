@@ -1,3 +1,9 @@
+24/11/06 Julien Dutheil
+* New function randC in DiscreteDistribution.
+
+26/10/06 Benoît Nabholz
+* New median function in VectorTools.
+
 28/08/06 -*- Version 1.1.0 -*-
 
 17/08/06 Julien Dutheil
