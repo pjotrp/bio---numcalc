@@ -45,6 +45,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 
 //From Utils:
+#include <Utils/Clonable.h>
 #include <Utils/TextTools.h>
 
 /**
@@ -52,12 +53,14 @@ using namespace std;
  *
  * It provides a method that tells if a given value is correct.
  */
-class Constraint {
-	
+class Constraint : public Clonable
+{
 	public:
 		Constraint() {}
 		virtual ~Constraint() {}
-			
+
+    Constraint * clone() const = 0;
+		
 	public:
 		/**
 		 * @brief Tell if a given value is correct.
@@ -94,7 +97,9 @@ class IncludingPositiveReal: public Constraint
 	public:
 		IncludingPositiveReal(double lowerBound): _lower(lowerBound) {}
 		virtual ~IncludingPositiveReal() {}
-	
+
+    IncludingPositiveReal * clone() const { return new IncludingPositiveReal(*this); }
+		
 	public:
 		bool isCorrect(double value) const { return value >= _lower; }
 		double getLimit(double value) const { return isCorrect(value) ? value : _lower; }
@@ -116,7 +121,9 @@ class ExcludingPositiveReal: public Constraint
 	public:
 		ExcludingPositiveReal(double lowerBound): _lower(lowerBound) {}
 		virtual ~ExcludingPositiveReal() {}
-	
+
+    ExcludingPositiveReal * clone() const { return new ExcludingPositiveReal(*this); }
+		
 	public:
 		bool isCorrect(double value) const { return value > _lower; }
 		double getLimit(double value) const { return isCorrect(value) ? value : _lower; }
@@ -144,7 +151,9 @@ class Interval: public Constraint
 		Interval(double lowerBound, double upperBound): _lower(lowerBound), _upper(upperBound) {}
 		
 		virtual ~Interval() {}
-			
+    
+    Interval * clone() const = 0;
+
 	public:
 		bool isCorrect(double value) const = 0;
 		double getLimit(double value) const
@@ -173,6 +182,8 @@ class IncludingInterval: public Interval
 
 		virtual ~IncludingInterval() {}
 	
+    IncludingInterval * clone() const { return new IncludingInterval(*this); }
+		
 	public:
 		bool isCorrect(double value) const
 		{
@@ -199,8 +210,11 @@ class ExcludingInterval: public Interval
 		 */
 		ExcludingInterval(double lowerBound, double upperBound):
 			Interval(lowerBound, upperBound) {}
+
     virtual ~ExcludingInterval() {}
 	
+    ExcludingInterval * clone() const { return new ExcludingInterval(*this); }
+		
 	public:
 		bool isCorrect(double value) const
 		{
@@ -231,6 +245,8 @@ class IncludingExcludingInterval: public Interval
 		
     virtual ~IncludingExcludingInterval() {}
 	
+    IncludingExcludingInterval * clone() const { return new IncludingExcludingInterval(*this); }
+		
 	public:
 		bool isCorrect(double value) const
 		{
@@ -262,6 +278,8 @@ class ExcludingIncludingInterval: public Interval
 
 		virtual ~ExcludingIncludingInterval() {}
 
+    ExcludingIncludingInterval * clone() const { return new ExcludingIncludingInterval(*this); }
+		
 	public:
 		bool isCorrect(double value) const
 		{

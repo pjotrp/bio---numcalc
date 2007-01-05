@@ -44,6 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "ParameterList.h"
 #include "OptimizationStopCondition.h"
 
+//From Utils:
+#include <Utils/Clonable.h>
+
 // From the STL:
 #include <iostream>
 
@@ -54,11 +57,13 @@ using namespace std;
  * 
  * An optimizer deals with Function objects.
  */
-class Optimizer
+class Optimizer: public Clonable
 {
 	public:
 		Optimizer() {}
 		virtual ~Optimizer() {}
+
+    Optimizer * clone() const = 0;
 	
 	public:
 		
@@ -159,7 +164,7 @@ class Optimizer
 		 * @param stopCondition The stop condition to use while optimizing.
 		 * @see OptimizationStopCondition.
 		 */
-		virtual void setStopCondition(OptimizationStopCondition * stopCondition) = 0;
+		virtual void setStopCondition(const OptimizationStopCondition & stopCondition) = 0;
 
 		/**
 		 * @brief Get the stop condition of the optimization algorithm.

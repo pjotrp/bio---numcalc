@@ -43,11 +43,6 @@ using namespace NumTools;
 
 /******************************************************************************/
 
-DownhillSimplexMethod::DSMStopCondition::DSMStopCondition(DownhillSimplexMethod * dsm):
-	AbstractOptimizationStopCondition(dsm) {}
-		
-DownhillSimplexMethod::DSMStopCondition::~DSMStopCondition() {}
-
 bool DownhillSimplexMethod::DSMStopCondition::isToleranceReached() const
 {
 	// NRC stop condition, replaced by a general stop condition on parmeter estimates.

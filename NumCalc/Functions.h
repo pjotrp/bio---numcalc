@@ -44,6 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Parametrizable.h"
 #include "ParameterExceptions.h"
 
+// From Utils:
+#include <Utils/Clonable.h>
+
 // From the STL:
 #include <cmath>
 using namespace std;
@@ -76,7 +79,9 @@ using namespace std;
  *
  * @see Parameter, ParameterList
  */
-class Function : public virtual Parametrizable
+class Function :
+  public virtual Parametrizable,
+  public virtual Clonable
 {    
   public:
     Function() {}
@@ -229,8 +234,16 @@ class InfinityFunctionWrapper : public virtual Function
     mutable bool _constraintMatch;
     
   public:
-    InfinityFunctionWrapper(Function * function): _function(function), _constraintMatch(false) {}
+    InfinityFunctionWrapper(Function * function):
+      _function(function),
+      _constraintMatch(false) {}
     virtual ~InfinityFunctionWrapper() {}
+
+#if defined(VIRTUAL_COV)
+    InfinityFunctionWrapper * clone() const { return new InfinityFunctionWrapper(*this); }
+#else
+    Clonable * clone() const { return new InfinityFunctionWrapper(*this); }
+#endif
 
   public:
 
@@ -322,6 +335,12 @@ class InfinityDerivableFirstOrderWrapper : public virtual InfinityFunctionWrappe
   public:
     InfinityDerivableFirstOrderWrapper(DerivableFirstOrder * function): InfinityFunctionWrapper(function) {}
     virtual ~InfinityDerivableFirstOrderWrapper() {}
+    
+#if defined(VIRTUAL_COV)
+    InfinityDerivableFirstOrderWrapper * clone() const { return new InfinityDerivableFirstOrderWrapper(*this); }
+#else
+    Clonable * clone() const { return new InfinityDerivableFirstOrderWrapper(*this); }
+#endif
 
   public:
     
@@ -347,6 +366,12 @@ class InfinityDerivableSecondOrderWrapper : public virtual InfinityDerivableFirs
       InfinityFunctionWrapper(function),
       InfinityDerivableFirstOrderWrapper(function) {}
     virtual ~InfinityDerivableSecondOrderWrapper() {}
+
+#if defined(VIRTUAL_COV)
+    InfinityDerivableSecondOrderWrapper * clone() const { return new InfinityDerivableSecondOrderWrapper(*this); }
+#else
+    Clonable * clone() const { return new InfinityDerivableSecondOrderWrapper(*this); }
+#endif
 
   public:
 

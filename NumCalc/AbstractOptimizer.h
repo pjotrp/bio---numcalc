@@ -45,7 +45,7 @@ knowledge of the CeCILL license and that you accept its terms.
 /**
  * @brief Partial implementation of the Optimizer interface.
  */
-class AbstractOptimizer: public virtual Optimizer
+class AbstractOptimizer: public Optimizer
 {
 	protected:
 		
@@ -118,8 +118,17 @@ class AbstractOptimizer: public virtual Optimizer
 
 
 	public:
-		AbstractOptimizer(Function * function);
-		virtual ~AbstractOptimizer() {}
+		AbstractOptimizer(Function * function = NULL);
+
+    AbstractOptimizer(const AbstractOptimizer & opt);
+    
+    AbstractOptimizer & operator=(const AbstractOptimizer & opt);
+
+		virtual ~AbstractOptimizer()
+    {
+      delete _stopCondition;
+      delete _defaultStopCondition;
+    }
 	
 	public:
 		
@@ -130,7 +139,11 @@ class AbstractOptimizer: public virtual Optimizer
 		 */
 		void init(const ParameterList & params) throw (Exception);
 		ParameterList getParameters() const { return _parameters; }
-		void setFunction(Function * function) { _function = function; if(function != NULL) _stopCondition -> init(); }
+		void setFunction(Function * function)
+    { 
+      _function = function;
+      if(function != NULL) _stopCondition->init();
+    }
 		const Function * getFunction() const { return _function; }
 		Function * getFunction() { return _function; }
 		double getFunctionValue() const throw (NullPointerException)
@@ -141,7 +154,10 @@ class AbstractOptimizer: public virtual Optimizer
 		void setMessageHandler(ostream * mh) { _messageHandler = mh; }
 		void setProfiler(ostream * profiler) { _profiler = profiler; }
 		int getNumberOfEvaluations() const { return _nbEval; }
-		void setStopCondition(OptimizationStopCondition * stopCondition) { _stopCondition = stopCondition; }
+		void setStopCondition(const OptimizationStopCondition & stopCondition)
+    {
+      _stopCondition = stopCondition.clone();
+    }
 		OptimizationStopCondition * getStopCondition() { return _stopCondition; }
 		const OptimizationStopCondition * getStopCondition() const { return _stopCondition; }
 		OptimizationStopCondition * getDefaultStopCondition() { return _defaultStopCondition; }

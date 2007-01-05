@@ -63,12 +63,12 @@ class AbstractNumericalDerivative: public DerivableSecondOrder
 {
   protected:
     Function * _function;
-    DerivableFirstOrder * _function1;
-    DerivableSecondOrder * _function2;
+    DerivableFirstOrder *_function1;
+    DerivableSecondOrder *_function2;
     double _h;
     vector<string> _variables;
-    mutable map<string,double> _der1;
-    mutable map<string,double> _der2;
+    mutable map<string, double> _der1;
+    mutable map<string, double> _der2;
     
 	public:
 		AbstractNumericalDerivative (Function * function):
@@ -78,6 +78,12 @@ class AbstractNumericalDerivative: public DerivableSecondOrder
 	  AbstractNumericalDerivative (DerivableSecondOrder * function):
       _function(function), _function1(function), _function2(function), _h(0.0001) {}
 		virtual ~AbstractNumericalDerivative() {}
+
+#if defined(VIRTUAL_COV)
+    AbstractNumericalDerivative * clone() const = 0;
+#else
+    Clonable * clone() const = 0;
+#endif
 
   public:
     /**
@@ -185,7 +191,7 @@ class AbstractNumericalDerivative: public DerivableSecondOrder
 		void matchParametersValues(const ParameterList & parameters)
       throw (ConstraintException)
     {
-			_function -> matchParametersValues(parameters);
+			_function->matchParametersValues(parameters);
 		}
     /** @} */
     

@@ -49,20 +49,37 @@ SimpleMultiDimensions::SimpleMultiDimensions(Function * function):
 	AbstractOptimizer(function)
 {
 	_defaultStopCondition = new FunctionStopCondition(this);
-	_stopCondition = _defaultStopCondition;
+	_stopCondition = _defaultStopCondition->clone();
 	_nbParams = 0;
 	_optimizer = new BrentOneDimension(function);
 }
 
 /******************************************************************************/
 
+SimpleMultiDimensions::SimpleMultiDimensions(const SimpleMultiDimensions & opt):
+  AbstractOptimizer(opt)
+{
+  _nbParams = opt._nbParams;
+  if(opt._optimizer) _optimizer = opt._optimizer->clone();
+  else               _optimizer = NULL;
+}
+
+/******************************************************************************/
+
+SimpleMultiDimensions & SimpleMultiDimensions::operator=(const SimpleMultiDimensions & opt)
+{
+  AbstractOptimizer::operator=(opt);
+  _nbParams = opt._nbParams;
+  if(opt._optimizer) _optimizer = opt._optimizer->clone();
+  else               _optimizer = NULL;
+  return *this;
+}
+
+/******************************************************************************/
+
 SimpleMultiDimensions::~SimpleMultiDimensions()
 {
-	//for(unsigned int i = 0; i < _nbParams; i++) {
-	//	delete _optimizers[i];
-	//}
 	delete _optimizer;
-	delete _defaultStopCondition;
 }
 
 /******************************************************************************/
@@ -126,30 +143,32 @@ void SimpleMultiDimensions::init(const ParameterList & params) throw (Exception)
 
 double SimpleMultiDimensions::step() throw (Exception)
 {
-	double f = _function -> getValue();
-	for(unsigned int i = 0; i < _nbParams; i++) {
-		if(_verbose > 0) {
-			cout << _parameters[i] -> getName() << ":";
+	double f = _function->getValue();
+	for(unsigned int i = 0; i < _nbParams; i++)
+  {
+		if(_verbose > 0)
+    {
+			cout << _parameters[i]->getName() << ":";
 			cout.flush();
 		}
 		// Re-init optimizer according to new values:
-		double v = _parameters[i] -> getValue();
+		double v = _parameters[i]->getValue();
 		//_optimizers[i] -> setInitialInterval(v - 0.01, v + 0.01);
 		//_optimizers[i] -> init(_parameters.subList(i));
-		_optimizer -> setVerbose( _verbose > 0 ? _verbose - 1 : 0);
-		_optimizer -> setInitialInterval(v - 0.01, v + 0.01);
-		_optimizer -> init(_parameters.subList(i));
+		_optimizer->setVerbose( _verbose > 0 ? _verbose - 1 : 0);
+		_optimizer->setInitialInterval(v - 0.01, v + 0.01);
+		_optimizer->init(_parameters.subList(i));
 
 		// Optimize through this dimension:
 		//_optimizers[i] -> optimize();
-		f = _optimizer -> optimize();
+		f = _optimizer->optimize();
 		// Update parameters with the new value:
 		//_parameters.setParametersValues(_optimizers[i] -> getParameters());
 		//_nbEval += _optimizers[i] -> getNumberOfEvaluations(); 
-		_parameters.setParametersValues(_optimizer -> getParameters());
-		_nbEval += _optimizer -> getNumberOfEvaluations(); 
+		_parameters.setParametersValues(_optimizer->getParameters());
+		_nbEval += _optimizer->getNumberOfEvaluations(); 
 	}
-	_tolIsReached = _nbParams <= 1 || _stopCondition -> isToleranceReached();
+	_tolIsReached = _nbParams <= 1 || _stopCondition->isToleranceReached();
 	return f;
 }
 
@@ -159,10 +178,11 @@ double SimpleMultiDimensions::optimize() throw (Exception)
 {
 	_tolIsReached = false;
 	_nbEval = 0;
-	for (_nbEval = 0; _nbEval < _nbEvalMax && ! _tolIsReached; _nbEval++) {
+	for (_nbEval = 0; _nbEval < _nbEvalMax && ! _tolIsReached; _nbEval++)
+  {
 		step();
 	}
-	return _function -> getValue();
+	return _function->getValue();
 }
 
 /******************************************************************************/

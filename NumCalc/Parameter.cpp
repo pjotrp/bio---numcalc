@@ -55,26 +55,26 @@ throw (ConstraintException)
 	setValue(value);
 }
 
-Parameter::Parameter(const Parameter & p): Clonable()
+Parameter::Parameter(const Parameter & p)
 {
-	_name       = p.getName();
-	_value      = p.getValue();
-	_constraint = p.getConstraint();	
+	_name       = p._name;
+	_value      = p._value;
+	_constraint = p._constraint;
 }
 
 Parameter & Parameter::operator=(const Parameter & p)
 {
-	_name       = p.getName();
-	_value      = p.getValue();
-	_constraint = p.getConstraint();
-	return * this;	
+	_name       = p._name;
+	_value      = p._value;
+	_constraint = p._constraint;
+	return *this;	
 }
 
 /** Value: ********************************************************************/
 
 inline void Parameter::setValue(double value) throw (ConstraintException)
 {
-	if(_constraint != NULL && !_constraint -> isCorrect(value)) 
+	if(_constraint != NULL && !_constraint->isCorrect(value)) 
 		throw ConstraintException("Parameter::setValue", this, value);
 	_value = value;
 }

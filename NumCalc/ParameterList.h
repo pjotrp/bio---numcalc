@@ -64,6 +64,11 @@ class ParameterList : public virtual vector<Parameter *>
 		 */
 		ParameterList();
 	
+    /**
+     * @brief Copy constructor
+     *
+     * All parameters in the list will be cloned.
+     */
 		ParameterList(const ParameterList & pl);
 		
 		ParameterList & operator=(const ParameterList & pl);

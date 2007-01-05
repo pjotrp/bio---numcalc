@@ -52,15 +52,17 @@ knowledge of the CeCILL license and that you accept its terms.
  * (ISBN 0-521-43108-5)
  * </pre>
  */
-class PowellMultiDimensions: public virtual AbstractOptimizer
+class PowellMultiDimensions: public AbstractOptimizer
 {
-	
 	public:
 		class PMDStopCondition: public AbstractOptimizationStopCondition
 		{
 			public:
-				PMDStopCondition(PowellMultiDimensions * pmd);
-				~PMDStopCondition();
+				PMDStopCondition(PowellMultiDimensions * pmd):
+          AbstractOptimizationStopCondition(pmd) {}
+				virtual ~PMDStopCondition() {}
+
+        PMDStopCondition * clone() const { return new PMDStopCondition(*this); }
 			
 			public:
 				void init() {}
@@ -75,11 +77,18 @@ class PowellMultiDimensions: public virtual AbstractOptimizer
 			protected:
 				mutable ParameterList _params, p, _xt;
 				Vdouble xi;
-				Function * function;
+				Function * _function;
 			
 			public:
-				DirectionFunction(Function * function);
-				virtual ~DirectionFunction();
+				DirectionFunction(Function * function = NULL): _function(function) {}
+				virtual ~DirectionFunction() {}
+
+#if defined(VIRTUAL_COV)
+        DirectionFunction * clone() const { return new DirectionFunction(*this); }
+#else
+        Clonable * clone() const { return new DirectionFunction(*this); }
+#endif
+
 			
 			public: // Function interface implementation:
 				void setParameters(const ParameterList & parameters)
@@ -98,11 +107,13 @@ class PowellMultiDimensions: public virtual AbstractOptimizer
 		
 		int ncom;
 		ParameterList pcom, xicom;
-		DirectionFunction * f1dim;
+		DirectionFunction f1dim;
 		
 	public:
 		PowellMultiDimensions(Function * function);
-		virtual ~PowellMultiDimensions();
+		virtual ~PowellMultiDimensions() {}
+
+    PowellMultiDimensions * clone() const { return new PowellMultiDimensions(*this); }
 	
 	public:		
 		

@@ -45,6 +45,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From the STL:
 #include <string>
+#include <iostream>
+using namespace std;
 
 //From Utils:
 #include <Utils/Clonable.h>
@@ -87,15 +89,13 @@ class Parameter: public Clonable
 		/**
 		 * @brief Assignment operator.
 		 */
-		virtual Parameter & operator=(const Parameter & param);
+		Parameter & operator=(const Parameter & param);
 	
 		//Destructor:
 		virtual ~Parameter() {}
 		
-	public:
+    Parameter * clone() const { return new Parameter(*this); }
 		
-		Clonable * clone() const { return new Parameter(* this); }
-
 	public:
 
 		/**

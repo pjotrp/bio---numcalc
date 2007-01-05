@@ -53,13 +53,15 @@ knowledge of the CeCILL license and that you accept its terms.
  */
 class GoldenSectionSearch : public AbstractOptimizer
 {	
-	
 	public:
 		class GSSStopCondition: public AbstractOptimizationStopCondition
 		{
 			public:
-				GSSStopCondition(GoldenSectionSearch * gss);
-				~GSSStopCondition();
+				GSSStopCondition(GoldenSectionSearch * gss):
+          AbstractOptimizationStopCondition(gss) {}
+				virtual ~GSSStopCondition() {}
+
+        GSSStopCondition * clone() const { return new GSSStopCondition(*this); }
 			
 			public:
 				void init() {}
@@ -75,7 +77,9 @@ class GoldenSectionSearch : public AbstractOptimizer
 	public:
 		
 		GoldenSectionSearch(Function * function);
-		virtual ~GoldenSectionSearch() { delete _defaultStopCondition; }
+		virtual ~GoldenSectionSearch() {}
+
+    GoldenSectionSearch * clone() const { return new GoldenSectionSearch(*this); }
 	
 	public:
 		

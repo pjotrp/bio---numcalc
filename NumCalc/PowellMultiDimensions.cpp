@@ -46,17 +46,12 @@ using namespace NumTools;
 
 /******************************************************************************/
 
-PowellMultiDimensions::PMDStopCondition::PMDStopCondition(PowellMultiDimensions * pmd):
-	AbstractOptimizationStopCondition(pmd) {}
-
-PowellMultiDimensions::PMDStopCondition::~PMDStopCondition() {}
-		
 bool PowellMultiDimensions::PMDStopCondition::isToleranceReached() const
 {
 	// NRC Test for done:
 	const PowellMultiDimensions * pmd = dynamic_cast<const PowellMultiDimensions *>(_optimizer);
-	double fp   = pmd -> _fp;
-	double fret = pmd -> _fret;
+	double fp   = pmd->_fp;
+	double fret = pmd->_fret;
 	return 2.0 * NumTools::abs(fp - fret) <= _tolerance * (NumTools::abs(fp) + NumTools::abs(fret));
 }
 		
@@ -65,15 +60,9 @@ bool PowellMultiDimensions::PMDStopCondition::isToleranceReached() const
 PowellMultiDimensions::PowellMultiDimensions(Function * function) :
 AbstractOptimizer(function)
 {
-	f1dim = new PowellMultiDimensions::DirectionFunction(_function);
+	f1dim = PowellMultiDimensions::DirectionFunction(_function);
 	_defaultStopCondition = new PMDStopCondition(this);
-	_stopCondition = _defaultStopCondition;
-}
-
-PowellMultiDimensions::~PowellMultiDimensions()
-{
-	delete f1dim;
-	delete _defaultStopCondition;
+	_stopCondition = _defaultStopCondition->clone();
 }
 
 /******************************************************************************/
@@ -193,8 +182,8 @@ void PowellMultiDimensions::linmin(Vdouble & xi)
 	double xx = 1.0;
 	
 	//_parameters.printParameters(cout); cout << endl;
-	f1dim -> set(_parameters, xi);
-	BrentOneDimension bod(f1dim);
+	f1dim.set(_parameters, xi);
+	BrentOneDimension bod(&f1dim);
 	bod.setMessageHandler(_messageHandler);
 	bod.setProfiler(NULL);
 	bod.setVerbose(_verbose > 1 ? 1 : 0);
@@ -209,27 +198,18 @@ void PowellMultiDimensions::linmin(Vdouble & xi)
 	
 	if(_verbose > 1) { cout << "#"; cout.flush(); }
 	
-	double xmin = f1dim -> getParameters()[0] -> getValue();
+	double xmin = f1dim.getParameters()[0]->getValue();
 	//cout << "xmin = " << xmin << endl;
-	for (int j = 0; j < n; j++) {
+	for (int j = 0; j < n; j++)
+  {
 		//cout << "xi[" << j << "] = " << xi[j] -> getValue() * xmin << endl;
 		         xi[j] *=  xmin;
 		//cout << "xi[" << j << "] = " << xi[j] -> getValue() << endl;
-		_parameters[j] -> setValue(_parameters[j] -> getValue() + xi[j]);
+		_parameters[j]->setValue(_parameters[j]->getValue() + xi[j]);
 	}
 	printPoint(_parameters, _fret);
 }
 
-/** DirectionFunction: ********************************************************/
-
-PowellMultiDimensions::DirectionFunction::DirectionFunction(
-	Function * function):
-	function(function) {}
-
-/******************************************************************************/
-
-PowellMultiDimensions::DirectionFunction::~DirectionFunction() {}
-	
 /******************************************************************************/
 
 void PowellMultiDimensions::DirectionFunction::setParameters(
@@ -238,8 +218,9 @@ void PowellMultiDimensions::DirectionFunction::setParameters(
 {
 	_params = params;
 	_xt = p;
-	for(unsigned int j = 0; j < p.size(); j++) {
-		_xt[j] -> setValue((p[j] -> getValue()) + (_params[0] -> getValue()) * xi[j]);
+	for(unsigned int j = 0; j < p.size(); j++)
+  {
+		_xt[j]->setValue((p[j]->getValue()) + (_params[0]->getValue()) * xi[j]);
 	}
 }
 
@@ -247,20 +228,22 @@ void PowellMultiDimensions::DirectionFunction::setParameters(
 
 double PowellMultiDimensions::DirectionFunction::getValue() const throw (Exception)
 {
-	return function -> f(_xt);
+	return _function->f(_xt);
 }
 
 /******************************************************************************/
 
-ParameterList PowellMultiDimensions::DirectionFunction::getParameters() const throw (Exception) {
+ParameterList PowellMultiDimensions::DirectionFunction::getParameters() const throw (Exception)
+{
 	return _params;
 }
 
 /******************************************************************************/
 
-void PowellMultiDimensions::DirectionFunction::set(const ParameterList & p, const Vdouble & xi) {
-	this -> p = p;
-	this -> xi = xi;	
+void PowellMultiDimensions::DirectionFunction::set(const ParameterList & p, const Vdouble & xi)
+{
+	this->p = p;
+	this->xi = xi;	
 }
 
 /******************************************************************************/

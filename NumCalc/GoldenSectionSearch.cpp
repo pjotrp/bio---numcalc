@@ -48,12 +48,8 @@ using namespace NumTools;
 
 /******************************************************************************/
 
-GoldenSectionSearch::GSSStopCondition::GSSStopCondition(GoldenSectionSearch * gss):
-	AbstractOptimizationStopCondition(gss) {}
-
-GoldenSectionSearch::GSSStopCondition::~GSSStopCondition() {}
-		
-bool GoldenSectionSearch::GSSStopCondition::isToleranceReached() const {
+bool GoldenSectionSearch::GSSStopCondition::isToleranceReached() const
+{
 	// NRC Test for done:
 	const GoldenSectionSearch * gss = dynamic_cast<const GoldenSectionSearch *>(_optimizer);
 	double x0 = gss -> x0;
@@ -75,7 +71,7 @@ AbstractOptimizer(function)
 {
 	_nbEvalMax = 10000;
 	_defaultStopCondition = new GSSStopCondition(this);
-	_stopCondition = _defaultStopCondition;
+	_stopCondition = _defaultStopCondition->clone();
 }
 
 /******************************************************************************/

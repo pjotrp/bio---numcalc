@@ -85,14 +85,13 @@ class AutoParameter : public Parameter
 		 *
 		 * @param param The parameter to copy.
 		 */
-		AutoParameter & operator=(const Parameter & param);
+		AutoParameter & operator=(const AutoParameter & param);
 	
 		virtual ~AutoParameter() {}
 	
-	public:
-		
-		Clonable * clone() const { return new AutoParameter(* this); }
-
+		AutoParameter * clone() const { return new AutoParameter(* this); }
+	
+  public:	
 	
 		/**
 		 * @brief Set the value of this parameter.

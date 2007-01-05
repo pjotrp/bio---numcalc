@@ -66,27 +66,25 @@ AutoParameter::AutoParameter(const AutoParameter & p): Parameter(p)
 	_messageHandler = p._messageHandler;
 }
 
-AutoParameter & AutoParameter::operator=(const Parameter & p)
+AutoParameter & AutoParameter::operator=(const AutoParameter & p)
 {
-	_name       = p.getName();
-	_value      = p.getValue();
-	_constraint = p.getConstraint();
-	try {
-		_messageHandler = dynamic_cast<const AutoParameter &>(p)._messageHandler;
-	} catch(exception e) {
-		_messageHandler = &cout;
-	}
-	return * this;	
+  Parameter::operator=(p);
+  _messageHandler = p._messageHandler;
+	return *this;	
 }
 
 /******************************************************************************/
 	
 void AutoParameter::setValue(double value) throw (ConstraintException)
 {
-	try { // First we try to assign this value:
+	try
+  { // First we try to assign this value:
 		Parameter::setValue(value);
-	} catch (ConstraintException & ce) { // Aie, there's a pb here...
-		if(_messageHandler != NULL) {
+	}
+  catch (ConstraintException & ce)
+  { // Aie, there's a pb here...
+		if(_messageHandler != NULL)
+    {
 			(* _messageHandler) << "Constraint match at parameter ";
 			(* _messageHandler) << _name;
 			(* _messageHandler) << ", badValue = ";
@@ -94,14 +92,20 @@ void AutoParameter::setValue(double value) throw (ConstraintException)
 			(* _messageHandler) << endl;
 		}
 		double limit = _constraint->getLimit(value);
-		try { // We try to assign the limit then.
+		try
+    { // We try to assign the limit then.
 			Parameter::setValue(limit);
-		} catch(ConstraintException & ce2) { // Aie, the limit is not reachable, so we perform a smaller step...
+		}
+    catch(ConstraintException & ce2)
+    { // Aie, the limit is not reachable, so we perform a smaller step...
 			//Parameter::setValue((getValue() + limit) / 2);
-			try {
+			try
+      {
 				// Try on the right:
 				Parameter::setValue(limit + TINY);
-			} catch(ConstraintException & ce3) {
+			}
+      catch(ConstraintException & ce3)
+      {
 				// Try on the left:
 				Parameter::setValue(limit - TINY);
 			}

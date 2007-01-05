@@ -53,13 +53,15 @@ knowledge of the CeCILL license and that you accept its terms.
  */
 class BrentOneDimension: public AbstractOptimizer
 {
-	
 	public:
 		class BODStopCondition: public AbstractOptimizationStopCondition
 		{
-			public:
-				BODStopCondition(BrentOneDimension * bod);
-				~BODStopCondition() {}
+      public:
+				BODStopCondition(BrentOneDimension * bod):
+          AbstractOptimizationStopCondition(bod) {}
+				virtual ~BODStopCondition() {}
+
+        BODStopCondition * clone() const { return new BODStopCondition(*this); } 
 			
 			public:
 				void init() {}
@@ -73,8 +75,10 @@ class BrentOneDimension: public AbstractOptimizer
 		double _xinf, _xsup;
 
 	public:
-		BrentOneDimension(Function * function);
-		virtual ~BrentOneDimension() { delete _defaultStopCondition; }
+		BrentOneDimension(Function * function = NULL);
+		virtual ~BrentOneDimension() {}
+
+    BrentOneDimension * clone() const { return new BrentOneDimension(*this); }
 	
 	public:		
 		

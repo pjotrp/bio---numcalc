@@ -47,7 +47,8 @@ ParameterList::ParameterList() : vector<Parameter *>() {}
 
 /** Copy constructor: *********************************************************/
 	
-ParameterList::ParameterList(const ParameterList & pl): vector<Parameter*>(pl.size())
+ParameterList::ParameterList(const ParameterList & pl):
+  vector<Parameter*>(pl)
 {
 	// First delete all parameters:
 	//reset();
@@ -56,8 +57,9 @@ ParameterList::ParameterList(const ParameterList & pl): vector<Parameter*>(pl.si
 	//resize(pl.size());
 	
 	// Now copy all parameters:
-	for(unsigned int i = 0; i < size(); i++) {
-		operator[](i) = dynamic_cast<Parameter *>(pl[i] -> clone());
+	for(unsigned int i = 0; i < size(); i++)
+  {
+		operator[](i) = dynamic_cast<Parameter *>(pl[i]->clone());
 	}
 }
 
@@ -70,13 +72,13 @@ ParameterList & ParameterList::operator=(const ParameterList & pl)
 		
 	// Then resize the vector:
 	resize(pl.size());
-	
 	// Now copy all parameters:
-	for(unsigned int i = 0; i < size(); i++) {
-		operator[](i) = dynamic_cast<Parameter *>(pl[i] -> clone());
+	for(unsigned int i = 0; i < pl.size(); i++)
+  {
+		(*this)[i] = dynamic_cast<Parameter *>(pl[i]->clone());
 	}
 	
-	return * this;
+	return *this;
 }
 	
 /** Destructor: ***************************************************************/
@@ -315,10 +317,11 @@ void ParameterList::printParameters(ostream & out) const
 {
 	out << "Name:\tValue:\tConstraint:" << endl;
 	out << "_________________________________________________" << endl;
-	for(unsigned int i = 0; i < size(); i++) {
-		out << operator[](i) -> getName();
-		out	<< "\t" << operator[](i) -> getValue();
-		out	<< (operator[](i) -> hasConstraint() ? "\t" + operator[](i) -> getConstraint() -> getDescription() : string(""));
+	for(unsigned int i = 0; i < size(); i++)
+  {
+		out << (*this)[i]->getName();
+		out	<< "\t" << (*this)[i]->getValue();
+		out	<< ((*this)[i]->hasConstraint() ? "\t" + (*this)[i]->getConstraint()->getDescription() : string(""));
 		out << endl;
 	}
 }
@@ -327,9 +330,10 @@ void ParameterList::printParameters(ostream & out) const
 
 void ParameterList::reset()
 {
-	for(unsigned int i = 0; i < size(); i++) {
-		//cout << "Deleting parameter " << i << ": " << operator[](i) -> getName() << endl;
-		delete operator[](i);
+	for(unsigned int i = 0; i < size(); i++)
+  {
+		//cout << "Deleting parameter " << i << ": " << operator[](i)->getName() << endl;
+		delete (*this)[i];
 	}
 	resize(0);
 }

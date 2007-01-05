@@ -57,13 +57,15 @@ knowledge of the CeCILL license and that you accept its terms.
  */
 class DownhillSimplexMethod: public AbstractOptimizer
 {
-	
 	public:
 		class DSMStopCondition: public AbstractOptimizationStopCondition
 		{
 			public:
-				DSMStopCondition(DownhillSimplexMethod * dsm);
-				~DSMStopCondition();
+				DSMStopCondition(DownhillSimplexMethod * dsm):
+          AbstractOptimizationStopCondition(dsm) {}
+				virtual ~DSMStopCondition() {}
+
+        DSMStopCondition * clone() const { return new DSMStopCondition(*this); }
 			
 			public:
 				void init() {}
@@ -97,7 +99,9 @@ class DownhillSimplexMethod: public AbstractOptimizer
 		 */
 		DownhillSimplexMethod(Function * function);
 	
-		virtual ~DownhillSimplexMethod() { delete _defaultStopCondition; }
+		virtual ~DownhillSimplexMethod() {}
+
+    DownhillSimplexMethod * clone() const { return new DownhillSimplexMethod(*this); }
 	
 	public:		
 		/**

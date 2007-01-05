@@ -59,13 +59,26 @@ class Optimizer;
  * parameter (@see ParametersStopCondition) or function (@see FunctionStopCondition) values,
  * or be specific to a given optimization method.
  */
-class OptimizationStopCondition
+class OptimizationStopCondition: public Clonable
 {
 	public:
 		OptimizationStopCondition() {}
 		virtual ~OptimizationStopCondition() {}
+
+    OptimizationStopCondition * clone() const = 0;
 	
 	public:
+
+    /**
+     * @return The optimizer to which this instance belongs to. 
+     */
+    virtual const Optimizer * getOptimizer() const = 0;
+    /**
+     * @brief Set the optimizer attached to this instance.
+     *
+     * @param optimizer The optimizer to which this instance belongs to. 
+     */
+    virtual void setOptimizer(const Optimizer * optimizer) = 0;
 
 		/**
 		 * @brief Initialize the condition.
@@ -133,9 +146,10 @@ class AbstractOptimizationStopCondition: public virtual OptimizationStopConditio
 		virtual ~AbstractOptimizationStopCondition();
 
 	public:
+    const Optimizer * getOptimizer() const { return _optimizer; }
+    void setOptimizer(const Optimizer * optimizer) { _optimizer = optimizer; }
 		void setTolerance(double tolerance);
 		double getTolerance() const;
-	
 		virtual void resetCounter();
 		virtual void setBurnin(int burnin);
 		virtual int getBurnin() const;
@@ -151,7 +165,7 @@ class AbstractOptimizationStopCondition: public virtual OptimizationStopConditio
  * where \f$\lambda_{i, t}\f$ is the value of the ith parameter at iteration \f$t\f$,
  * and \f$\lambda_{i, t-1}\f$ is the value of the ith parameter at iteration \f$t-1\f$.
  */
-class ParametersStopCondition: public virtual AbstractOptimizationStopCondition
+class ParametersStopCondition: public AbstractOptimizationStopCondition
 {
 	protected:
 
@@ -175,7 +189,9 @@ class ParametersStopCondition: public virtual AbstractOptimizationStopCondition
 		ParametersStopCondition(const Optimizer * optimizer, int burnin);
 		ParametersStopCondition(const Optimizer * optimizer, double tolerance, int burnin);
 		
-		~ParametersStopCondition() {}
+		virtual ~ParametersStopCondition() {}
+
+    ParametersStopCondition * clone() const { return new ParametersStopCondition(*this); }
 	
 	public:
 		void init();
@@ -215,7 +231,9 @@ class FunctionStopCondition: public virtual AbstractOptimizationStopCondition
 		FunctionStopCondition(const Optimizer * optimizer, int burnin);
 		FunctionStopCondition(const Optimizer * optimizer, double tolerance, int burnin);
 		
-		~FunctionStopCondition();
+		virtual ~FunctionStopCondition();
+
+    FunctionStopCondition * clone() const { return new FunctionStopCondition(*this); }
 	
 	public:
 		void init();

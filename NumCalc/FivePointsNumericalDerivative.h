@@ -84,6 +84,12 @@ class FivePointsNumericalDerivative: public AbstractNumericalDerivative
 		FivePointsNumericalDerivative (DerivableSecondOrder * function): AbstractNumericalDerivative(function) {}
 		virtual ~FivePointsNumericalDerivative() {}
 
+#if defined(VIRTUAL_COV)
+    FivePointsNumericalDerivative * clone() const { return new FivePointsNumericalDerivative(*this); }
+#else
+    Clonable * clone() const { return new FivePointsNumericalDerivative(*this); }
+#endif
+
   public:
     
     void setParameters(const ParameterList & parameters)

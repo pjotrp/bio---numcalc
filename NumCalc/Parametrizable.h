@@ -187,7 +187,7 @@ class AbstractParametrizable : public virtual Parametrizable
 		double getParameterValue(const string & name) const
 			throw (ParameterNotFoundException)
 		{ 
-			return _parameters.getParameter(name) -> getValue();
+			return _parameters.getParameter(name)->getValue();
 		}
 
 		void setAllParametersValues(const ParameterList & parameters) 

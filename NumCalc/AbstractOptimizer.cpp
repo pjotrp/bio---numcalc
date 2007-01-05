@@ -48,15 +48,79 @@ knowledge of the CeCILL license and that you accept its terms.
 
 /******************************************************************************/
 
-AbstractOptimizer::AbstractOptimizer(Function * function): _function(function) 
+AbstractOptimizer::AbstractOptimizer(Function * function):
+  _function(function) 
 {
 	// Initialization with defaults:
 	_messageHandler   = & cout;
 	_profiler         = & cout;
 	_constraintPolicy = CONSTRAINTS_KEEP;	
-	_nbEvalMax = 1000000;
-  _nbEval = 0;
-	_verbose = true;
+	_nbEvalMax        = 1000000;
+  _nbEval           = 0;
+	_verbose          = true;
+}
+
+/******************************************************************************/
+
+AbstractOptimizer::AbstractOptimizer(const AbstractOptimizer & opt)
+{
+  _function               = opt._function;
+  _parameters             = opt._parameters;
+  _messageHandler         = opt._messageHandler;
+  _profiler               = opt._profiler;
+  _constraintPolicy       = opt._constraintPolicy;
+  _tolIsReached           = opt._tolIsReached;
+  if(opt._stopCondition)
+  {
+    _stopCondition        = opt._stopCondition->clone();
+    _stopCondition->setOptimizer(this);
+  }
+  else
+    _stopCondition        = NULL;
+  if(opt._defaultStopCondition)
+  {
+    _defaultStopCondition = opt._defaultStopCondition->clone();
+    _defaultStopCondition->setOptimizer(this);
+  }
+  else
+    _defaultStopCondition = NULL;
+  _nbEvalMax              = opt._nbEvalMax;
+  _nbEval                 = opt._nbEval;
+  _verbose                = opt._verbose;
+  //In case of AutoParameter instances, we must actualize the pointers toward _messageHandler:
+  init(_parameters);
+}
+
+/******************************************************************************/
+
+AbstractOptimizer & AbstractOptimizer::operator=(const AbstractOptimizer & opt)
+{
+  _function               = opt._function;
+  _parameters             = opt._parameters;
+  _messageHandler         = opt._messageHandler;
+  _profiler               = opt._profiler;
+  _constraintPolicy       = opt._constraintPolicy;
+  _tolIsReached           = opt._tolIsReached;
+  if(opt._stopCondition)
+  {
+    _stopCondition        = opt._stopCondition->clone();
+    _stopCondition->setOptimizer(this);
+  }
+  else
+    _stopCondition        = NULL;
+  if(opt._defaultStopCondition)
+  {
+    _defaultStopCondition = opt._defaultStopCondition->clone();
+    _defaultStopCondition->setOptimizer(this);
+  }
+  else
+    _defaultStopCondition = NULL;
+  _nbEvalMax              = opt._nbEvalMax;
+  _nbEval                 = opt._nbEval;
+  _verbose                = opt._verbose;
+  //In case of AutoParameter instances, we must actualize the pointers toward _messageHandler:
+  init(_parameters);
+  return *this;
 }
 
 /******************************************************************************/
