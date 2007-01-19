@@ -11,7 +11,7 @@ AC_MSG_CHECKING([Covariant return with virtual inheritance])
 AC_ARG_WITH(
 	[virtual-cov],
 	[  --with-virtual-cov      Enable covariant return type with
-	                  virtual inheritance (GCC < 3.4)],
+	                  virtual inheritance (GCC >= 3.4)],
   ,
   with_virtual_cov="yes"
 )
