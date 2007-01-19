@@ -95,13 +95,6 @@ void SimpleMultiDimensions::setFunction(Function * function)
 
 void SimpleMultiDimensions::init(const ParameterList & params) throw (Exception)
 {
-	// Some cleaning first.
-	// This is useful only if the optimizer have been initialized once before this time.
-	//for(unsigned int i = 0; i < _nbParams; i++) {
-	//	delete _optimizers[i];
-	//}
-	
-
 	_parameters = params;
 
 	_nbParams = params.size();
@@ -109,34 +102,22 @@ void SimpleMultiDimensions::init(const ParameterList & params) throw (Exception)
 
 	// Initialize optimizers:
 	unsigned int nbEvalMax = _nbEvalMax / _nbParams;
-	//_optimizers.resize(_nbParams);
-	//for(unsigned int i = 0; i < _nbParams; i++) {
-	//	//_optimizers[i] = new BrentOneDimension(_function);
-	//	_optimizers[i] = new GoldenSectionSearch(_function);
-	//	_optimizers[i] -> setMaximumNumberOfEvaluations(nbEvalMax);
-	//	_optimizers[i] -> setProfiler(_profiler);
-	//	_optimizers[i] -> setMessageHandler(_messageHandler);
-	//	//_optimizers[i] -> setTolerance(_stopCondition -> getTolerance());
-	//	_optimizers[i] -> getStopCondition() -> setTolerance(getStopCondition() -> getTolerance());
-	//	_optimizers[i] -> setConstraintPolicy(_constraintPolicy);
-	//	_optimizers[i] -> setInitialInterval(0.,1.);
-	//	profile(_parameters[i] -> getName() + "\t"); 
-	//}
-	_optimizer -> setMaximumNumberOfEvaluations(nbEvalMax);
-	_optimizer -> setProfiler(_profiler);
-	_optimizer -> setMessageHandler(_messageHandler);
-	_optimizer -> getStopCondition() -> setTolerance(getStopCondition() -> getTolerance());
-	_optimizer -> setConstraintPolicy(_constraintPolicy);
-	_optimizer -> setInitialInterval(0.,1.);
+	_optimizer->setMaximumNumberOfEvaluations(nbEvalMax);
+	_optimizer->setProfiler(_profiler);
+	_optimizer->setMessageHandler(_messageHandler);
+	_optimizer->getStopCondition()->setTolerance(getStopCondition()->getTolerance());
+	_optimizer->setConstraintPolicy(_constraintPolicy);
+	_optimizer->setInitialInterval(0.,1.);
 	
-	for(unsigned int i = 0; i < _nbParams; i++) {
-		profile(_parameters[i] -> getName() + "\t"); 
+	for(unsigned int i = 0; i < _nbParams; i++)
+  {
+		profile(_parameters[i]->getName() + "\t"); 
 	}
-	profileln("Function");
+	profileln("Function\tTime");
 
-	printPoint(_parameters, _function -> f(_parameters));
+	printPoint(_parameters, _function->f(_parameters));
 	// Initialize the StopCondition:
-	_stopCondition -> init();
+	_stopCondition->init();
 }
 
 /******************************************************************************/

@@ -186,8 +186,9 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 
 		void resize(unsigned int nRows, unsigned int nCols)
 		{
-			vector< vector<double> >::resize(nRows);
-			for(unsigned int i = 0; i < nRows; i++) {
+			vector< vector<Scalar> >::resize(nRows);
+			for(unsigned int i = 0; i < nRows; i++)
+      {
 				vector< vector<Scalar> >::operator[](i).resize(nCols);
 			}
 		}

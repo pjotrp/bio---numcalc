@@ -110,7 +110,7 @@ void GoldenSectionSearch::init(const ParameterList & params) throw (Exception)
 	_parameters[0] -> setValue(x2); f2 = _function -> f(_parameters);
 	_nbEval = 0;	
 
-	profileln(_parameters[0] -> getName() + "\tFunction");
+	profileln(_parameters[0] -> getName() + "\tFunction\tTime");
 }
 
 /******************************************************************************/

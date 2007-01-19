@@ -104,7 +104,7 @@ void DownhillSimplexMethod::init(const ParameterList & params) throw (Exception)
 	for (int j = 0; j < nDim; j++) {
 		profile(_parameters[j] -> getName() + "\t"); 
 	}
-	profileln("Function");
+	profileln("Function\tTime");
 }
 	
 /******************************************************************************/

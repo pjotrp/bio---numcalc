@@ -1,9 +1,12 @@
+19/01/07 -*- Version 1.2.0 -*-
+
 30/12/06 Julien Dutheil
 * --enable-virtual-cov option in configure, set to yes by default.
 * The Function interface now inherits from Clonable (bpp-utils).
 * Constraint interface now inherits from Clonable.
 * Optimizer interface now inherits from Clonable.
 * OptimizationStopCondition interface now inherits from Clonable.
+* Bug fixed in RowMatrix<T>: double changed to T in resize function. 
 
 24/11/06 Julien Dutheil
 * New function randC in DiscreteDistribution.

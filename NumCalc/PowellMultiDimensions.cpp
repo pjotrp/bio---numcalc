@@ -74,23 +74,26 @@ void PowellMultiDimensions::init(const ParameterList & params) throw (Exception)
 	// Build the initial matrix:
 	unsigned int n = params.size();
 	_xi.resize(n);
-	for(unsigned int i = 0; i < n; i++) {
+	for(unsigned int i = 0; i < n; i++)
+  {
 		// Copy the parameter list:
 		_xi[i] = Vdouble(n);
-		for(unsigned int j = 0; j < n; j++) {
+		for(unsigned int j = 0; j < n; j++)
+    {
 			// Set the directions to unit vectors:
 			_xi[i][j] = (j == i) ? 1 : 0;
 		}
 	}
 	
 	// Starting point:
-	_fret = _function -> f(_parameters);
+	_fret = _function->f(_parameters);
 	_pt   = _parameters;
 
-	for (unsigned int j = 0; j < n; j++) {
-		profile(_parameters[j] -> getName() + "\t"); 
+	for (unsigned int j = 0; j < n; j++)
+  {
+		profile(_parameters[j]->getName() + "\t"); 
 	}
-	profileln("Function");
+	profileln("Function\tTime");
 	printPoint(_parameters, _fret);
 }
 	

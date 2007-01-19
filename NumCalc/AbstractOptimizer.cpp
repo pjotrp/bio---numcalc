@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From the STL:
 #include <iomanip>
+#include <time.h>
 
 // From Utils:
 #include <Utils/TextTools.h>
@@ -166,11 +167,16 @@ void AbstractOptimizer::profileln(const string & s)
 void AbstractOptimizer::printPoint(const ParameterList & params, double value)
 {
 	int ndim = params.size();
-	for (int j = 0; j < ndim; j++) {
-		profile(TextTools::toString(params[j] -> getValue()));
+	for (int j = 0; j < ndim; j++)
+  {
+		profile(TextTools::toString(params[j]->getValue()));
 		profile("\t"); 
 	}
-	profileln(value);
+	profile(value);
+  profile("\t");
+  time_t seconds;
+  time(&seconds);
+  profileln(ctime(&seconds)); 
 }
 
 /******************************************************************************/

@@ -105,7 +105,7 @@ void BrentOneDimension::init(const ParameterList & params) throw (Exception)
 	_parameters[0]->setValue(x);
 	fw = fv = fx = _function->f(_parameters);	
 
-	profileln(_parameters[0]->getName() + "\tFunction");
+	profileln(_parameters[0]->getName() + "\tFunction\tTime");
 }
 
 /******************************************************************************/
