@@ -47,7 +47,8 @@ knowledge of the CeCILL license and that you accept its terms.
 /**
  * @brief Discretized Gamma distribution.
  */
-class GammaDiscreteDistribution : public AbstractDiscreteDistribution
+class GammaDiscreteDistribution:
+  public AbstractDiscreteDistribution
 {
 	protected:
 		vector<double> _bounds;
@@ -57,7 +58,34 @@ class GammaDiscreteDistribution : public AbstractDiscreteDistribution
 		
 	public:
 		GammaDiscreteDistribution(unsigned int n, double alpha = 1.);
+
+    GammaDiscreteDistribution(const GammaDiscreteDistribution & dist):
+      AbstractParametrizable(dist),
+      AbstractDiscreteDistribution(dist),
+      _bounds(dist._bounds),
+      _alphaConstraint(dist._alphaConstraint->clone()) {}
+    
+    GammaDiscreteDistribution & operator=(const GammaDiscreteDistribution & dist)
+    {
+      AbstractDiscreteDistribution::operator=(dist);
+      _bounds = dist._bounds;
+      _alphaConstraint = dist._alphaConstraint->clone();
+      return *this;
+    }
+
 		virtual ~GammaDiscreteDistribution();
+
+#if defined(VIRTUAL_COV)
+    GammaDiscreteDistribution * clone() const
+    {
+      return new GammaDiscreteDistribution(*this);
+    }
+#else
+    Clonable * clone() const
+    {
+      return new GammaDiscreteDistribution(*this);
+    }
+#endif
 	
 	public:
     Domain getDomain() const;

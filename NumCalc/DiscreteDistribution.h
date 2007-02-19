@@ -70,6 +70,10 @@ class DiscreteDistribution: public virtual Parametrizable
 		DiscreteDistribution() {}
 		virtual ~DiscreteDistribution() {}
 	
+#if defined(VIRTUAL_COV)
+    DiscreteDistribution * clone() const = 0;
+#endif
+
 	public:
 		
 		/**

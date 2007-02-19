@@ -79,9 +79,8 @@ using namespace std;
  *
  * @see Parameter, ParameterList
  */
-class Function :
-  public virtual Parametrizable,
-  public virtual Clonable
+class Function:
+  public virtual Parametrizable
 {    
   public:
     Function() {}
@@ -123,7 +122,8 @@ class Function :
  *
  * This class adds the getFirstOrderDerivative() and df() shortcut functions.
  */
-class DerivableFirstOrder : public virtual Function
+class DerivableFirstOrder:
+  public virtual Function
 {
   public:
     DerivableFirstOrder() {}
@@ -162,7 +162,8 @@ class DerivableFirstOrder : public virtual Function
  * This class adds the getSecondOrderDerivative() and d2f() shortcut functions.
  * Cross derivative functions are also provided.
  */
-class DerivableSecondOrder : public virtual DerivableFirstOrder
+class DerivableSecondOrder:
+  public virtual DerivableFirstOrder
 {
   public:
     DerivableSecondOrder() {}
@@ -227,7 +228,8 @@ class DerivableSecondOrder : public virtual DerivableFirstOrder
  *
  * Catch any ConstraintException thrown and send +inf.
  */
-class InfinityFunctionWrapper : public virtual Function
+class InfinityFunctionWrapper:
+  public virtual Function
 {
   protected:
     Function * _function;
@@ -330,7 +332,8 @@ class InfinityFunctionWrapper : public virtual Function
  *
  * Catch any ConstraintException thrown and send +inf.
  */
-class InfinityDerivableFirstOrderWrapper : public virtual InfinityFunctionWrapper
+class InfinityDerivableFirstOrderWrapper:
+  public virtual InfinityFunctionWrapper
 {
   public:
     InfinityDerivableFirstOrderWrapper(DerivableFirstOrder * function): InfinityFunctionWrapper(function) {}
@@ -359,7 +362,8 @@ class InfinityDerivableFirstOrderWrapper : public virtual InfinityFunctionWrappe
  *
  * Catch any ConstraintException thrown and send +inf.
  */
-class InfinityDerivableSecondOrderWrapper : public virtual InfinityDerivableFirstOrderWrapper
+class InfinityDerivableSecondOrderWrapper:
+  public virtual InfinityDerivableFirstOrderWrapper
 {
   public:
     InfinityDerivableSecondOrderWrapper(DerivableFirstOrder * function):
@@ -392,7 +396,6 @@ class InfinityDerivableSecondOrderWrapper : public virtual InfinityDerivableFirs
       setParameters(parameters);
       return getSecondOrderDerivative(variable1, variable2);
     }
-
 };
 
 #endif  //_FUNCTIONS_H_

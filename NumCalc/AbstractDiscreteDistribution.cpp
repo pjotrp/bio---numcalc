@@ -46,7 +46,8 @@ using namespace VectorFunctions;
 
 /******************************************************************************/
 	
-unsigned int AbstractDiscreteDistribution::getNumberOfCategories() const {
+unsigned int AbstractDiscreteDistribution::getNumberOfCategories() const
+{
 	return _distribution.size();
 }
 
@@ -109,13 +110,15 @@ Vdouble AbstractDiscreteDistribution::getProbabilities() const
 
 /******************************************************************************/
 
-void AbstractDiscreteDistribution::set(double category, double probability) {
+void AbstractDiscreteDistribution::set(double category, double probability)
+{
 	_distribution[category] = probability;
 }
 
 /******************************************************************************/
 
-void AbstractDiscreteDistribution::add(double category, double probability) {
+void AbstractDiscreteDistribution::add(double category, double probability)
+{
 	if(_distribution.find(category) == _distribution.end()) {
 		//new category
 		_distribution[category] = probability;

@@ -40,6 +40,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _PARAMETRIZABLE_H_
 #define _PARAMETRIZABLE_H_
 
+// From Utils:
+#include <Utils/Clonable.h>
+
 // From the STL:
 #include <string>
 using namespace std;
@@ -51,7 +54,8 @@ using namespace std;
  *
  * @see Parameter, ParameterList
  */
-class Parametrizable
+class Parametrizable:
+  public virtual Clonable
 {
 	public:
 		Parametrizable() {}
@@ -133,7 +137,8 @@ class Parametrizable
  *
  * @see Parameter, ParameterList, Parametrizable
  */
-class ParametrizableAdapter : public virtual Parametrizable
+class ParametrizableAdapter:
+  public virtual Parametrizable
 {
 	public:
 		ParametrizableAdapter() {}
@@ -171,13 +176,15 @@ class ParametrizableAdapter : public virtual Parametrizable
  * All methods call the corresponding method in ParameterList and then call the
  * fireParameterChanged() method.
  */
-class AbstractParametrizable : public virtual Parametrizable
+class AbstractParametrizable:
+  public virtual Parametrizable
 {
 	protected:
 		mutable ParameterList _parameters;
 	
 	public:
 		AbstractParametrizable() {}
+
 		virtual ~AbstractParametrizable() {}
 
 	public:

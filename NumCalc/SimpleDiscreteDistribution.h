@@ -51,22 +51,34 @@ using namespace std;
  *
  * Keys are taken to be interval values, and map values to be the corresponding probabilities.
  */
-class SimpleDiscreteDistribution: public virtual AbstractDiscreteDistribution
+class SimpleDiscreteDistribution: public AbstractDiscreteDistribution
 {
-	public:
-		/**
-		 * @brief Build a new SimpleDiscreteDistribution object.
-		 *
-		 * @param distribution The map object to use.
-		 */
-		SimpleDiscreteDistribution(
-				const map<double, double> & distribution);
-		virtual ~SimpleDiscreteDistribution() {}
+  public:
+    /**
+     * @brief Build a new SimpleDiscreteDistribution object.
+     *
+     * @param distribution The map object to use.
+     */
+    SimpleDiscreteDistribution(const map<double, double> & distribution);
 
-	public:
-		void fireParameterChanged(const ParameterList & parameters) {}
-		Domain getDomain() const;
+    virtual ~SimpleDiscreteDistribution() {}
+
+#if defined(VIRTUAL_COV)
+    SimpleDiscreteDistribution * clone() const
+    {
+      return new SimpleDiscreteDistribution(*this);
+    }
+#else
+    Clonable * clone() const
+    {
+      return new SimpleDiscreteDistribution(*this);
+    }
+#endif
+
+  public:
+    void fireParameterChanged(const ParameterList & parameters) {}
+    Domain getDomain() const;
 };
 
-#endif	//_SIMPLEDISCRETEDISTRIBUTION_H_
+#endif  //_SIMPLEDISCRETEDISTRIBUTION_H_
 

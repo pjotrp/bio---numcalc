@@ -49,19 +49,31 @@ knowledge of the CeCILL license and that you accept its terms.
  */
 class ConstantDistribution : public AbstractDiscreteDistribution
 {
-    protected:
-        double _value;
+  protected:
+    double _value;
         
-    public:
-		ConstantDistribution(double value);
-		virtual ~ConstantDistribution() {}
-	
-	public:
+  public:
+    ConstantDistribution(double value);
+    virtual ~ConstantDistribution() {}
+
+#if defined(VIRTUAL_COV)
+    ConstantDistribution * clone() const
+    {
+      return new ConstantDistribution(*this);
+    }
+#else
+    Clonable * clone() const
+    {
+      return new ConstantDistribution(*this);
+    }
+#endif
+  
+  public:
     Domain getDomain() const;
-		void fireParameterChanged(const ParameterList & parameters) {}
+    void fireParameterChanged(const ParameterList & parameters) {}
     double randC() const throw (Exception) { return _value; }
-	
+  
 };
 
-#endif	//_CONSTANTDISTRIBUTION_H_
+#endif  //_CONSTANTDISTRIBUTION_H_
 

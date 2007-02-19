@@ -53,7 +53,9 @@ using namespace std;
  * It uses its own comparator class to deal with double precision.
  * By default, category values that differ less than 10E-9 will be considered identical.
  */
-class AbstractDiscreteDistribution: public virtual DiscreteDistribution, public virtual AbstractParametrizable
+class AbstractDiscreteDistribution:
+  public virtual DiscreteDistribution,
+  public virtual AbstractParametrizable
 {
 
   public:
@@ -61,7 +63,8 @@ class AbstractDiscreteDistribution: public virtual DiscreteDistribution, public 
     /**
 		 * @brief Comparator class for AbstractDiscreteDistribution.
 		 */
-		class Order {
+		class Order
+    {
       public:
         bool operator() (double l1, double l2) const {
           return (l1 < l2 - 0.000000001); //precision of E9
@@ -76,7 +79,8 @@ class AbstractDiscreteDistribution: public virtual DiscreteDistribution, public 
 	
 	public:
 		AbstractDiscreteDistribution() {}
-		virtual ~AbstractDiscreteDistribution() {}
+
+    virtual ~AbstractDiscreteDistribution() {}
 	
 	public:
 

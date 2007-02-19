@@ -1,3 +1,6 @@
+19/02/07 Julien Dutheil
+* Parametrizable interface now inherits from Clonable.
+
 19/01/07 -*- Version 1.2.0 -*-
 
 30/12/06 Julien Dutheil
