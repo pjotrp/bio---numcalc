@@ -54,8 +54,8 @@ using namespace std;
  * By default, category values that differ less than 10E-9 will be considered identical.
  */
 class AbstractDiscreteDistribution:
-  public virtual DiscreteDistribution,
-  public virtual AbstractParametrizable
+  public DiscreteDistribution,
+  public AbstractParametrizable
 {
 
   public:
@@ -81,7 +81,7 @@ class AbstractDiscreteDistribution:
 		AbstractDiscreteDistribution() {}
 
     virtual ~AbstractDiscreteDistribution() {}
-	
+
 	public:
 
 		/**

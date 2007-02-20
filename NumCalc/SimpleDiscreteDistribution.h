@@ -51,7 +51,8 @@ using namespace std;
  *
  * Keys are taken to be interval values, and map values to be the corresponding probabilities.
  */
-class SimpleDiscreteDistribution: public AbstractDiscreteDistribution
+class SimpleDiscreteDistribution:
+  public AbstractDiscreteDistribution
 {
   public:
     /**

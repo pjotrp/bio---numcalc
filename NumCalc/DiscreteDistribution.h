@@ -64,7 +64,8 @@ using namespace std;
  * depend on the parameters values, depending on the kind of
  * discretization used.
  */
-class DiscreteDistribution: public virtual Parametrizable
+class DiscreteDistribution:
+  public virtual Parametrizable
 {
 	public:
 		DiscreteDistribution() {}

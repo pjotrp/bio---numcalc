@@ -60,7 +60,7 @@ class GammaDiscreteDistribution:
 		GammaDiscreteDistribution(unsigned int n, double alpha = 1.);
 
     GammaDiscreteDistribution(const GammaDiscreteDistribution & dist):
-      AbstractParametrizable(dist),
+      //AbstractParametrizable(dist),
       AbstractDiscreteDistribution(dist),
       _bounds(dist._bounds),
       _alphaConstraint(dist._alphaConstraint->clone()) {}
