@@ -46,12 +46,12 @@ knowledge of the CeCILL license and that you accept its terms.
 /******************************************************************************/
 
 SimpleMultiDimensions::SimpleMultiDimensions(Function * function):
-	AbstractOptimizer(function)
+  AbstractOptimizer(function)
 {
-	_defaultStopCondition = new FunctionStopCondition(this);
-	_stopCondition = _defaultStopCondition->clone();
-	_nbParams = 0;
-	_optimizer = new BrentOneDimension(function);
+  _defaultStopCondition = new FunctionStopCondition(this);
+  _stopCondition = _defaultStopCondition->clone();
+  _nbParams = 0;
+  _optimizer = new BrentOneDimension(function);
 }
 
 /******************************************************************************/
@@ -79,91 +79,93 @@ SimpleMultiDimensions & SimpleMultiDimensions::operator=(const SimpleMultiDimens
 
 SimpleMultiDimensions::~SimpleMultiDimensions()
 {
-	delete _optimizer;
+  delete _optimizer;
 }
 
 /******************************************************************************/
 
 void SimpleMultiDimensions::setFunction(Function * function)
 {
-	AbstractOptimizer::setFunction(function);
-	_optimizer -> setFunction(function);
-	_stopCondition -> init();
+  AbstractOptimizer::setFunction(function);
+  _optimizer -> setFunction(function);
+  _stopCondition -> init();
 }
 
 /******************************************************************************/
 
 void SimpleMultiDimensions::init(const ParameterList & params) throw (Exception)
 {
-	_parameters = params;
+  _parameters = params;
 
-	_nbParams = params.size();
-	if(_nbParams == 0) return;
+  _nbParams = params.size();
+  if(_nbParams == 0) return;
 
-	// Initialize optimizers:
-	unsigned int nbEvalMax = _nbEvalMax / _nbParams;
-	_optimizer->setMaximumNumberOfEvaluations(nbEvalMax);
-	_optimizer->setProfiler(_profiler);
-	_optimizer->setMessageHandler(_messageHandler);
-	_optimizer->getStopCondition()->setTolerance(getStopCondition()->getTolerance());
-	_optimizer->setConstraintPolicy(_constraintPolicy);
-	_optimizer->setInitialInterval(0.,1.);
-	
-	for(unsigned int i = 0; i < _nbParams; i++)
+  // Initialize optimizers:
+  unsigned int nbEvalMax = _nbEvalMax / _nbParams;
+  _optimizer->setMaximumNumberOfEvaluations(nbEvalMax);
+  _optimizer->setProfiler(_profiler);
+  _optimizer->setMessageHandler(_messageHandler);
+  _optimizer->getStopCondition()->setTolerance(getStopCondition()->getTolerance());
+  _optimizer->setConstraintPolicy(_constraintPolicy);
+  _optimizer->setInitialInterval(0.,1.);
+  
+  for(unsigned int i = 0; i < _nbParams; i++)
   {
-		profile(_parameters[i]->getName() + "\t"); 
-	}
-	profileln("Function\tTime");
+    profile(_parameters[i]->getName() + "\t"); 
+  }
+  profileln("Function\tTime");
 
-	printPoint(_parameters, _function->f(_parameters));
-	// Initialize the StopCondition:
-	_stopCondition->init();
+  printPoint(_parameters, _function->f(_parameters));
+  // Initialize the StopCondition:
+  _stopCondition->init();
+  _isInitialized = true;
 }
 
 /******************************************************************************/
 
 double SimpleMultiDimensions::step() throw (Exception)
 {
-	double f = _function->getValue();
-	for(unsigned int i = 0; i < _nbParams; i++)
+  if(!_isInitialized) throw Exception("SimpleMultiDimensions::step. Optimizer not initialized: call the 'init' method first!");
+  double f = _function->getValue();
+  for(unsigned int i = 0; i < _nbParams; i++)
   {
-		if(_verbose > 0)
+    if(_verbose > 0)
     {
-			cout << _parameters[i]->getName() << ":";
-			cout.flush();
-		}
-		// Re-init optimizer according to new values:
-		double v = _parameters[i]->getValue();
-		//_optimizers[i] -> setInitialInterval(v - 0.01, v + 0.01);
-		//_optimizers[i] -> init(_parameters.subList(i));
-		_optimizer->setVerbose( _verbose > 0 ? _verbose - 1 : 0);
-		_optimizer->setInitialInterval(v - 0.01, v + 0.01);
-		_optimizer->init(_parameters.subList(i));
+      cout << _parameters[i]->getName() << ":";
+      cout.flush();
+    }
+    // Re-init optimizer according to new values:
+    double v = _parameters[i]->getValue();
+    //_optimizers[i] -> setInitialInterval(v - 0.01, v + 0.01);
+    //_optimizers[i] -> init(_parameters.subList(i));
+    _optimizer->setVerbose( _verbose > 0 ? _verbose - 1 : 0);
+    _optimizer->setInitialInterval(v - 0.01, v + 0.01);
+    _optimizer->init(_parameters.subList(i));
 
-		// Optimize through this dimension:
-		//_optimizers[i] -> optimize();
-		f = _optimizer->optimize();
-		// Update parameters with the new value:
-		//_parameters.setParametersValues(_optimizers[i] -> getParameters());
-		//_nbEval += _optimizers[i] -> getNumberOfEvaluations(); 
-		_parameters.setParametersValues(_optimizer->getParameters());
-		_nbEval += _optimizer->getNumberOfEvaluations(); 
-	}
-	_tolIsReached = _nbParams <= 1 || _stopCondition->isToleranceReached();
-	return f;
+    // Optimize through this dimension:
+    //_optimizers[i] -> optimize();
+    f = _optimizer->optimize();
+    // Update parameters with the new value:
+    //_parameters.setParametersValues(_optimizers[i] -> getParameters());
+    //_nbEval += _optimizers[i] -> getNumberOfEvaluations(); 
+    _parameters.setParametersValues(_optimizer->getParameters());
+    _nbEval += _optimizer->getNumberOfEvaluations(); 
+  }
+  _tolIsReached = _nbParams <= 1 || _stopCondition->isToleranceReached();
+  return f;
 }
 
 /******************************************************************************/
 
 double SimpleMultiDimensions::optimize() throw (Exception)
 {
-	_tolIsReached = false;
-	_nbEval = 0;
-	for (_nbEval = 0; _nbEval < _nbEvalMax && ! _tolIsReached; _nbEval++)
+  _tolIsReached = false;
+  _nbEval = 0;
+  for (_nbEval = 0; _nbEval < _nbEvalMax && ! _tolIsReached; _nbEval++)
   {
-		step();
-	}
-	return _function->getValue();
+    step();
+  }
+  return _function->getValue();
 }
 
 /******************************************************************************/

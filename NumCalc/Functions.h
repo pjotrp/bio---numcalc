@@ -129,6 +129,12 @@ class DerivableFirstOrder:
     DerivableFirstOrder() {}
     virtual ~DerivableFirstOrder() {}
 
+#if defined(NO_VIRTUAL_COV)
+    Clonable * clone() const = 0;
+#else
+    DerivableFirstOrder * clone() const = 0;
+#endif
+
   public:
     
     /**
@@ -168,6 +174,12 @@ class DerivableSecondOrder:
   public:
     DerivableSecondOrder() {}
     virtual ~DerivableSecondOrder() {}
+
+#if defined(NO_VIRTUAL_COV)
+    Clonable * clone() const = 0;
+#else
+    DerivableSecondOrder * clone() const = 0;
+#endif
 
   public:
 
@@ -241,10 +253,10 @@ class InfinityFunctionWrapper:
       _constraintMatch(false) {}
     virtual ~InfinityFunctionWrapper() {}
 
-#if defined(VIRTUAL_COV)
-    InfinityFunctionWrapper * clone() const { return new InfinityFunctionWrapper(*this); }
-#else
+#if defined(NO_VIRTUAL_COV)
     Clonable * clone() const { return new InfinityFunctionWrapper(*this); }
+#else
+    InfinityFunctionWrapper * clone() const { return new InfinityFunctionWrapper(*this); }
 #endif
 
   public:
@@ -339,10 +351,10 @@ class InfinityDerivableFirstOrderWrapper:
     InfinityDerivableFirstOrderWrapper(DerivableFirstOrder * function): InfinityFunctionWrapper(function) {}
     virtual ~InfinityDerivableFirstOrderWrapper() {}
     
-#if defined(VIRTUAL_COV)
-    InfinityDerivableFirstOrderWrapper * clone() const { return new InfinityDerivableFirstOrderWrapper(*this); }
-#else
+#if defined(NO_VIRTUAL_COV)
     Clonable * clone() const { return new InfinityDerivableFirstOrderWrapper(*this); }
+#else
+    InfinityDerivableFirstOrderWrapper * clone() const { return new InfinityDerivableFirstOrderWrapper(*this); }
 #endif
 
   public:
@@ -371,10 +383,10 @@ class InfinityDerivableSecondOrderWrapper:
       InfinityDerivableFirstOrderWrapper(function) {}
     virtual ~InfinityDerivableSecondOrderWrapper() {}
 
-#if defined(VIRTUAL_COV)
-    InfinityDerivableSecondOrderWrapper * clone() const { return new InfinityDerivableSecondOrderWrapper(*this); }
-#else
+#if defined(NO_VIRTUAL_COV)
     Clonable * clone() const { return new InfinityDerivableSecondOrderWrapper(*this); }
+#else
+    InfinityDerivableSecondOrderWrapper * clone() const { return new InfinityDerivableSecondOrderWrapper(*this); }
 #endif
 
   public:

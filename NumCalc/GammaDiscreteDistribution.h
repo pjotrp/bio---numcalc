@@ -75,16 +75,10 @@ class GammaDiscreteDistribution:
 
 		virtual ~GammaDiscreteDistribution();
 
-#if defined(VIRTUAL_COV)
-    GammaDiscreteDistribution * clone() const
-    {
-      return new GammaDiscreteDistribution(*this);
-    }
+#if defined(NO_VIRTUAL_COV)
+    Clonable * clone() const { return new GammaDiscreteDistribution(*this); }
 #else
-    Clonable * clone() const
-    {
-      return new GammaDiscreteDistribution(*this);
-    }
+    GammaDiscreteDistribution * clone() const { return new GammaDiscreteDistribution(*this); }
 #endif
 	
 	public:

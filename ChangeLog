@@ -1,3 +1,13 @@
+02/04/07 Julien Dutheil
+* VIRTUAL_COV variable changed to NO_VIRTUAL_COV. configure.ac file updated.
+  => Default behaviour is now /really/ to use covariant return type with
+	virtual inheritence, even when importing the files in an IDE. To use the old
+	compilers behaviour, one must set the NO_VIRTUAL_COV preproc variable.
+* Optimizer interface now has a 'isInitialized' method, and send an exception
+  when attempting to optimize without properly initializing the optimizer.
+	Similar behaviour is set for the setInitialInterval method in
+	one-dimensional optimizers.
+
 19/02/07 Julien Dutheil
 * Parametrizable interface now inherits from Clonable.
 

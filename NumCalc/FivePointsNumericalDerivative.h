@@ -73,7 +73,8 @@ knowledge of the CeCILL license and that you accept its terms.
  *
  * @see AbstractNumericalDerivative
  */
-class FivePointsNumericalDerivative: public AbstractNumericalDerivative
+class FivePointsNumericalDerivative:
+  public AbstractNumericalDerivative
 {
   protected:
     double _f1, _f2, _f3, _f4, _f5;
@@ -84,10 +85,10 @@ class FivePointsNumericalDerivative: public AbstractNumericalDerivative
 		FivePointsNumericalDerivative (DerivableSecondOrder * function): AbstractNumericalDerivative(function) {}
 		virtual ~FivePointsNumericalDerivative() {}
 
-#if defined(VIRTUAL_COV)
-    FivePointsNumericalDerivative * clone() const { return new FivePointsNumericalDerivative(*this); }
-#else
+#if defined(NO_VIRTUAL_COV)
     Clonable * clone() const { return new FivePointsNumericalDerivative(*this); }
+#else
+    FivePointsNumericalDerivative * clone() const { return new FivePointsNumericalDerivative(*this); }
 #endif
 
   public:

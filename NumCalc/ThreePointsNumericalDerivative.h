@@ -73,7 +73,8 @@ knowledge of the CeCILL license and that you accept its terms.
  *
  * @see AbstractNumericalDerivative
  */
-class ThreePointsNumericalDerivative: public AbstractNumericalDerivative
+class ThreePointsNumericalDerivative:
+  public AbstractNumericalDerivative
 {
   protected:
     double _f1, _f2, _f3;
@@ -84,10 +85,10 @@ class ThreePointsNumericalDerivative: public AbstractNumericalDerivative
 		ThreePointsNumericalDerivative (DerivableSecondOrder * function): AbstractNumericalDerivative(function) {}
 		virtual ~ThreePointsNumericalDerivative() {}
 
-#if defined(VIRTUAL_COV)
-    ThreePointsNumericalDerivative * clone() const { return new ThreePointsNumericalDerivative(*this); }
-#else
+#if defined(NO_VIRTUAL_COV)
     Clonable * clone() const { return new ThreePointsNumericalDerivative(*this); }
+#else
+    ThreePointsNumericalDerivative * clone() const { return new ThreePointsNumericalDerivative(*this); }
 #endif
 
   public:

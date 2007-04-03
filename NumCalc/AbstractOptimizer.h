@@ -45,7 +45,8 @@ knowledge of the CeCILL license and that you accept its terms.
 /**
  * @brief Partial implementation of the Optimizer interface.
  */
-class AbstractOptimizer: public Optimizer
+class AbstractOptimizer:
+  public Optimizer
 {
 	protected:
 		
@@ -116,6 +117,10 @@ class AbstractOptimizer: public Optimizer
 		 */
 		unsigned int _verbose;
 
+    /**
+     * @brief Check if the optimizer have been feeded with initial parameters values.
+     */
+    bool _isInitialized;
 
 	public:
 		AbstractOptimizer(Function * function = NULL);
@@ -138,6 +143,7 @@ class AbstractOptimizer: public Optimizer
 		 * @{
 		 */
 		void init(const ParameterList & params) throw (Exception);
+    bool isInitialized() const { return _isInitialized; }
 		ParameterList getParameters() const { return _parameters; }
 		void setFunction(Function * function)
     { 

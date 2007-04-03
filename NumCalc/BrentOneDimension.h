@@ -51,10 +51,12 @@ knowledge of the CeCILL license and that you accept its terms.
  * (ISBN 0-521-43108-5)
  * </pre>
  */
-class BrentOneDimension: public AbstractOptimizer
+class BrentOneDimension:
+  public AbstractOptimizer
 {
 	public:
-		class BODStopCondition: public AbstractOptimizationStopCondition
+		class BODStopCondition:
+      public AbstractOptimizationStopCondition
 		{
       public:
 				BODStopCondition(BrentOneDimension * bod):
@@ -70,9 +72,10 @@ class BrentOneDimension: public AbstractOptimizer
 	
 	friend class BODStopCondition;
 	
-	protected: // Fields:
+	protected:
 		double a, b, d, e, etemp, fu, fv, fw, fx, p, q, r, tol1, tol2, u, v, w, x, xm;
 		double _xinf, _xsup;
+    bool _isInitialIntervalSet;
 
 	public:
 		BrentOneDimension(Function * function = NULL);
@@ -121,6 +124,11 @@ class BrentOneDimension: public AbstractOptimizer
 		 */
 		void setInitialInterval(double inf, double sup);
 		/** @} */
+
+    /**
+     * @return 'true' if the initial interval has been correctly set.
+     */
+    bool isInitialIntervalSet() const { return _isInitialIntervalSet; }
 	
 	public:
 		

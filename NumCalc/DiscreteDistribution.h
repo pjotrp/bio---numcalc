@@ -71,7 +71,7 @@ class DiscreteDistribution:
 		DiscreteDistribution() {}
 		virtual ~DiscreteDistribution() {}
 	
-#if defined(VIRTUAL_COV)
+#ifndef NO_VIRTUAL_COV
     DiscreteDistribution * clone() const = 0;
 #endif
 

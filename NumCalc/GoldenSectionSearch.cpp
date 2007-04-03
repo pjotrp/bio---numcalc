@@ -72,6 +72,7 @@ AbstractOptimizer(function)
 	_nbEvalMax = 10000;
 	_defaultStopCondition = new GSSStopCondition(this);
 	_stopCondition = _defaultStopCondition->clone();
+  _isInitialIntervalSet = false;
 }
 
 /******************************************************************************/
@@ -117,13 +118,16 @@ void GoldenSectionSearch::init(const ParameterList & params) throw (Exception)
 
 void GoldenSectionSearch::setInitialInterval(double inf, double sup)
 {
-	_xinf = inf; _xsup = sup;	
+	_xinf = inf; _xsup = sup;
+  _isInitialIntervalSet = true;
 }
 
 /******************************************************************************/
 
 double GoldenSectionSearch::step() throw (Exception)
 {
+  if(!_isInitialized) throw Exception("GoldenSectionSearch::step. Optimizer not initialized: call the 'init' method first!");
+  if(!_isInitialIntervalSet) throw Exception("GoldenSectionSearch::step. Initial interval not set: call the 'setInitialInterval' method first!");
 	if(_verbose > 0) { cout << "."; cout.flush(); }
 	
 	_nbEval++;

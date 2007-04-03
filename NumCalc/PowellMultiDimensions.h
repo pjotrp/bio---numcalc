@@ -52,7 +52,8 @@ knowledge of the CeCILL license and that you accept its terms.
  * (ISBN 0-521-43108-5)
  * </pre>
  */
-class PowellMultiDimensions: public AbstractOptimizer
+class PowellMultiDimensions:
+  public AbstractOptimizer
 {
 	public:
 		class PMDStopCondition: public AbstractOptimizationStopCondition
@@ -72,7 +73,9 @@ class PowellMultiDimensions: public AbstractOptimizer
 	friend class PMDStopCondition;
 		
 	protected:		
-		class DirectionFunction: public virtual Function, public virtual ParametrizableAdapter
+		class DirectionFunction:
+      public virtual Function,
+      public virtual ParametrizableAdapter
 		{
 			protected:
 				mutable ParameterList _params, p, _xt;
@@ -83,10 +86,10 @@ class PowellMultiDimensions: public AbstractOptimizer
 				DirectionFunction(Function * function = NULL): _function(function) {}
 				virtual ~DirectionFunction() {}
 
-#if defined(VIRTUAL_COV)
-        DirectionFunction * clone() const { return new DirectionFunction(*this); }
-#else
+#if defined(NO_VIRTUAL_COV)
         Clonable * clone() const { return new DirectionFunction(*this); }
+#else
+        DirectionFunction * clone() const { return new DirectionFunction(*this); }
 #endif
 
 			

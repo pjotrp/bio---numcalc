@@ -59,6 +59,7 @@ AbstractOptimizer::AbstractOptimizer(Function * function):
 	_nbEvalMax        = 1000000;
   _nbEval           = 0;
 	_verbose          = true;
+  _isInitialized    = false;
 }
 
 /******************************************************************************/
@@ -90,6 +91,7 @@ AbstractOptimizer::AbstractOptimizer(const AbstractOptimizer & opt)
   _verbose                = opt._verbose;
   //In case of AutoParameter instances, we must actualize the pointers toward _messageHandler:
   init(_parameters);
+  _isInitialized          = opt._isInitialized;
 }
 
 /******************************************************************************/
@@ -121,6 +123,7 @@ AbstractOptimizer & AbstractOptimizer::operator=(const AbstractOptimizer & opt)
   _verbose                = opt._verbose;
   //In case of AutoParameter instances, we must actualize the pointers toward _messageHandler:
   init(_parameters);
+  _isInitialized          = opt._isInitialized;
   return *this;
 }
 
@@ -132,6 +135,7 @@ void AbstractOptimizer::init(const ParameterList & params) throw (Exception)
 	     if(_constraintPolicy == CONSTRAINTS_AUTO)   autoParameter();
 	else if(_constraintPolicy == CONSTRAINTS_IGNORE) ignoreConstraints();
 	_tolIsReached = false;
+  _isInitialized = true;
 }
 
 /******************************************************************************/

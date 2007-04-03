@@ -47,7 +47,8 @@ knowledge of the CeCILL license and that you accept its terms.
  *
  * Only one category with probability 1.0.
  */
-class ConstantDistribution : public AbstractDiscreteDistribution
+class ConstantDistribution :
+  public AbstractDiscreteDistribution
 {
   protected:
     double _value;
@@ -56,13 +57,13 @@ class ConstantDistribution : public AbstractDiscreteDistribution
     ConstantDistribution(double value);
     virtual ~ConstantDistribution() {}
 
-#if defined(VIRTUAL_COV)
-    ConstantDistribution * clone() const
+#if defined(NO_VIRTUAL_COV)
+    Clonable * clone() const
     {
       return new ConstantDistribution(*this);
     }
 #else
-    Clonable * clone() const
+    ConstantDistribution * clone() const
     {
       return new ConstantDistribution(*this);
     }

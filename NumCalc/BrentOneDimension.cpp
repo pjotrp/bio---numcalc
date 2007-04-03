@@ -68,6 +68,7 @@ AbstractOptimizer(function)
 	_defaultStopCondition = new BODStopCondition(this);
 	_stopCondition = _defaultStopCondition->clone();
 	_nbEvalMax = 10000;
+  _isInitialIntervalSet = false;
 }
 
 /******************************************************************************/
@@ -113,12 +114,15 @@ void BrentOneDimension::init(const ParameterList & params) throw (Exception)
 void BrentOneDimension::setInitialInterval(double inf, double sup)
 {
 	_xinf = inf; _xsup = sup;
+  _isInitialIntervalSet = true;
 }
 
 /******************************************************************************/
 
 double BrentOneDimension::step() throw (Exception)
 {
+  if(!_isInitialized) throw Exception("BrentOneDimension::step. Optimizer not initialized: call the 'init' method first!");
+  if(!_isInitialIntervalSet) throw Exception("BrentOneDimension::step. Initial interval not set: call the 'setInitialInterval' method first!");
 	if(_verbose > 0) { cout << "."; cout.flush(); }
 	xm   = 0.5 * (a + b);
 	tol2 = 2.0 * (tol1 = _stopCondition->getTolerance() * NumTools::abs(x) + ZEPS);

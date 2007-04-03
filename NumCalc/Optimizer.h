@@ -57,13 +57,18 @@ using namespace std;
  * 
  * An optimizer deals with Function objects.
  */
-class Optimizer: public Clonable
+class Optimizer:
+  public virtual Clonable
 {
 	public:
 		Optimizer() {}
 		virtual ~Optimizer() {}
 
+#if defined(NO_VIRTUAL_COV)
+    Clonable * clone() const = 0;
+#else
     Optimizer * clone() const = 0;
+#endif
 	
 	public:
 		
@@ -75,11 +80,16 @@ class Optimizer: public Clonable
 		 */
 		virtual void init(const ParameterList & params) throw (Exception) = 0;
 
+    /**
+     * @return 'true' if this optimizer has been initialized.
+     */
+    virtual bool isInitialized() const = 0;
+
 		/**
 		 * @brief Perform an optimization step.
 		 *
 		 * @return the value of the function after this step.
-		 * @throw Exception If a problem occured during optimization.
+		 * @throw Exception If a problem occured during optimization or if the optimizer has not been initialized.
 		 */
 		virtual double step() throw (Exception) = 0;
 
@@ -100,6 +110,7 @@ class Optimizer: public Clonable
 		 * @brief Perform as many optimization steps untill the stop condition is met.
 		 *
 		 * @return The value of the function after optimization is completed.
+		 * @throw Exception If a problem occured during optimization or if the optimizer has not been initialized.
 		 */
 		virtual double optimize() throw (Exception) = 0;
 	

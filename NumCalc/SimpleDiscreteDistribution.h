@@ -64,16 +64,10 @@ class SimpleDiscreteDistribution:
 
     virtual ~SimpleDiscreteDistribution() {}
 
-#if defined(VIRTUAL_COV)
-    SimpleDiscreteDistribution * clone() const
-    {
-      return new SimpleDiscreteDistribution(*this);
-    }
+#if defined(NO_VIRTUAL_COV)
+    Clonable * clone() const { return new SimpleDiscreteDistribution(*this); }
 #else
-    Clonable * clone() const
-    {
-      return new SimpleDiscreteDistribution(*this);
-    }
+    SimpleDiscreteDistribution * clone() const { return new SimpleDiscreteDistribution(*this); }
 #endif
 
   public:

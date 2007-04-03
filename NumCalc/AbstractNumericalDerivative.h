@@ -59,7 +59,8 @@ knowledge of the CeCILL license and that you accept its terms.
  * In the second case, first order derivative will be computed analytically only if no appropriate analytical derivative is available, second order derivative will always be computed numerically.
  * In the last case, first and second order derivative will be computed analytically only if no appropriate analytical derivative is available.
  */
-class AbstractNumericalDerivative: public DerivableSecondOrder
+class AbstractNumericalDerivative:
+  public DerivableSecondOrder
 {
   protected:
     Function * _function;
@@ -79,10 +80,10 @@ class AbstractNumericalDerivative: public DerivableSecondOrder
       _function(function), _function1(function), _function2(function), _h(0.0001) {}
 		virtual ~AbstractNumericalDerivative() {}
 
-#if defined(VIRTUAL_COV)
-    AbstractNumericalDerivative * clone() const = 0;
-#else
+#if defined(NO_VIRTUAL_COV)
     Clonable * clone() const = 0;
+#else
+    AbstractNumericalDerivative * clone() const = 0;
 #endif
 
   public:

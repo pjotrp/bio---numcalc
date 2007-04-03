@@ -77,7 +77,8 @@ class MatrixTools
 		static Matrix getId(unsigned int n)
 		{
 			Matrix id(n, n);
-			for(unsigned int i = 0; i < n; i++) {
+			for(unsigned int i = 0; i < n; i++)
+      {
 				for(unsigned int j = 0; j < n; j++) id(i, j) = (i == j) ? 1 : 0;
 			}
 			return id;
@@ -92,7 +93,8 @@ class MatrixTools
 		{
 			unsigned int n = d.size();
 			Matrix diago(n, n);
-			for(unsigned int i = 0; i < n; i++) {
+			for(unsigned int i = 0; i < n; i++)
+      {
 				for(unsigned int j = 0; j < n; j++) diago(i, j) = (i == j) ? d[i] : 0;
 			}
 			return diago;
@@ -122,8 +124,10 @@ class MatrixTools
 		template<class Matrix, class Scalar>
 		static void fill(Matrix & M, Scalar x)
 		{
-			for(unsigned int i = 0; i < M.nRows(); i++) {
-				for(unsigned int j = 0; j < M.nCols(); j++) {
+			for(unsigned int i = 0; i < M.nRows(); i++)
+      {
+				for(unsigned int j = 0; j < M.nCols(); j++)
+        {
 					M(i, j) = x;
 				}
 			}
@@ -139,9 +143,12 @@ class MatrixTools
 		 * @param b Constant.
 		 */
 		template<class Matrix, class Scalar>
-		static void scale(Matrix & X, Scalar a, Scalar b = 0) {
-			for(unsigned int i = 0; i < X.nRows(); i++) {
-				for(unsigned int j = 0; j < X.nCols(); j++) {
+		static void scale(Matrix & X, Scalar a, Scalar b = 0)
+    {
+			for(unsigned int i = 0; i < X.nRows(); i++)
+      {
+				for(unsigned int j = 0; j < X.nCols(); j++)
+        {
 					X(i,j) = a * X(i, j) + b;
 				}
 			}
@@ -161,10 +168,13 @@ class MatrixTools
 			unsigned int ncB = B.nCols();
 			if(ncA != nrB) throw DimensionException("MatrixTools::mult(). nrows B != ncols A.", nrB, ncA); 
 			MatrixB C(nrA, ncB);
-			for(unsigned int i = 0; i < nrA; i++) {
-				for(unsigned int j = 0; j < ncB; j++) {
+			for(unsigned int i = 0; i < nrA; i++)
+      {
+				for(unsigned int j = 0; j < ncB; j++)
+        {
 					C(i, j) = 0;
-					for(unsigned int k = 0; k < ncA; k++) {
+					for(unsigned int k = 0; k < ncA; k++)
+          {
 						C(i, j) += A(i, k) * B(k, j);
 					}
 				}
@@ -194,10 +204,13 @@ class MatrixTools
 			if(ncA != nrB) throw DimensionException("MatrixTools::mult(). nrows B != ncols A.", nrB, ncA); 
 			if(ncA != D.size()) throw DimensionException("MatrixTools::mult(). Vector size is not eual to matrix size.", D.size(), ncA); 
 			MatrixB C(nrA, ncB);
-			for(unsigned int i = 0; i < nrA; i++) {
-				for(unsigned int j = 0; j < ncB; j++) {
+			for(unsigned int i = 0; i < nrA; i++)
+      {
+				for(unsigned int j = 0; j < ncB; j++)
+        {
 					C(i, j) = 0;
-					for(unsigned int k = 0; k < ncA; k++) {
+					for(unsigned int k = 0; k < ncA; k++)
+          {
 						C(i, j) += A(i, k) * B(k, j) * D[k];
 					}
 				}
@@ -221,8 +234,10 @@ class MatrixTools
 			unsigned int ncB = B.nCols();
 			if(ncA != ncB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of colums.", ncB, ncA); 
 			if(nrA != nrB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of rows.", nrB, nrA); 
-			for(unsigned int i = 0; i < A.nRows(); i++) {
-				for(unsigned int j = 0; j < A.nCols(); j++) {
+			for(unsigned int i = 0; i < A.nRows(); i++)
+      {
+				for(unsigned int j = 0; j < A.nCols(); j++)
+        {
 					A(i, j) += B(i, j);
 				}
 			}
@@ -241,7 +256,8 @@ class MatrixTools
 			unsigned int n = m.nRows();
 			if(n != m.nCols()) throw DimensionException("MatrixTools::pow(). nrows != ncols.", m.nCols(), m.nRows()); 
 			if(p == 0) return getId<Matrix>(n);
-			else {
+			else
+      {
 				Matrix result(n, n);
 				result = mult(m, pow<Matrix>(m, p - 1));
 				return result;
@@ -261,11 +277,14 @@ class MatrixTools
 			unsigned int imax = 0;
 			unsigned int jmax = 0;
 			double currentMax = log(0.);
-			for(unsigned int i = 0; i < nrows; i++) {
-				for(unsigned int j = 0; j < ncols; j++) {
+			for(unsigned int i = 0; i < nrows; i++)
+      {
+				for(unsigned int j = 0; j < ncols; j++)
+        {
 					double currentValue = m(i, j);
 					//cout << currentValue << "\t" << (currentValue > currentMax) << endl;
-					if(currentValue > currentMax) {
+					if(currentValue > currentMax)
+          {
 						imax = i;
 						jmax = j;
 						currentMax = currentValue;
@@ -290,10 +309,13 @@ class MatrixTools
 			unsigned int imin = 0;
 			unsigned int jmin = 0;
 			double currentMin = -log(0.);
-			for(unsigned int i = 0; i < nrows; i++) {
-				for(unsigned int j = 0; j < ncols; j++) {
+			for(unsigned int i = 0; i < nrows; i++)
+      {
+				for(unsigned int j = 0; j < ncols; j++)
+        {
 					double currentValue = m(i, j);
-					if(currentValue < currentMin) {
+					if(currentValue < currentMin)
+          {
 						imin = i;
 						jmin = j;
 						currentMin = currentValue;
@@ -316,9 +338,11 @@ class MatrixTools
 		{
 			out << m.nRows() << "x" << m.nCols() << endl;
 			out << "[" << endl;
-			for(unsigned int i = 0; i < m.nRows(); i++) {
+			for(unsigned int i = 0; i < m.nRows(); i++)
+      {
 				out << "[";
-				for(unsigned int j = 0; j < m.nCols() - 1; j++) {
+				for(unsigned int j = 0; j < m.nCols() - 1; j++)
+        {
 					out << m(i, j) << ", ";
 				}
 				if(m.nCols() > 0) out << m(i, m.nCols() - 1) << "]" << endl;
@@ -337,7 +361,8 @@ class MatrixTools
 		{
 			out << v.size() << endl;
 			out << "[";
-			for(unsigned int i = 0; i < v.size() - 1; i++) {
+			for(unsigned int i = 0; i < v.size() - 1; i++)
+      {
 				out << v[i] << ", ";
 			}
 			if(v.size() > 0) out << v[v.size() - 1];
@@ -373,8 +398,10 @@ class MatrixTools
 		static RowMatrix<Real> transpose(const Matrix<Real> & A)
 		{
 			RowMatrix<Real> M(A.nCols(), A.nRows());
-			for(unsigned int i = 0; i < A.nCols(); i++) {
-				for(unsigned int j = 0; j < A.nRows(); j++) {
+			for(unsigned int i = 0; i < A.nCols(); i++)
+      {
+				for(unsigned int j = 0; j < A.nRows(); j++)
+        {
 					M(i, j) = A(j, i);
 				}
 			}

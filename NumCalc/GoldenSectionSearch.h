@@ -51,10 +51,12 @@ knowledge of the CeCILL license and that you accept its terms.
  * (ISBN 0-521-43108-5)
  * </pre>
  */
-class GoldenSectionSearch : public AbstractOptimizer
+class GoldenSectionSearch:
+  public AbstractOptimizer
 {	
 	public:
-		class GSSStopCondition: public AbstractOptimizationStopCondition
+		class GSSStopCondition:
+      public AbstractOptimizationStopCondition
 		{
 			public:
 				GSSStopCondition(GoldenSectionSearch * gss):
@@ -70,9 +72,10 @@ class GoldenSectionSearch : public AbstractOptimizer
 	
 	friend class GSSStopCondition;
 
-	protected: // Fields:
+	protected:
 		double f1, f2, x0, x1, x2, x3;
 		double _xinf, _xsup;
+    bool _isInitialIntervalSet;
 	
 	public:
 		
@@ -125,7 +128,12 @@ class GoldenSectionSearch : public AbstractOptimizer
 		void setInitialInterval(double inf, double sup);
 		/** @} */
 
-	protected:
+    /**
+     * @return 'true' if the initial interval has been correctly set.
+     */
+    bool isInitialIntervalSet() const { return _isInitialIntervalSet; }
+
+  protected:
 		
 		static double R;
 		static double C;
