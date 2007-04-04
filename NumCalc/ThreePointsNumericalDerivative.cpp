@@ -82,6 +82,8 @@ throw (ParameterNotFoundException, ConstraintException)
       _der1[var] = (_f3 - _f2) / _h;
       _der2[var] = (_f1 - 2.*_f3 + _f2) / (_h*_h);
     }
+    //Reset initial value:
+    _function->setParameterValue(var, value);
   }
 }
 
