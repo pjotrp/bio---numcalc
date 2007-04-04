@@ -66,7 +66,7 @@ throw (ParameterNotFoundException, ConstraintException)
       _function->setParameterValue(var, value - 2*_h);
       _f1 = _function->getValue();
       _der1[var] = (_f3 - _f2) / _h;
-      _der1[var] = (_f3 - 2.*_f2 + _f1) / (_h*_h);        
+      _der2[var] = (_f3 - 2.*_f2 + _f1) / (_h*_h);        
       }
       //No limit raised, use central approximation:
       _function->setParameterValue(var, value - _h);
@@ -84,7 +84,7 @@ throw (ParameterNotFoundException, ConstraintException)
       _function->setParameterValue(var, value + 2*_h);
       _f5 = _function->getValue();
       _der1[var] = (_f4 - _f3) / _h;
-      _der1[var] = (_f5 - 2.*_f4 + _f3) / (_h*_h);
+      _der2[var] = (_f5 - 2.*_f4 + _f3) / (_h*_h);
     }
   }
 }
