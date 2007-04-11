@@ -61,7 +61,8 @@ using namespace std;
  *
  * @see ParameterList, Parametrizable, Constraint.
  */
-class Parameter: public Clonable
+class Parameter:
+  public Clonable
 {
 	protected:
 		string _name;					//Parameter name
@@ -148,6 +149,13 @@ class Parameter: public Clonable
 		 * @return A pointer toward the formerly used contraint.
 		 */
 		virtual const Constraint * removeConstraint();
+
+    virtual void setConstraint(Constraint * constraint) throw (ConstraintException)
+    {
+      if(_constraint && _constraint->isCorrect(_value))
+        _constraint = constraint;
+      else throw ConstraintException("Parameter::setConstraint", this, _value);
+    }
 	
 	public:
 		static IncludingPositiveReal R_PLUS;

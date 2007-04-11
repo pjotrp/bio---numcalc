@@ -1,6 +1,7 @@
 03/04/07 Benoît Nabholz & Julien Dutheil
 * Bug fixed in numerical derivatives classes: derivatives properly computed
   when constraint matched.
+* New method setConstraint in class Parameter.
 
 02/04/07 Julien Dutheil
 * VIRTUAL_COV variable changed to NO_VIRTUAL_COV. configure.ac file updated.

@@ -44,6 +44,7 @@ throw (ParameterNotFoundException, ConstraintException)
 {
   _function->setParameters(parameters);
   _f2 = _function->getValue();
+  ParameterList tmp = parameters;
   for(unsigned int i = 0; i < _variables.size(); i++)
   {
     string var = _variables[i];
@@ -51,22 +52,26 @@ throw (ParameterNotFoundException, ConstraintException)
     //Compute two other points:
     try
     {
-      _function->setParameterValue(var, value - _h);
+      tmp.getParameter(var)->setValue(value - _h);
+      _function->setParameters(tmp);
       _f1 = _function->getValue();
       try
       {
-        _function->setParameterValue(var, value + _h);
+        tmp.getParameter(var)->setValue(value + _h);
+        _function->setParameters(tmp);
         _f3 = _function->getValue();
       }
       catch(ConstraintException & ce)
       {
         //Right limit raised, use backward approximation:
-      _function->setParameterValue(var, value - _h);
-      _f1 = _function->getValue();
-      _function->setParameterValue(var, value - 2*_h);
-      _f3 = _function->getValue();
-      _der1[var] = (_f2 - _f1) / _h;
-      _der2[var] = (_f2 - 2.*_f1 + _f3) / (_h*_h);        
+        tmp.getParameter(var)->setValue(value - _h);
+        _function->setParameters(tmp);
+        _f1 = _function->getValue();
+        tmp.getParameter(var)->setValue(value - 2*_h);
+        _function->setParameters(tmp);
+        _f3 = _function->getValue();
+        _der1[var] = (_f2 - _f1) / _h;
+        _der2[var] = (_f2 - 2.*_f1 + _f3) / (_h*_h);        
       }
       //No limit raised, use central approximation:
       _der1[var] = (-_f1 + _f3) / (2.*_h);
@@ -75,15 +80,17 @@ throw (ParameterNotFoundException, ConstraintException)
     catch(ConstraintException & ce)
     {
       //Left limit raised, use forward approximation:
-      _function->setParameterValue(var, value + _h);
+      tmp.getParameter(var)->setValue(value + _h);
+      _function->setParameters(tmp);
       _f3 = _function->getValue();
-      _function->setParameterValue(var, value + 2*_h);
+      tmp.getParameter(var)->setValue(value + 2*_h);
+      _function->setParameters(tmp);
       _f1 = _function->getValue();
       _der1[var] = (_f3 - _f2) / _h;
       _der2[var] = (_f1 - 2.*_f3 + _f2) / (_h*_h);
     }
     //Reset initial value:
-    _function->setParameterValue(var, value);
+    tmp.getParameter(var)->setValue(value);
   }
 }
 
