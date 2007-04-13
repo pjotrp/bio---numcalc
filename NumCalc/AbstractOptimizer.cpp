@@ -55,7 +55,7 @@ AbstractOptimizer::AbstractOptimizer(Function * function):
 	// Initialization with defaults:
 	_messageHandler   = & cout;
 	_profiler         = & cout;
-	_constraintPolicy = CONSTRAINTS_KEEP;	
+	_constraintPolicy = AutoParameter::CONSTRAINTS_KEEP;	
 	_nbEvalMax        = 1000000;
   _nbEval           = 0;
 	_verbose          = true;
@@ -132,8 +132,8 @@ AbstractOptimizer & AbstractOptimizer::operator=(const AbstractOptimizer & opt)
 void AbstractOptimizer::init(const ParameterList & params) throw (Exception)
 {
 	_parameters = params;
-	     if(_constraintPolicy == CONSTRAINTS_AUTO)   autoParameter();
-	else if(_constraintPolicy == CONSTRAINTS_IGNORE) ignoreConstraints();
+	     if(_constraintPolicy == AutoParameter::CONSTRAINTS_AUTO)   autoParameter();
+	else if(_constraintPolicy == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
 	_tolIsReached = false;
   _isInitialized = true;
 }
@@ -208,16 +208,11 @@ void AbstractOptimizer::autoParameter()
 
 void AbstractOptimizer::ignoreConstraints()
 {
-	for(unsigned int i = 0; i < _parameters.size(); i++) {
-		_parameters[i] -> removeConstraint();
+	for(unsigned int i = 0; i < _parameters.size(); i++)
+  {
+		_parameters[i]->removeConstraint();
 	}
 }
-
-/******************************************************************************/
-
-string AbstractOptimizer::CONSTRAINTS_AUTO   = "auto";
-string AbstractOptimizer::CONSTRAINTS_IGNORE = "ignore";
-string AbstractOptimizer::CONSTRAINTS_KEEP   = "keep";
 
 /******************************************************************************/
 

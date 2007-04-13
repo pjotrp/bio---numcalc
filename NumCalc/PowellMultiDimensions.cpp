@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "NumTools.h"
 #include "BrentOneDimension.h"
+#include "OneDimensionOptimizationTools.h"
 
 using namespace NumTools;
 
@@ -58,9 +59,8 @@ bool PowellMultiDimensions::PMDStopCondition::isToleranceReached() const
 /******************************************************************************/
 
 PowellMultiDimensions::PowellMultiDimensions(Function * function) :
-AbstractOptimizer(function)
+AbstractOptimizer(function), _f1dim(function)
 {
-  f1dim = PowellMultiDimensions::DirectionFunction(_function);
   _defaultStopCondition = new PMDStopCondition(this);
   _stopCondition = _defaultStopCondition->clone();
 }
@@ -104,24 +104,27 @@ double PowellMultiDimensions::step() throw (Exception)
   if(!_isInitialized) throw Exception("PowellMultiDimensions::step. Optimizer not initialized: call the 'init' method first!");
   if(_verbose > 0) { cout << "*" << endl; }
   
-  int n = _parameters.size();
+  unsigned int n = _parameters.size();
   _fp = _fret;
-  int ibig = 0;
+  unsigned int ibig = 0;
   double del = 0.0; // Will be the biggest function decrease
   Vdouble xit(n);
   
   // In each iteration, loop over all directions in the set.
   double fptt;
-  for (int i = 0; i < n; i++)
+  for(unsigned int i = 0; i < n; i++)
   {
     // Copy the direction:
-    for(int j = 0; j < n; j++)
+    for(unsigned int j = 0; j < n; j++)
     {
       xit[j] = _xi[j][i];
       //xit[j] = _xi[i][j];
     }
     fptt = _fret;
-    linmin(xit);
+    _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, xit, _stopCondition->getTolerance(), _profiler, _messageHandler, _verbose);
+    //_fret = _f1dim.getValue();
+    _fret = _function->f(_parameters);
+    printPoint(_parameters, _fret);
     if (fptt - _fret > del)
     {
       del = fptt - _fret;
@@ -132,7 +135,7 @@ double PowellMultiDimensions::step() throw (Exception)
   // Construct the extrapolated point and the average direction moved.
   // Save the old starting point.
   ParameterList ptt = _parameters;
-  for (int j = 0; j < n; j++)
+  for(unsigned int j = 0; j < n; j++)
   {
     ptt[j]->setValue(2.0 * _parameters[j]->getValue() - _pt[j]->getValue());
     xit[j] = _parameters[j]->getValue() - _pt[j]->getValue();
@@ -147,8 +150,8 @@ double PowellMultiDimensions::step() throw (Exception)
     {
       //cout << endl << "New direction: drection " << ibig << " removed." << endl;
       // Move to the minimum of the new direction, and save the new direction.
-      linmin(xit);
-      for (int j = 0; j < n; j++)
+      _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, xit, _stopCondition->getTolerance(), _profiler, _messageHandler, _verbose);
+      for(unsigned int j = 0; j < n; j++)
       {
         _xi[j][ibig]  = _xi[j][n - 1];
         _xi[j][n - 1] = xit[j];
@@ -159,6 +162,7 @@ double PowellMultiDimensions::step() throw (Exception)
   // We check for tolerance only once all directions have been looped over:
   _tolIsReached = _stopCondition->isToleranceReached();
 
+  _stopCondition->init();
   return _fret;
 }
 
@@ -181,81 +185,6 @@ double PowellMultiDimensions::getFunctionValue() const throw (NullPointerExcepti
 {
     if(_function == NULL) throw NullPointerException("PowellMultiDimensions::getFunctionValue. No function associated to this optimizer.");
     return _fret;
-}
-
-/******************************************************************************/
-
-void PowellMultiDimensions::linmin(Vdouble & xi)
-{
-  int n = _parameters.size();
-  
-  // Initial guess for brackets:
-  double ax = 0.0;
-  double xx = 1.0;
-  
-  //_parameters.printParameters(cout); cout << endl;
-  f1dim.set(_parameters, xi);
-  BrentOneDimension bod(&f1dim);
-  bod.setMessageHandler(_messageHandler);
-  bod.setProfiler(NULL);
-  bod.setVerbose(_verbose > 1 ? 1 : 0);
-  bod.getStopCondition()->setTolerance(_stopCondition->getTolerance());
-  bod.setInitialInterval(ax, xx);
-  bod.setConstraintPolicy(AbstractOptimizer::CONSTRAINTS_KEEP);
-  ParameterList singleParameter;
-  singleParameter.addParameter(Parameter("x", 0.0));
-  bod.init(singleParameter);
-  _fret = bod.optimize();
-  _nbEval += bod.getNumberOfEvaluations();
-  
-  if(_verbose > 1) { cout << "#"; cout.flush(); }
-  
-  double xmin = f1dim.getParameters()[0]->getValue();
-  //cout << "xmin = " << xmin << endl;
-  for (int j = 0; j < n; j++)
-  {
-    //cout << "xi[" << j << "] = " << xi[j]getValue() * xmin << endl;
-             xi[j] *=  xmin;
-    //cout << "xi[" << j << "] = " << xi[j]getValue() << endl;
-    _parameters[j]->setValue(_parameters[j]->getValue() + xi[j]);
-  }
-  printPoint(_parameters, _fret);
-}
-
-/******************************************************************************/
-
-void PowellMultiDimensions::DirectionFunction::setParameters(
-  const ParameterList & params)
-  throw (ParameterNotFoundException, ConstraintException)
-{
-  _params = params;
-  _xt = p;
-  for(unsigned int j = 0; j < p.size(); j++)
-  {
-    _xt[j]->setValue((p[j]->getValue()) + (_params[0]->getValue()) * xi[j]);
-  }
-}
-
-/******************************************************************************/
-
-double PowellMultiDimensions::DirectionFunction::getValue() const throw (Exception)
-{
-  return _function->f(_xt);
-}
-
-/******************************************************************************/
-
-ParameterList PowellMultiDimensions::DirectionFunction::getParameters() const throw (Exception)
-{
-  return _params;
-}
-
-/******************************************************************************/
-
-void PowellMultiDimensions::DirectionFunction::set(const ParameterList & p, const Vdouble & xi)
-{
-  this->p = p;
-  this->xi = xi;  
 }
 
 /******************************************************************************/

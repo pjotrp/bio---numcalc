@@ -158,8 +158,8 @@ ParametersStopCondition::ParametersStopCondition(
 
 void ParametersStopCondition::init()
 {
-	if(_optimizer -> getFunction() != NULL)
-		_newParametersEstimates = _optimizer -> getParameters();
+	if(_optimizer->getFunction() != NULL)
+		_newParametersEstimates = _optimizer->getParameters();
 }
 
 /******************************************************************************/
@@ -223,8 +223,8 @@ FunctionStopCondition::~FunctionStopCondition() {}
 
 void FunctionStopCondition::init()
 {
-	if(_optimizer -> getFunction() != NULL)
-		_newFunctionValue = _optimizer -> getFunctionValue();
+	if(_optimizer->getFunction() != NULL)
+		_newFunctionValue = _optimizer->getFunctionValue();
 }
 
 /******************************************************************************/

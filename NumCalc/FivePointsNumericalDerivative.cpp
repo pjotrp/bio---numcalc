@@ -42,6 +42,8 @@ knowledge of the CeCILL license and that you accept its terms.
 void FivePointsNumericalDerivative::setParameters(const ParameterList & parameters)
 throw (ParameterNotFoundException, ConstraintException)
 {
+  if(_function1) _function1->enableFirstOrderDerivatives(false);
+  if(_function2) _function2->enableSecondOrderDerivatives(false);
   _function->setParameters(parameters);
   _f3 = _function->getValue();
   ParameterList tmp = parameters;
@@ -98,5 +100,9 @@ throw (ParameterNotFoundException, ConstraintException)
     //Reset initial value:
     tmp.getParameter(var)->setValue(value);
   }
+  //Reset initial value and compute analytical derivatives if any.
+  if(_function1) _function1->enableFirstOrderDerivatives(true);
+  if(_function2) _function2->enableSecondOrderDerivatives(true);
+  _function->setParameters(parameters);
 }
 

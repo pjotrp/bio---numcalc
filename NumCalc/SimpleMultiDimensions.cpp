@@ -87,8 +87,8 @@ SimpleMultiDimensions::~SimpleMultiDimensions()
 void SimpleMultiDimensions::setFunction(Function * function)
 {
   AbstractOptimizer::setFunction(function);
-  _optimizer -> setFunction(function);
-  _stopCondition -> init();
+  _optimizer->setFunction(function);
+  _stopCondition->init();
 }
 
 /******************************************************************************/

@@ -49,11 +49,11 @@ knowledge of the CeCILL license and that you accept its terms.
  * Exception is thrown. This allows to perform optimization under constraint.
  */ 
 
-class AutoParameter : public Parameter
+class AutoParameter:
+  public Parameter
 {
 	protected:
 		ostream * _messageHandler;
-		static double TINY;
 	
 	public:
 		
@@ -124,6 +124,12 @@ class AutoParameter : public Parameter
 		 */
 		virtual void setMessageHandler(ostream * mh) { _messageHandler = mh; }
 		
+	public:
+	
+		static double TINY;
+		static string CONSTRAINTS_AUTO;
+		static string CONSTRAINTS_IGNORE;
+		static string CONSTRAINTS_KEEP;
 };
 
 #endif	//_AUTOPARAMETER_H_

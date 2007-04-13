@@ -80,11 +80,7 @@ class AbstractNumericalDerivative:
       _function(function), _function1(function), _function2(function), _h(0.0001) {}
 		virtual ~AbstractNumericalDerivative() {}
 
-#if defined(NO_VIRTUAL_COV)
-    Clonable * clone() const = 0;
-#else
     AbstractNumericalDerivative * clone() const = 0;
-#endif
 
   public:
     /**
@@ -113,14 +109,19 @@ class AbstractNumericalDerivative:
      *
      * @{
      */
+    void enableFirstOrderDerivatives(bool yn) {}
+    bool enableFirstOrderDerivatives() const { return true; }
+    
     double getFirstOrderDerivative(const string & variable) const
       throw (Exception)
     {
       if(_function1 != NULL)
       {
-        try {
+        try
+        {
           return _function1->getFirstOrderDerivative(variable);
-        } catch(Exception & e) {}
+        }
+        catch(Exception & e) {}
       }    
       map<string,double>::iterator it = _der1.find(variable);
       if(it != _der1.end()) return it->second;
@@ -133,14 +134,21 @@ class AbstractNumericalDerivative:
      *
      * @{
      */
+
+    void enableSecondOrderDerivatives(bool yn) {}
+    bool enableSecondOrderDerivatives() const { return true; }
+    /** @} */
+
     double getSecondOrderDerivative(const string & variable) const
       throw (Exception)
     {
       if(_function2 != NULL)
       {
-        try {
+        try
+        {
           return _function2->getSecondOrderDerivative(variable);
-        } catch(Exception & e) {}
+        }
+        catch(Exception & e) {}
       }    
       map<string,double>::iterator it = _der2.find(variable);
       if(it != _der2.end()) return it->second;

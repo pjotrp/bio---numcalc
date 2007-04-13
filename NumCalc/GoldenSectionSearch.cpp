@@ -85,7 +85,8 @@ void GoldenSectionSearch::init(const ParameterList & params) throw (Exception)
 
 	// Bracket the minimum.
 	Bracket bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, _function, _parameters);
-	if(_verbose > 0) {
+	if(_verbose > 0)
+  {
 		printMessage("Initial bracketing:");
 		printMessage("A: x = " + TextTools::toString(bracket.a.x) + ", f = " + TextTools::toString(bracket.a.f));
 		printMessage("B: x = " + TextTools::toString(bracket.b.x) + ", f = " + TextTools::toString(bracket.b.f));
@@ -96,21 +97,25 @@ void GoldenSectionSearch::init(const ParameterList & params) throw (Exception)
 	x0 = bracket.a.x;
 	x3 = bracket.c.x;
 	if (NumTools::abs(bracket.c.x - bracket.b.x)
-      > NumTools::abs(bracket.b.x - bracket.a.x)) {
+      > NumTools::abs(bracket.b.x - bracket.a.x))
+  {
 		// Make x0 to x1 the smaller segment,
 		x1 = bracket.b.x;
 		// and fill in the new point to be tried.
 		x2 = bracket.b.x + C * (bracket.c.x - bracket.b.x);
-	} else {
+	}
+  else
+  {
 		x2 = bracket.b.x;
 		x1 = bracket.b.x - C * (bracket.b.x - bracket.a.x);
 	}
 	// The initial function evaluations.
 	// Note that we never need to evaluate the function at the original endpoints.
-	_parameters[0] -> setValue(x1); f1 = _function -> f(_parameters);
-	_parameters[0] -> setValue(x2); f2 = _function -> f(_parameters);
+	_parameters[0]->setValue(x1); f1 = _function->f(_parameters);
+	_parameters[0]->setValue(x2); f2 = _function->f(_parameters);
 	_nbEval = 0;	
 
+  _stopCondition->init();
 	profileln(_parameters[0] -> getName() + "\tFunction\tTime");
 }
 
@@ -132,7 +137,8 @@ double GoldenSectionSearch::step() throw (Exception)
 	
 	_nbEval++;
 
-	if (f2 < f1) {
+	if (f2 < f1)
+  {
 		// One possible outcome, its housekeeping,
 		NumTools::shift<double>(x0, x1, x2);
 		x2 = R * x1 + C * x3;
@@ -142,7 +148,9 @@ double GoldenSectionSearch::step() throw (Exception)
 		NumTools::shift<double>(f1, f2, _function -> f(_parameters));
 		printPoint(_parameters, f2);
 		return f2;
-	} else {
+	}
+  else
+  {
 		// The other outcome,
 		NumTools::shift<double>(x3, x2, x1);
 		x1 = R * x2 + C * x0;

@@ -41,9 +41,10 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _ONEDIMENSIONOPTIMIZATIONTOOLS_H_
 
 #include "Functions.h"
+#include "DirectionFunction.h"
 
-class Point {
-			
+class Point
+{		
 	public: // Constructor and destructor:
 		Point() {}
 		Point(double x, double f): x(x), f(f) {}
@@ -57,8 +58,8 @@ class Point {
 		double f;			
 };
 		
-class Bracket {
-	
+class Bracket
+{	
 	public: // Constructor and destructor::
 		Bracket() {}
 		virtual ~Bracket() {}
@@ -101,6 +102,8 @@ class OneDimensionOptimizationTools
 		 */
 		static Bracket bracketMinimum(double a, double b, Function * function, ParameterList parameters);
 	
+    static unsigned int lineMinimization(DirectionFunction & f1dim, ParameterList & parameters, vector<double> & xi, double tolerance, ostream * profiler = NULL, ostream * messenger = NULL, int verbose = 2);
+
 	public:
 		
 		/**

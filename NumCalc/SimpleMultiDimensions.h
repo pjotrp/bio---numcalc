@@ -1,13 +1,11 @@
 //
 // File: SimpleMultiDimensions.h
 // Created by: Julien Dutheil
-// Created on: ue Nov 16 17:51 2004
+// Created on: Tue Nov 16 17:51 2004
 //
 
 /*
 Copyright or © or Copr. CNRS, (November 19, 2004)
-
-Julien.Dutheil@univ-montp2.fr
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -44,7 +42,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractOptimizer.h"
 #include "BrentOneDimension.h"
-//#include "GoldenSectionSearch.h"
 
 /**
  * @brief This Optimizer is a very simple multi-dimensions optimizer, calling
@@ -53,13 +50,13 @@ knowledge of the CeCILL license and that you accept its terms.
  * The one-dimensional optimizer used is BrentOneDimension.
  * Consider using PowellMultiDimensions optimizer for a more efficient modified version of the algorithm.
  */
-class SimpleMultiDimensions : public AbstractOptimizer
+class SimpleMultiDimensions:
+  public AbstractOptimizer
 {
 	protected:
 
 		unsigned int _nbParams;
 
-		//vector<BrentOneDimension *> _optimizers; // One dimensional optimizers.
 		BrentOneDimension * _optimizer; // One dimensional optimizer.
 
 	public:

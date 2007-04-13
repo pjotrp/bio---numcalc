@@ -46,7 +46,12 @@ using namespace std;
 // Utils:
 #include "Utils/TextTools.h"
 
+/******************************************************************************/
+
 double AutoParameter::TINY = .000000000001;
+string AutoParameter::CONSTRAINTS_AUTO   = "auto";
+string AutoParameter::CONSTRAINTS_IGNORE = "ignore";
+string AutoParameter::CONSTRAINTS_KEEP   = "keep";
 
 /** Constructors: *************************************************************/
 

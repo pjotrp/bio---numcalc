@@ -44,7 +44,8 @@ distributions\
 random\
 AbstractNumericalDerivative.h\
 ThreePointsNumericalDerivative.h\
-FivePointsNumericalDerivative.h
+FivePointsNumericalDerivative.h\
+DirectionFunction.h
 
 CPP_FILES = \
 AbstractOptimizer.cpp\
@@ -73,7 +74,8 @@ Uniform01QD.cpp\
 Uniform01WH.cpp\
 DataTable.cpp\
 ThreePointsNumericalDerivative.cpp\
-FivePointsNumericalDerivative.cpp
+FivePointsNumericalDerivative.cpp\
+DirectionFunction.cpp
 
 lib_LTLIBRARIES = libbpp-numcalc.la
 libbpp_numcalc_la_SOURCES = $(H_FILES) $(CPP_FILES)

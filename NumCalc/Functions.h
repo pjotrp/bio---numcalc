@@ -136,7 +136,21 @@ class DerivableFirstOrder:
 #endif
 
   public:
+
+    /**
+     * @brief Tell if derivatives must be computed.
+     *
+     * @param yn yes/no
+     */
+    virtual void enableFirstOrderDerivatives(bool yn) = 0;
     
+    /**
+     * @brief Tell if derivatives must be computed.
+     *
+     * @return yes/no
+     */
+    virtual bool enableFirstOrderDerivatives() const = 0;
+
     /**
      * @brief Get the derivative of the function at the current point.
      *
@@ -182,6 +196,20 @@ class DerivableSecondOrder:
 #endif
 
   public:
+
+    /**
+     * @brief Tell if derivatives must be computed.
+     *
+     * @param yn yes/no
+     */
+    virtual void enableSecondOrderDerivatives(bool yn) = 0;
+    
+    /**
+     * @brief Tell if derivatives must be computed.
+     *
+     * @return yes/no
+     */
+    virtual bool enableSecondOrderDerivatives() const = 0;
 
     /**
      * @brief Get the second order derivative of the function at the current point.

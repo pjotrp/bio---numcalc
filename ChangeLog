@@ -1,3 +1,10 @@
+11/04/07 Julien Dutheil
+* DirectionFunction improved and in a sperate class.
+  Powel optimizer modified and improved.
+* Function classes augmented: new methods enableFirst(Second)OrderDerivatives.
+  Numerical derivatives classes improved: faster computation, no analytical
+	derivatives computed when computing function at other points.
+
 03/04/07 Benoît Nabholz & Julien Dutheil
 * Bug fixed in numerical derivatives classes: derivatives properly computed
   when constraint matched.

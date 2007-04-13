@@ -42,6 +42,9 @@ knowledge of the CeCILL license and that you accept its terms.
 void ThreePointsNumericalDerivative::setParameters(const ParameterList & parameters)
 throw (ParameterNotFoundException, ConstraintException)
 {
+  if(_function1) _function1->enableFirstOrderDerivatives(false);
+  if(_function2) _function2->enableSecondOrderDerivatives(false);
+  _function->setParameters(parameters);
   _function->setParameters(parameters);
   _f2 = _function->getValue();
   ParameterList tmp = parameters;
@@ -49,7 +52,7 @@ throw (ParameterNotFoundException, ConstraintException)
   {
     string var = _variables[i];
     double value = _function->getParameterValue(var);
-    //Compute two other points:
+    //Compute one other point:
     try
     {
       tmp.getParameter(var)->setValue(value - _h);
@@ -92,5 +95,9 @@ throw (ParameterNotFoundException, ConstraintException)
     //Reset initial value:
     tmp.getParameter(var)->setValue(value);
   }
+  //Reset initial value and compute analytical derivatives if any.
+  if(_function1) _function1->enableFirstOrderDerivatives(true);
+  if(_function2) _function2->enableSecondOrderDerivatives(true);
+  _function->setParameters(parameters);
 }
 

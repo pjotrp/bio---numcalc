@@ -122,7 +122,8 @@ class OptimizationStopCondition: public Clonable
  * - A counter of the number of calls toward the isToleranceReached() function,
  * - A burnin function, that prohibe the optimization to stop prematurely.
  */   
-class AbstractOptimizationStopCondition: public virtual OptimizationStopCondition
+class AbstractOptimizationStopCondition:
+  public virtual OptimizationStopCondition
 {
 	protected:
 		const Optimizer * _optimizer;

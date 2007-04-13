@@ -39,6 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "OneDimensionOptimizationTools.h"
 #include "NumTools.h"
+#include "BrentOneDimension.h"
 
 /******************************************************************************
  *                              The Point class                               *
@@ -142,6 +143,40 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
 		NumTools::shift<double>(bracket.a.f, bracket.b.f, bracket.c.f, fu);
 	}
 	return bracket;
+}
+
+/******************************************************************************/
+
+unsigned int OneDimensionOptimizationTools::lineMinimization(DirectionFunction & f1dim, ParameterList & parameters, vector<double> & xi, double tolerance, ostream * profiler, ostream * messenger, int verbose)
+{
+  // Initial guess for brackets:
+  double ax = 0.;
+  double xx = 0.01;
+  
+  f1dim.setConstraintPolicy(AutoParameter::CONSTRAINTS_AUTO);
+  f1dim.setMessageHandler(messenger);
+  f1dim.init(parameters, xi);
+  BrentOneDimension bod(&f1dim);
+  bod.setMessageHandler(messenger);
+  bod.setProfiler(profiler);
+  //bod.setVerbose(verbose > 1 ? 1 : 0);
+  bod.getStopCondition()->setTolerance(0.01);
+  bod.setInitialInterval(ax, xx);
+  bod.setConstraintPolicy(AutoParameter::CONSTRAINTS_KEEP);
+  ParameterList singleParameter;
+  singleParameter.addParameter(Parameter("x", 0.0));
+  bod.init(singleParameter);
+  bod.optimize();
+  //Required if the function modifies the parameter set (global constraint):
+  parameters.matchParametersValues(f1dim.getFunction()->getParameters());
+  
+  double xmin = f1dim.getParameters()[0]->getValue();
+  for(unsigned int j = 0; j < parameters.size(); j++)
+  {
+    xi[j] *= xmin;
+    //parameters[j]->setValue(parameters[j]->getValue() + xi[j]);
+  }
+  return bod.getNumberOfEvaluations();
 }
 
 /******************************************************************************/

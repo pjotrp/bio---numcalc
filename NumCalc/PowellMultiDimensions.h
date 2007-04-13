@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractOptimizer.h"
 #include "VectorTools.h"
+#include "DirectionFunction.h"
 
 /**
  * @brief Powell's multi-dimensions optimization algorithm for one parameter.
@@ -72,45 +73,15 @@ class PowellMultiDimensions:
 	
 	friend class PMDStopCondition;
 		
-	protected:		
-		class DirectionFunction:
-      public virtual Function,
-      public virtual ParametrizableAdapter
-		{
-			protected:
-				mutable ParameterList _params, p, _xt;
-				Vdouble xi;
-				Function * _function;
-			
-			public:
-				DirectionFunction(Function * function = NULL): _function(function) {}
-				virtual ~DirectionFunction() {}
-
-#if defined(NO_VIRTUAL_COV)
-        Clonable * clone() const { return new DirectionFunction(*this); }
-#else
-        DirectionFunction * clone() const { return new DirectionFunction(*this); }
-#endif
-
-			
-			public: // Function interface implementation:
-				void setParameters(const ParameterList & parameters)
-					throw (ParameterNotFoundException, ConstraintException);
-				double getValue() const throw (Exception);
-				ParameterList getParameters() const throw (Exception);
-			public: // Specific methods:
-				void set(const ParameterList & p, const Vdouble & xi); 
-		};
-	
 	protected:
 		double _fp;
 		double _fret;
 		ParameterList _pt;
 		VVdouble _xi;
 		
-		int ncom;
-		ParameterList pcom, xicom;
-		DirectionFunction f1dim;
+		unsigned int _ncom;
+		ParameterList _pcom, _xicom;
+		DirectionFunction _f1dim;
 		
 	public:
 		PowellMultiDimensions(Function * function);
@@ -131,21 +102,6 @@ class PowellMultiDimensions:
 		double getFunctionValue() const throw (NullPointerException);
 		/** @} */
 	
-	protected:
-		
-		/**
-		 * @name Specific method
-		 *
-		 * @{
-		 */
-		
-		/**
-		 * @brief Minimization in one direction.
-		 *
-		 * @param xi Matrix of parameters.
-		 */
-		void linmin(Vdouble & xi);
-		/** @} */
 };
 
 #endif	//_POWELLMULTIDIMENSIONS_H_

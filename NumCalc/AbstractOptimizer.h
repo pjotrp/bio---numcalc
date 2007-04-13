@@ -103,12 +103,12 @@ class AbstractOptimizer:
 		/**
 		 * @brief The maximum number of function evaluations allowed.
 		 */
-		int _nbEvalMax;
+		unsigned int _nbEvalMax;
 		
 		/**
 		 * @brief The current number of function evaluations achieved.
 		 */
-		int _nbEval;
+		unsigned int _nbEval;
 
 		/**
 		 * @brief State of the verbose mode: > 0 = enabled.
@@ -240,11 +240,6 @@ class AbstractOptimizer:
 
 		/** @} */
 	
-	public:
-	
-		static string CONSTRAINTS_AUTO;
-		static string CONSTRAINTS_IGNORE;
-		static string CONSTRAINTS_KEEP;
 };
 
 #endif	//_ABSTRACTOPTIMIZER_H_

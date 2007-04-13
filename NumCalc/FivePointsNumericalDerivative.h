@@ -100,7 +100,7 @@ class FivePointsNumericalDerivative:
     {
       return _f3;
     }
-    
+ 
 };
 
 #endif //_FIVEPOINTSNUMERICALDERIVATIVE_H_
