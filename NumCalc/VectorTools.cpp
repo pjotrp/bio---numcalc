@@ -42,7 +42,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "VectorTools.h"
 using namespace VectorOperators;
-using namespace VectorFunctions;
 
 // From the STL:
 #include <cmath>
@@ -51,7 +50,7 @@ using namespace std;
 
 /******************************************************************************/
 
-bool VectorFunctions::test()
+bool VectorTools::test()
 {
   vector<float> x1(5);
   vector<float> x2(5);

@@ -102,11 +102,12 @@ class BrentOneDimension:
 		 *
 		 * @param params The initial parameter list.
 		 */
-		void init(const ParameterList & params) throw (Exception); //redefinition
-		double step() throw (Exception);
-		double optimize() throw (Exception);
-		double getFunctionValue() const throw (NullPointerException);
+    double optimize() throw (Exception); //redefinition
 		/** @} */
+		
+    void doInit(const ParameterList & params) throw (Exception);
+		
+    double doStep() throw (Exception);
 	
 	public:
 

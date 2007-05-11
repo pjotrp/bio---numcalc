@@ -55,106 +55,108 @@ knowledge of the CeCILL license and that you accept its terms.
  * (ISBN 0-521-43108-5)
  * </pre>
  */
-class DownhillSimplexMethod: public AbstractOptimizer
+class DownhillSimplexMethod:
+  public AbstractOptimizer
 {
-	public:
-		class DSMStopCondition: public AbstractOptimizationStopCondition
-		{
-			public:
-				DSMStopCondition(DownhillSimplexMethod * dsm):
+  public:
+    class DSMStopCondition: public AbstractOptimizationStopCondition
+    {
+      public:
+        DSMStopCondition(DownhillSimplexMethod * dsm):
           AbstractOptimizationStopCondition(dsm) {}
-				virtual ~DSMStopCondition() {}
+        virtual ~DSMStopCondition() {}
 
         DSMStopCondition * clone() const { return new DSMStopCondition(*this); }
-			
-			public:
-				void init() {}
-				bool isToleranceReached() const;
-		};
-	
-	friend class DSMStopCondition;
-	
-	protected:
-		class Simplex: public vector<ParameterList> {
-			public: // Class constructor and destructor:
-				Simplex();
-				virtual ~Simplex();
-			
-			public: // Methods:
-				virtual int getDimension() const;
-		};
-		
-	protected:
-		Simplex _simplex;
-		Vdouble _y;
-		ParameterList _pSum;
-		int _iHighest, _iNextHighest, _iLowest;
-	
-	public:
+      
+      public:
+        void init() {}
+        bool isToleranceReached() const;
+    };
+  
+  friend class DSMStopCondition;
+  
+  protected:
+    class Simplex:
+      public vector<ParameterList>
+  {
+      public: // Class constructor and destructor:
+        Simplex();
+        virtual ~Simplex();
+      
+      public: // Methods:
+        virtual int getDimension() const;
+  };
+    
+  protected:
+    Simplex _simplex;
+    Vdouble _y;
+    ParameterList _pSum;
+    int _iHighest, _iNextHighest, _iLowest;
+  
+  public:
 
-		/**
-		 * @brief Build a new Downhill Simplex optimizer.
-		 *
-		 * @param function A pointer toward an object implementing the Optimizable interface.
-		 */
-		DownhillSimplexMethod(Function * function);
-	
-		virtual ~DownhillSimplexMethod() {}
+    /**
+     * @brief Build a new Downhill Simplex optimizer.
+     *
+     * @param function A pointer toward an object implementing the Optimizable interface.
+     */
+    DownhillSimplexMethod(Function * function);
+  
+    virtual ~DownhillSimplexMethod() {}
 
     DownhillSimplexMethod * clone() const { return new DownhillSimplexMethod(*this); }
-	
-	public:		
-		/**
-		 * @name The Optimizer interface.
-		 *
-		 * @{
-		 */
-		
-		void init(const ParameterList & params) throw (Exception); //redefinition
-	
-		double step() throw (Exception);
-	
-		/**
-		 * @brief Multidimensional minimization of the function _function by the
-		 * downhill simplex method of Nelder and Mead.
-		 *
-		 * The simplex \f$p_{1..nDim+1,1..nDim}\f$.
-		 * is input. Its \f$nDim+1\f$ rows are nDim-dimensional vectors which are the vertices
-		 * of the starting simplex.
-		 * Also input is the vector \f$y_{1..nDim+1}\f$, whose components
-		 * must be preinitialized to the values of _function evaluated at the \f$nDim + 1\f$
-		 * vertices (rows).
-		 * On output, \f$p\f$ and \f$y\f$ will have been reset to \f$nDim + 1\f$
-		 * new points all within @c fTol of a minimum function value.
-		 */
-		double optimize() throw (Exception);
-		double getFunctionValue() const throw (NullPointerException);
-		/** @} */
-	
-	protected:
-		
-		/**
-		 * @name Specific inner methods
-		 *
-		 * @{
-		 */
-		
-		/**
-		 * @brief Update the _pSum variable.
-		 */
-		ParameterList getPSum();
-	
-		/**
-		 * @brief Extrapolates by a factor fac throough the face of the simplex
-		 * from the high point, try it, an dreplaces the high point if the new point is better.
-		 *
-		 * @param fac Extrapolation factor.
-		 * @return The value of the function for the new point.
-		 */
-		double amotry(double fac);
+  
+  public:    
+    /**
+     * @name The Optimizer interface.
+     *
+     * @{
+     */
+    
+    /**
+     * @brief Multidimensional minimization of the function _function by the
+     * downhill simplex method of Nelder and Mead.
+     *
+     * The simplex \f$p_{1..nDim+1,1..nDim}\f$.
+     * is input. Its \f$nDim+1\f$ rows are nDim-dimensional vectors which are the vertices
+     * of the starting simplex.
+     * Also input is the vector \f$y_{1..nDim+1}\f$, whose components
+     * must be preinitialized to the values of _function evaluated at the \f$nDim + 1\f$
+     * vertices (rows).
+     * On output, \f$p\f$ and \f$y\f$ will have been reset to \f$nDim + 1\f$
+     * new points all within @c fTol of a minimum function value.
+     */
+    double optimize() throw (Exception);
+    /** @} */
 
-		/** @} */
+    void doInit(const ParameterList & params) throw (Exception);
+    
+    double doStep() throw (Exception);
+  
+  protected:
+    
+    /**
+     * @name Specific inner methods
+     *
+     * @{
+     */
+    
+    /**
+     * @brief Update the _pSum variable.
+     */
+    ParameterList getPSum();
+  
+    /**
+     * @brief Extrapolates by a factor fac throough the face of the simplex
+     * from the high point, try it, an dreplaces the high point if the new point is better.
+     *
+     * @param fac Extrapolation factor.
+     * @return The value of the function for the new point.
+     */
+    double amotry(double fac);
+
+    /** @} */
 };
 
-#endif	//_DOWNHILLSIMPLEXMETHOD_H_
+#endif  //_DOWNHILLSIMPLEXMETHOD_H_
 

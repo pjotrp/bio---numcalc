@@ -71,16 +71,14 @@ DownhillSimplexMethod::DownhillSimplexMethod(Function * function):
 	// Default values:
 	_nbEvalMax = 5000;
 	_defaultStopCondition = new DSMStopCondition(this);
-	_stopCondition = _defaultStopCondition;
+	_stopCondition = _defaultStopCondition->clone();
 }
 
 /******************************************************************************/
 
-void DownhillSimplexMethod::init(const ParameterList & params) throw (Exception)
+void DownhillSimplexMethod::doInit(const ParameterList & params) throw (Exception)
 {
-	AbstractOptimizer::init(params);
-
-	int nDim = _parameters.size();
+	unsigned int nDim = _parameters.size();
 
 	// Initialize the simplex:
 	_simplex.resize(nDim + 1);
@@ -88,12 +86,12 @@ void DownhillSimplexMethod::init(const ParameterList & params) throw (Exception)
 	_simplex[0] = _parameters;
 	_y[0] = _function->f(_simplex[0]);
 	double lambda = 1.;
-	for(int i = 1; i < nDim + 1; i++)
+	for(unsigned int i = 1; i < nDim + 1; i++)
   {
 		// Copy the vector...
 		_simplex[i] = _parameters;
 		// ... and set the initial values.
-		for(int j = 0; j < nDim; j++)
+		for(unsigned int j = 0; j < nDim; j++)
     {
 			_simplex[i][j]->setValue(_parameters[j]->getValue() + (j == i - 1 ? lambda : 0.));
 		}
@@ -103,19 +101,12 @@ void DownhillSimplexMethod::init(const ParameterList & params) throw (Exception)
 	
 	_nbEval = 0;
 	_pSum = getPSum();
-
-	for (int j = 0; j < nDim; j++) {
-		profile(_parameters[j]->getName() + "\t"); 
-	}
-	profileln("Function\tTime");
 }
 	
 /******************************************************************************/
 
-double DownhillSimplexMethod::step() throw (Exception)
+double DownhillSimplexMethod::doStep() throw (Exception)
 {
-  if(!_isInitialized) throw Exception("DownhillSimplexMethod::step. Optimizer not initialized: call the 'init' method first!");
- 	if(_verbose > 0) { cout << "."; cout.flush(); }
 	// The number of dimensions of the parameter space:
 	int nDim = _simplex.getDimension();
 	int mpts = nDim + 1;
@@ -162,11 +153,8 @@ double DownhillSimplexMethod::step() throw (Exception)
 		// Set current best point:
 		_parameters = _simplex[_iLowest];
 
-		// Test for stop:
-		_tolIsReached = _nbEval > 2 && _stopCondition->isToleranceReached();
-
-		// Print parameters to profile:
-		printPoint(_simplex[_iLowest], _y[_iLowest]);
+		//// Test for stop:
+		//_tolIsReached = _nbEval > 2 && _stopCondition->isToleranceReached();
 	}
   else if (yTry >= _y[_iNextHighest])
   {
@@ -189,7 +177,6 @@ double DownhillSimplexMethod::step() throw (Exception)
 						_simplex[i][j]->setValue(_pSum[j]->getValue());
 					}
 					_y[i] = _function->f(_pSum);
-					//printPoint(_pSum, _y[i]);
 				}
 			}
 			_nbEval += nDim;
@@ -198,7 +185,6 @@ double DownhillSimplexMethod::step() throw (Exception)
 	}
   else --(_nbEval); // Correct the evaluation count.
 
-	// Send current value of lower point:
 	return _y[_iLowest];
 }
 
@@ -206,23 +192,10 @@ double DownhillSimplexMethod::step() throw (Exception)
 
 double DownhillSimplexMethod::optimize() throw (Exception)
 {
-	_nbEval = 0;
-	_tolIsReached = false;
-	while (_nbEval < _nbEvalMax && !_tolIsReached)
-  {
-		step();
-	}
+  AbstractOptimizer::optimize();
 
 	// set best shot:
 	return _function->f(_simplex[_iLowest]);
-}
-
-/******************************************************************************/
-
-double DownhillSimplexMethod::getFunctionValue() const throw (NullPointerException)
-{
-		if(_function == NULL) throw NullPointerException("DownhillSimplexMethod::getFunctionValue. No function associated to this optimizer.");
-		return _y[_iLowest];
 }
 
 /******************************************************************************/

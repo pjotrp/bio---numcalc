@@ -58,11 +58,11 @@ const Parameter * ParameterException::getParameter() const { return parameter; }
 /******************************************************************************/
 
 ConstraintException::ConstraintException(const char *   text, const Parameter * param, double badValue) :
-	ParameterException("ConstraintException: " + string(text) + "(" + TextTools::toString(badValue) + ")", param),
+	ParameterException("ConstraintException: " + string(text) + "(" + TextTools::toString(badValue) + ")" + param->getConstraint()->getDescription(), param),
 	badValue(badValue) {};
 		
 ConstraintException::ConstraintException(const string & text, const Parameter * param, double badValue) :
-	ParameterException("ConstraintException: " + text + "(" + TextTools::toString(badValue) + ")", param),
+	ParameterException("ConstraintException: " + text + "(" + TextTools::toString(badValue) + ")" + param->getConstraint()->getDescription(), param),
 	badValue(badValue) {};
 		
 double ConstraintException::getBadValue() const { return badValue; }

@@ -70,14 +70,15 @@ class AbstractNumericalDerivative:
     vector<string> _variables;
     mutable map<string, double> _der1;
     mutable map<string, double> _der2;
+    bool _computeD1, _computeD2;
     
 	public:
 		AbstractNumericalDerivative (Function * function):
-      _function(function), _function1(NULL), _function2(NULL), _h(0.0001) {}
+      _function(function), _function1(NULL), _function2(NULL), _h(0.0001), _computeD1(true), _computeD2(true) {}
 		AbstractNumericalDerivative (DerivableFirstOrder * function):
-      _function(function), _function1(function), _function2(NULL), _h(0.0001) {}
+      _function(function), _function1(function), _function2(NULL), _h(0.0001), _computeD1(true), _computeD2(true) {}
 	  AbstractNumericalDerivative (DerivableSecondOrder * function):
-      _function(function), _function1(function), _function2(function), _h(0.0001) {}
+      _function(function), _function1(function), _function2(function), _h(0.0001), _computeD1(true), _computeD2(true) {}
 		virtual ~AbstractNumericalDerivative() {}
 
     AbstractNumericalDerivative * clone() const = 0;
@@ -109,8 +110,8 @@ class AbstractNumericalDerivative:
      *
      * @{
      */
-    void enableFirstOrderDerivatives(bool yn) {}
-    bool enableFirstOrderDerivatives() const { return true; }
+    void enableFirstOrderDerivatives(bool yn) { _computeD1 = yn; }
+    bool enableFirstOrderDerivatives() const { return _computeD1; }
     
     double getFirstOrderDerivative(const string & variable) const
       throw (Exception)
@@ -135,8 +136,8 @@ class AbstractNumericalDerivative:
      * @{
      */
 
-    void enableSecondOrderDerivatives(bool yn) {}
-    bool enableSecondOrderDerivatives() const { return true; }
+    void enableSecondOrderDerivatives(bool yn) { _computeD2 = yn; }
+    bool enableSecondOrderDerivatives() const { return _computeD2; }
     /** @} */
 
     double getSecondOrderDerivative(const string & variable) const

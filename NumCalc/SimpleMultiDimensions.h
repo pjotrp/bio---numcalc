@@ -77,14 +77,21 @@ class SimpleMultiDimensions:
 		 *
 		 * @{
 		 */
-		void init(const ParameterList & params) throw (Exception);
-
-		double step() throw (Exception);
-
-		double optimize() throw (Exception);
-
 		void setFunction(Function * function);
 		/** @} */
+		
+		void doInit(const ParameterList & params) throw (Exception);
+
+    double doStep() throw (Exception);
+
+    /**
+     * @return The optimizer used to optimize each parameter.
+     */
+    Optimizer * getOneDimensionOptimizer() { return _optimizer; } 
+    /**
+     * @return The optimizer used to optimize each parameter.
+     */
+    const Optimizer * getOneDimensionOptimizer() const { return _optimizer; } 
 };
 
 #endif //_SIMPLEMULTIDIMENSIONS_H_

@@ -46,33 +46,42 @@ knowledge of the CeCILL license and that you accept its terms.
 
 /** Constructors: *************************************************************/
 
-Parameter::Parameter(const string & name, double value, const Constraint * constraint) 
+Parameter::Parameter(const string & name, double value, Constraint * constraint, bool attachConstraint) 
 throw (ConstraintException)
 {
 	_name = name;
 	_constraint = constraint;
 	// This may throw a ConstraintException:
 	setValue(value);
+  _attach = attachConstraint;
 }
 
 Parameter::Parameter(const Parameter & p)
 {
 	_name       = p._name;
 	_value      = p._value;
-	_constraint = p._constraint;
+  _attach     = p._attach;
+	if(p._attach && p._constraint)
+    _constraint = p._constraint->clone();
+  else
+    _constraint = p._constraint;
 }
 
 Parameter & Parameter::operator=(const Parameter & p)
 {
 	_name       = p._name;
 	_value      = p._value;
-	_constraint = p._constraint;
+  _attach     = p._attach;
+	if(p._attach && p._constraint)
+    _constraint = p._constraint->clone();
+  else
+    _constraint = p._constraint;
 	return *this;	
 }
 
 /** Value: ********************************************************************/
 
-inline void Parameter::setValue(double value) throw (ConstraintException)
+void Parameter::setValue(double value) throw (ConstraintException)
 {
 	if(_constraint != NULL && !_constraint->isCorrect(value)) 
 		throw ConstraintException("Parameter::setValue", this, value);

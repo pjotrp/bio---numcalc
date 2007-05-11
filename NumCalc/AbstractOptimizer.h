@@ -118,9 +118,22 @@ class AbstractOptimizer:
 		unsigned int _verbose;
 
     /**
+     * @brief The current value of the function.
+     */
+    double _currentValue;
+
+    /**
      * @brief Check if the optimizer have been feeded with initial parameters values.
      */
     bool _isInitialized;
+
+    time_t _startTime;
+
+    vector<OptimizationListener *> _listeners;
+
+    bool _updateParameters;
+
+    string _stepChar;
 
 	public:
 		AbstractOptimizer(Function * function = NULL);
@@ -142,7 +155,24 @@ class AbstractOptimizer:
 		 *
 		 * @{
 		 */
+    /**
+     * @brief Basic implementation.
+     *
+     * Store all parameters, call the doInit method, print to profiler, initialize timer and notify all listeners.
+     */
 		void init(const ParameterList & params) throw (Exception);
+    /**
+     * @brief Basic implementation.
+     *
+     * Check if the optimizer is initialized, check if parameters need update because of listeners, call the doStep method, print the current point to the profiler, notify all listeners and return the current value of the function.
+     */
+    double step() throw (Exception);
+    /**
+     * @brief Basic implementation.
+     *
+     * Call the step method untill tolerance is reached.
+     */
+    double optimize() throw (Exception);
     bool isInitialized() const { return _isInitialized; }
 		ParameterList getParameters() const { return _parameters; }
 		void setFunction(Function * function)
@@ -155,7 +185,7 @@ class AbstractOptimizer:
 		double getFunctionValue() const throw (NullPointerException)
 		{
 			if(_function == NULL) throw NullPointerException("AbstractOptimizer::getFunctionValue. No function associated to this optimizer.");
-			return _function -> getValue();
+			return _currentValue;
 		}
 		void setMessageHandler(ostream * mh) { _messageHandler = mh; }
 		void setProfiler(ostream * profiler) { _profiler = profiler; }
@@ -175,9 +205,44 @@ class AbstractOptimizer:
 		unsigned int getVerbose() const { return _verbose; }
 		void setConstraintPolicy(const string & constraintPolicy) { _constraintPolicy = constraintPolicy; }
 		string getConstraintPolicy() const { return _constraintPolicy; }
+    void addOptimizationListener(OptimizationListener * listener) { if(listener) _listeners.push_back(listener); }
 		/** @} */
+
+    /**
+     * @brief Tell if we shall update all parameters after one optimization step.
+     *
+     * This is required only for functions that have non-independent parameters,
+     * which means that setting one parameter value may modify one or several other parameters.
+     *
+     * @param yn true/false
+     */
+    void updateParameters(bool yn) { _updateParameters = yn; }
+
+    /**
+     * @brief Tell if we shall update all parameters after one optimization step.
+     *
+     * This is required only for functions that have non-independent parameters,
+     * which means that setting one parameter value may modify one or several other parameters.
+     *
+     * @return yn true/false
+     */
+    bool updateParameters() const { return _updateParameters; }
 	
 	protected:
+
+    /**
+     * @brief This function is called by the init() method and contains all calculations.
+     *
+     * @param params The parameters to use for initialization.
+     */
+    virtual void doInit(const ParameterList & params) throw (Exception) = 0;
+		
+    /**
+     * @brief This function is called by the step() method and contains all calculations.
+     *
+     * @return The value of the function after the optimization step.
+     */
+    virtual double doStep() throw (Exception) = 0;
 		
 		/**
 		 * @name Inner utilitary functions
@@ -238,6 +303,25 @@ class AbstractOptimizer:
 		 */
 		void printMessage(const string & message);
 
+    /**
+     * @brief Notify all listeners that optimizer initialization was performed.
+     *
+     * This method should be called by the init method.
+     *
+     * @param event An OptimizationEvent object.
+     */
+    void fireOptimizationInitializationPerformed(const OptimizationEvent & event);
+
+    /**
+     * @brief Notify all listeners that an optimization step was performed.
+     *
+     * This method should be called by the step method.
+     *
+     * @param event An OptimizationEvent object.
+     */
+    void fireOptimizationStepPerformed(const OptimizationEvent & event);
+
+    bool listenerModifiesParameters() const;
 		/** @} */
 	
 };

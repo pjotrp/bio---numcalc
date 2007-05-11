@@ -50,171 +50,149 @@ using namespace NumTools;
 
 bool BrentOneDimension::BODStopCondition::isToleranceReached() const
 {
-	// NRC Test for done:
-	const BrentOneDimension * bod = dynamic_cast<const BrentOneDimension *>(_optimizer);
-	double x    = bod->x;
-	double xm   = bod->xm;
-	double tol2 = bod->tol2;
-	double b    = bod->b;
-	double a    = bod->a;
-	return NumTools::abs(x - xm) <= (tol2 - 0.5 * (b - a));
+  // NRC Test for done:
+  const BrentOneDimension * bod = dynamic_cast<const BrentOneDimension *>(_optimizer);
+  double x    = bod->x;
+  double xm   = bod->xm;
+  double tol2 = bod->tol2;
+  double b    = bod->b;
+  double a    = bod->a;
+  return NumTools::abs(x - xm) <= (tol2 - 0.5 * (b - a));
 }
-		
+    
 /******************************************************************************/
 
 BrentOneDimension::BrentOneDimension(Function * function) :
 AbstractOptimizer(function)
 {
-	_defaultStopCondition = new BODStopCondition(this);
-	_stopCondition = _defaultStopCondition->clone();
-	_nbEvalMax = 10000;
+  _defaultStopCondition = new BODStopCondition(this);
+  _stopCondition = _defaultStopCondition->clone();
+  _nbEvalMax = 10000;
   _isInitialIntervalSet = false;
 }
 
 /******************************************************************************/
-	
+  
 double BrentOneDimension::CGOLD = 0.3819660;
 double BrentOneDimension::ZEPS  = 1.0e-10;
-	
+  
 /******************************************************************************/
-	
-void BrentOneDimension::init(const ParameterList & params) throw (Exception)
+  
+void BrentOneDimension::doInit(const ParameterList & params) throw (Exception)
 {
-	// Set the initial value (no use here! Use setInitialValues() instead).
-	if(params.size() != 1) throw Exception("BrentOneDimension::init(). This optimizer only deals with one parameter.");
-	AbstractOptimizer::init(params);
+  // Set the initial value (no use here! Use setInitialValues() instead).
+  if(params.size() != 1) throw Exception("BrentOneDimension::init(). This optimizer only deals with one parameter.");
 
-	// Bracket the minimum.
-	Bracket bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, _function, _parameters);
-	if(_verbose > 0)
+  // Bracket the minimum.
+  Bracket bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, _function, _parameters);
+  if(_verbose > 0)
   {
-		printMessage("Initial bracketing:");
-		printMessage("A: x = " + TextTools::toString(bracket.a.x) + ", f = " + TextTools::toString(bracket.a.f));
-		printMessage("B: x = " + TextTools::toString(bracket.b.x) + ", f = " + TextTools::toString(bracket.b.f));
-		printMessage("C: x = " + TextTools::toString(bracket.c.x) + ", f = " + TextTools::toString(bracket.c.f));
-	}
-	
-	// This will be the distance moved on the step before last.
-	e = 0.0;
+    printMessage("Initial bracketing:");
+    printMessage("A: x = " + TextTools::toString(bracket.a.x) + ", f = " + TextTools::toString(bracket.a.f));
+    printMessage("B: x = " + TextTools::toString(bracket.b.x) + ", f = " + TextTools::toString(bracket.b.f));
+    printMessage("C: x = " + TextTools::toString(bracket.c.x) + ", f = " + TextTools::toString(bracket.c.f));
+  }
+  
+  // This will be the distance moved on the step before last.
+  e = 0.0;
 
-	// a and b must be in ascending order, but input abscissa need not be.
-	a = (bracket.a.x < bracket.c.x ? bracket.a.x : bracket.c.x);
-	b = (bracket.a.x > bracket.c.x ? bracket.a.x : bracket.c.x);
-	
-	// Initializations...
-	x = w = v = bracket.b.x;
-	_parameters[0]->setValue(x);
-	fw = fv = fx = _function->f(_parameters);	
-
-  _stopCondition->init();
-	profileln(_parameters[0]->getName() + "\tFunction\tTime");
+  // a and b must be in ascending order, but input abscissa need not be.
+  a = (bracket.a.x < bracket.c.x ? bracket.a.x : bracket.c.x);
+  b = (bracket.a.x > bracket.c.x ? bracket.a.x : bracket.c.x);
+  
+  // Initializations...
+  x = w = v = bracket.b.x;
+  _parameters[0]->setValue(x);
+  fw = fv = fx = _function->f(_parameters);  
 }
 
 /******************************************************************************/
-	
+  
 void BrentOneDimension::setInitialInterval(double inf, double sup)
 {
-	_xinf = inf; _xsup = sup;
+  _xinf = inf; _xsup = sup;
   _isInitialIntervalSet = true;
 }
 
 /******************************************************************************/
 
-double BrentOneDimension::step() throw (Exception)
+double BrentOneDimension::doStep() throw (Exception)
 {
-  if(!_isInitialized) throw Exception("BrentOneDimension::step. Optimizer not initialized: call the 'init' method first!");
   if(!_isInitialIntervalSet) throw Exception("BrentOneDimension::step. Initial interval not set: call the 'setInitialInterval' method first!");
-	if(_verbose > 0) { cout << "."; cout.flush(); }
-	xm   = 0.5 * (a + b);
-	tol2 = 2.0 * (tol1 = _stopCondition->getTolerance() * NumTools::abs(x) + ZEPS);
-	
-	// Construct a trial parabolic fit:
-	if (NumTools::abs(e) > tol1)
+  xm   = 0.5 * (a + b);
+  tol2 = 2.0 * (tol1 = _stopCondition->getTolerance() * NumTools::abs(x) + ZEPS);
+  
+  // Construct a trial parabolic fit:
+  if(NumTools::abs(e) > tol1)
   {
-		r = (x - w) * (fx - fv);
-		q = (x - v) * (fx - fw);
-		p = (x - v) * q - (x - w) * r;
-		q = 2.0 * (q - r);
-		if (q > 0.0) p = -p;
-		q = NumTools::abs(q);
-		etemp = e;
-		e = d;
-		if (NumTools::abs(p) >= NumTools::abs(0.5 * q * etemp) || p <= q * (a - x) || p >= q * (b - x))
-			d = CGOLD * (e = (x >= xm ? a - x : b - x));
-		// The above conditions determine the acceptability of the parabolic fit.
-		// Here we take the golden section step into the larger of the two segments.
-		else
+    r = (x - w) * (fx - fv);
+    q = (x - v) * (fx - fw);
+    p = (x - v) * q - (x - w) * r;
+    q = 2.0 * (q - r);
+    if (q > 0.0) p = -p;
+    q = NumTools::abs(q);
+    etemp = e;
+    e = d;
+    if (NumTools::abs(p) >= NumTools::abs(0.5 * q * etemp) || p <= q * (a - x) || p >= q * (b - x))
+      d = CGOLD * (e = (x >= xm ? a - x : b - x));
+    // The above conditions determine the acceptability of the parabolic fit.
+    // Here we take the golden section step into the larger of the two segments.
+    else
     {
-			d = p / q; // Take the parabolic step.
-			u = x + d;
-			if (u - a < tol2 || b - u < tol2)
-				d = sign(tol1, xm - x);
-		}
-	}
+      d = p / q; // Take the parabolic step.
+      u = x + d;
+      if (u - a < tol2 || b - u < tol2)
+        d = sign(tol1, xm - x);
+    }
+  }
   else
   {
-		d = CGOLD * (e = (x >= xm ? a - x : b - x));
-	}
-	u = (NumTools::abs(d) >= tol1 ? x + d : x + sign(tol1, d));
+    d = CGOLD * (e = (x >= xm ? a - x : b - x));
+  }
+  u = (NumTools::abs(d) >= tol1 ? x + d : x + sign(tol1, d));
 
-	// This is the one function evaluate per iteration.
-	ParameterList pl = _parameters;
-	pl[0]->setValue(u);
-	fu = _function->f(pl);
-	// Now decide what to do with our function evaluation.
-	if (fu <= fx)
+  // This is the one function evaluate per iteration.
+  ParameterList pl = _parameters;
+  pl[0]->setValue(u);
+  fu = _function->f(pl);
+  // Now decide what to do with our function evaluation.
+  if (fu <= fx)
   {
-		if (u >= x) a = x; else b = x;
-		// Here is the house keeping:
-		shift(v, w, x, u);
-		shift(fv, fw, fx, fu);
-	}
+    if (u >= x) a = x; else b = x;
+    // Here is the house keeping:
+    shift(v, w, x, u);
+    shift(fv, fw, fx, fu);
+  }
   else
   {
-		if (u < x) a = u; else b = u;
-		if (fu <= fw || w == x)
+    if (u < x) a = u; else b = u;
+    if (fu <= fw || w == x)
     {
-			v  = w;
-			w  = u;
-			fv = fw;
-			fw = fu;
-		}
+      v  = w;
+      w  = u;
+      fv = fw;
+      fw = fu;
+    }
     else if (fu <= fv || v == x || v == w)
     {
-			v  = u;
-			fv = fu;
-		}
-	} // Done with housekeeping.
+      v  = u;
+      fv = fu;
+    }
+  } // Done with housekeeping.
 
-	// Store results for this step:
-	_parameters[0]->setValue(x);
-	_tolIsReached = _nbEval > 2 && _stopCondition->isToleranceReached();
-	printPoint(_parameters, fx);
-	return fx;
+  // Store results for this step:
+  _parameters[0]->setValue(x);
+  return fx;
 }
 
 /******************************************************************************/
-	
+  
 double BrentOneDimension::optimize() throw (Exception)
 {
-	// Main program loop.
-	_tolIsReached = false;
-	for (_nbEval = 0; _nbEval < _nbEvalMax && !_tolIsReached; _nbEval++)
-  {
-		step();
-	}
-
-	// Apply parameters and evaluate function at minimum point:
-	_parameters[0]->setValue(x); fx = _function->f(_parameters);
-	return fx;
-}
-
-/******************************************************************************/
-
-double BrentOneDimension::getFunctionValue() const throw (NullPointerException)
-{
-		if(_function == NULL) throw NullPointerException("BrentOneDimension::getFunctionValue. No function associated to this optimizer.");
-		return fx;
+  AbstractOptimizer::optimize();
+  // Apply parameters and evaluate function at minimum point:
+  _function->f(_parameters);
+  return _currentValue;
 }
 
 /******************************************************************************/

@@ -107,7 +107,7 @@ class IncludingPositiveReal: public Constraint
 		{
 			return "[ " + TextTools::toString(_lower) + ", +inf [";
 		}
-		
+    void setLowerBound(double lowerBound) { _lower = lowerBound; }
 };
 		
 /**
@@ -131,6 +131,55 @@ class ExcludingPositiveReal: public Constraint
 		{
 			return "] " + TextTools::toString(_lower) + ", +inf [";
 		}
+    void setLowerBound(double lowerBound) { _lower = lowerBound; }
+};
+
+/**
+ * @brief Including neg tive real constraint.
+ */
+class IncludingNegativeReal: public Constraint
+{
+	protected:
+		double _upper;
+	
+	public:
+		IncludingNegativeReal(double upperBound): _upper(upperBound) {}
+		virtual ~IncludingNegativeReal() {}
+
+    IncludingNegativeReal * clone() const { return new IncludingNegativeReal(*this); }
+		
+	public:
+		bool isCorrect(double value) const { return value <= _upper; }
+		double getLimit(double value) const { return isCorrect(value) ? value : _upper; }
+		string getDescription() const
+		{
+			return "] -inf, " + TextTools::toString(_upper) + " ]";
+		}
+    void setUpperBound(double upperBound) { _upper = upperBound; }
+};
+		
+/**
+ * @brief Excluding positive real constraint.
+ */
+class ExcludingNegativeReal: public Constraint
+{
+	protected:
+		double _upper;
+	
+	public:
+		ExcludingNegativeReal(double upperBound): _upper(upperBound) {}
+		virtual ~ExcludingNegativeReal() {}
+
+    ExcludingNegativeReal * clone() const { return new ExcludingNegativeReal(*this); }
+		
+	public:
+		bool isCorrect(double value) const { return value < _upper; }
+		double getLimit(double value) const { return isCorrect(value) ? value : _upper; }
+		string getDescription() const
+		{
+			return "] -inf, " + TextTools::toString(_upper) + " [";
+		}
+    void setUpperBound(double upperBound) { _upper = upperBound; }
 };
 
 /**
@@ -163,6 +212,10 @@ class Interval: public Constraint
 			else return _upper;
 		}	
 		string getDescription() const = 0;
+    virtual void setLowerBound(double lowerBound) { _lower = lowerBound; }
+    virtual void setUpperBound(double upperBound) { _upper = upperBound; }
+    virtual double getLowerBound() const { return _lower; }
+    virtual double getUpperBound() const { return _upper; }
 };
 
 /**

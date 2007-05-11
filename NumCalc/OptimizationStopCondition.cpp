@@ -40,7 +40,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "OptimizationStopCondition.h"
 #include "Optimizer.h"
 #include "VectorTools.h"
-using namespace VectorFunctions;
 #include "NumTools.h"
 using namespace NumTools;
 
@@ -212,7 +211,7 @@ FunctionStopCondition::FunctionStopCondition(
 	const Optimizer * optimizer,
 	double tolerance,
 	int burnin):
-	AbstractOptimizationStopCondition(optimizer, tolerance, burnin)
+	AbstractOptimizationStopCondition(optimizer, tolerance, burnin), _lastFunctionValue(-log(0.)), _newFunctionValue(-log(0.))
 {
 	init();
 }
@@ -223,8 +222,11 @@ FunctionStopCondition::~FunctionStopCondition() {}
 
 void FunctionStopCondition::init()
 {
+  _newFunctionValue = -log(0);
 	if(_optimizer->getFunction() != NULL)
+  {
 		_newFunctionValue = _optimizer->getFunctionValue();
+  }
 }
 
 /******************************************************************************/
@@ -233,7 +235,7 @@ bool FunctionStopCondition::isToleranceReached() const
 {
 	_callCount++;
 	_lastFunctionValue = _newFunctionValue;
-	_newFunctionValue  = _optimizer -> getFunctionValue();
+	_newFunctionValue  = _optimizer->getFunctionValue();
 	if(_callCount <= _burnin) return false;
 	double tol = NumTools::abs<double>(_newFunctionValue - _lastFunctionValue);
 	return tol < _tolerance;

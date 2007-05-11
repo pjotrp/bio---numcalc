@@ -67,10 +67,8 @@ AbstractOptimizer(function), _f1dim(function)
 
 /******************************************************************************/
 
-void PowellMultiDimensions::init(const ParameterList & params) throw (Exception)
+void PowellMultiDimensions::doInit(const ParameterList & params) throw (Exception)
 {
-  AbstractOptimizer::init(params);
-  
   // Build the initial matrix:
   unsigned int n = params.size();
   _xi.resize(n);
@@ -88,22 +86,12 @@ void PowellMultiDimensions::init(const ParameterList & params) throw (Exception)
   // Starting point:
   _fret = _function->f(_parameters);
   _pt   = _parameters;
-
-  for (unsigned int j = 0; j < n; j++)
-  {
-    profile(_parameters[j]->getName() + "\t"); 
-  }
-  profileln("Function\tTime");
-  printPoint(_parameters, _fret);
 }
   
 /******************************************************************************/
   
-double PowellMultiDimensions::step() throw (Exception)
+double PowellMultiDimensions::doStep() throw (Exception)
 {
-  if(!_isInitialized) throw Exception("PowellMultiDimensions::step. Optimizer not initialized: call the 'init' method first!");
-  if(_verbose > 0) { cout << "*" << endl; }
-  
   unsigned int n = _parameters.size();
   _fp = _fret;
   unsigned int ibig = 0;
@@ -159,10 +147,6 @@ double PowellMultiDimensions::step() throw (Exception)
     }
   }
 
-  // We check for tolerance only once all directions have been looped over:
-  _tolIsReached = _stopCondition->isToleranceReached();
-
-  _stopCondition->init();
   return _fret;
 }
 
@@ -170,21 +154,9 @@ double PowellMultiDimensions::step() throw (Exception)
 
 double PowellMultiDimensions::optimize() throw (Exception)
 {
-  _tolIsReached = false;
-  for (_nbEval = 0; _nbEval < _nbEvalMax && ! _tolIsReached; _nbEval++)
-  {
-    step();
-  }
+  AbstractOptimizer::optimize();
   // Apply best parameter:
   return _function->f(_parameters);
-}
-
-/******************************************************************************/
-
-double PowellMultiDimensions::getFunctionValue() const throw (NullPointerException)
-{
-    if(_function == NULL) throw NullPointerException("PowellMultiDimensions::getFunctionValue. No function associated to this optimizer.");
-    return _fret;
 }
 
 /******************************************************************************/

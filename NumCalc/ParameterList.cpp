@@ -329,6 +329,42 @@ void ParameterList::deleteParameter(const string & name) throw (ParameterNotFoun
 
 /******************************************************************************/
 
+void ParameterList::deleteParameters(const vector<string> & names) throw (ParameterNotFoundException)
+{
+	for(unsigned int i = 0; i < names.size(); i++)
+  {
+		deleteParameter(names[i]);
+	}
+}
+
+/******************************************************************************/
+
+void ParameterList::deleteParameter(unsigned int index) throw (IndexOutOfBoundsException)
+{
+  if(index >= size()) throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
+	Parameter * p = operator[](index);
+  delete p;
+  erase(begin() + index);
+}
+
+/******************************************************************************/
+
+void ParameterList::deleteParameters(const vector<unsigned int> & indices) throw (IndexOutOfBoundsException)
+{
+  vector<unsigned int> tmp(indices);
+  std::sort(tmp.begin(), tmp.end());
+	for(vector<unsigned int>::reverse_iterator i = tmp.rbegin(); i != tmp.rend(); i++)
+  {
+    unsigned int index = *i;
+    if(index >= size()) throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
+	  Parameter * p = operator[](index);
+    delete p;
+    erase(begin() + index);
+	}
+}
+
+/******************************************************************************/
+
 void ParameterList::printParameters(ostream & out) const
 {
 	out << "Name:\tValue:\tConstraint:" << endl;

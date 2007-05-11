@@ -51,26 +51,28 @@ throw (ParameterNotFoundException, ConstraintException)
   for(unsigned int i = 0; i < _variables.size(); i++)
   {
     string var = _variables[i];
+    Parameter * p = tmp.getParameter(var);
+    if(!p) continue;
     double value = _function->getParameterValue(var);
     //Compute one other point:
     try
     {
-      tmp.getParameter(var)->setValue(value - _h);
+      p->setValue(value - _h);
       _function->setParameters(tmp);
       _f1 = _function->getValue();
       try
       {
-        tmp.getParameter(var)->setValue(value + _h);
+        p->setValue(value + _h);
         _function->setParameters(tmp);
         _f3 = _function->getValue();
       }
       catch(ConstraintException & ce)
       {
         //Right limit raised, use backward approximation:
-        tmp.getParameter(var)->setValue(value - _h);
+        p->setValue(value - _h);
         _function->setParameters(tmp);
         _f1 = _function->getValue();
-        tmp.getParameter(var)->setValue(value - 2*_h);
+        p->setValue(value - 2*_h);
         _function->setParameters(tmp);
         _f3 = _function->getValue();
         _der1[var] = (_f2 - _f1) / _h;
@@ -83,21 +85,21 @@ throw (ParameterNotFoundException, ConstraintException)
     catch(ConstraintException & ce)
     {
       //Left limit raised, use forward approximation:
-      tmp.getParameter(var)->setValue(value + _h);
+      p->setValue(value + _h);
       _function->setParameters(tmp);
       _f3 = _function->getValue();
-      tmp.getParameter(var)->setValue(value + 2*_h);
+      p->setValue(value + 2*_h);
       _function->setParameters(tmp);
       _f1 = _function->getValue();
       _der1[var] = (_f3 - _f2) / _h;
       _der2[var] = (_f1 - 2.*_f3 + _f2) / (_h*_h);
     }
     //Reset initial value:
-    tmp.getParameter(var)->setValue(value);
+    p->setValue(value);
   }
   //Reset initial value and compute analytical derivatives if any.
-  if(_function1) _function1->enableFirstOrderDerivatives(true);
-  if(_function2) _function2->enableSecondOrderDerivatives(true);
+  if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
+  if(_function2) _function2->enableSecondOrderDerivatives(_computeD2);
   _function->setParameters(parameters);
 }
 

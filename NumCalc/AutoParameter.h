@@ -63,8 +63,11 @@ class AutoParameter:
 		 * @param name The parameter name.
 		 * @param value The parameter value.
 		 * @param constraint An optional pointer toward a Constraint object.
+     * @param attachConstraint Tell if the constraint must be attached to this parameter, or shared
+     * between different objects. See Parameter.
+		 * @throw ConstraintException If the parameter value does not match the contraint.
 		 */
-		AutoParameter(const string & name = "", double value = 0, const Constraint * constraint = NULL);
+		AutoParameter(const string & name = "", double value = 0, Constraint * constraint = NULL, bool attachConstraint = false) throw (ConstraintException);
 
 		/**
 		 * @brief Copy constructor.

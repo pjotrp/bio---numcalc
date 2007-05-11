@@ -50,17 +50,14 @@ knowledge of the CeCILL license and that you accept its terms.
 /******************************************************************************/
 
 AbstractOptimizer::AbstractOptimizer(Function * function):
-  _function(function) 
-{
-	// Initialization with defaults:
-	_messageHandler   = & cout;
-	_profiler         = & cout;
-	_constraintPolicy = AutoParameter::CONSTRAINTS_KEEP;	
-	_nbEvalMax        = 1000000;
-  _nbEval           = 0;
-	_verbose          = true;
-  _isInitialized    = false;
-}
+  _function(function),
+  _messageHandler(&cout),
+  _profiler(&cout),
+  _constraintPolicy(AutoParameter::CONSTRAINTS_KEEP),
+  _nbEvalMax(1000000), _nbEval(0), _verbose(true),
+  _isInitialized(false), _updateParameters(false),
+  _stepChar("*")
+{}
 
 /******************************************************************************/
 
@@ -90,8 +87,10 @@ AbstractOptimizer::AbstractOptimizer(const AbstractOptimizer & opt)
   _nbEval                 = opt._nbEval;
   _verbose                = opt._verbose;
   //In case of AutoParameter instances, we must actualize the pointers toward _messageHandler:
-  init(_parameters);
+  if(_function) init(_parameters);
   _isInitialized          = opt._isInitialized;
+  _updateParameters       = opt._updateParameters;
+  _stepChar               = opt._stepChar;
 }
 
 /******************************************************************************/
@@ -124,6 +123,8 @@ AbstractOptimizer & AbstractOptimizer::operator=(const AbstractOptimizer & opt)
   //In case of AutoParameter instances, we must actualize the pointers toward _messageHandler:
   init(_parameters);
   _isInitialized          = opt._isInitialized;
+  _updateParameters       = opt._updateParameters;
+  _stepChar               = opt._stepChar;
   return *this;
 }
 
@@ -131,11 +132,68 @@ AbstractOptimizer & AbstractOptimizer::operator=(const AbstractOptimizer & opt)
 	
 void AbstractOptimizer::init(const ParameterList & params) throw (Exception)
 {
+  if(!_function) throw Exception("AbstractOptimizer::init. Optimizer currently has no function.");
+  //We do this in order to keep original constraints:
 	_parameters = params;
+  //More secure, but too slow:
+	//_parameters = _function->getParameters().subList(params.getParameterNames());
+  //_parameters.matchParametersValues(params);
 	     if(_constraintPolicy == AutoParameter::CONSTRAINTS_AUTO)   autoParameter();
 	else if(_constraintPolicy == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
+  doInit(params);
+  _nbEval = 0;
 	_tolIsReached = false;
   _isInitialized = true;
+  time(&_startTime);
+  for(unsigned int i = 0; i < _parameters.size(); i++)
+  {
+    profile(_parameters[i]->getName() + "\t"); 
+  }
+  profileln("Function\tTime");
+
+  //Assign parameters:
+  _currentValue = _function->f(_parameters);
+  printPoint(_parameters, _currentValue);
+  
+  // Initialize the StopCondition:
+  _stopCondition->init();
+  fireOptimizationInitializationPerformed(OptimizationEvent(this));
+}
+
+/******************************************************************************/
+
+double AbstractOptimizer::step() throw (Exception)
+{
+  if(_verbose > 0) { cout << _stepChar; cout.flush(); }
+  _currentValue = doStep();
+  //if(_updateParameters) _parameters.matchParametersValues(_function->getParameters());
+  printPoint(_parameters, _currentValue);
+  fireOptimizationStepPerformed(OptimizationEvent(this));
+  if(listenerModifiesParameters())
+  {
+    if(!_updateParameters)
+      _parameters.matchParametersValues(_function->getParameters());
+    //else already done!
+ 
+    //_currentValue = _function->getValue();
+    //Often useless, but avoid some bizare behaviour in particular cases:
+    _currentValue = _function->f(_parameters);
+  }
+  _tolIsReached = _tolIsReached || _stopCondition->isToleranceReached();
+  return _currentValue;
+}
+
+/**************************************************************************/
+
+double AbstractOptimizer::optimize() throw (Exception)
+{
+  if(!_isInitialized) throw Exception("AbstractOptimizer::step. Optimizer not initialized: call the 'init' method first!");
+  _tolIsReached = false;
+  for (_nbEval = 0; _nbEval < _nbEvalMax && ! _tolIsReached; _nbEval++)
+  {
+    step();
+  }
+  return _currentValue;
 }
 
 /******************************************************************************/
@@ -180,7 +238,7 @@ void AbstractOptimizer::printPoint(const ParameterList & params, double value)
   profile("\t");
   time_t seconds;
   time(&seconds);
-  profileln(ctime(&seconds)); 
+  profileln(difftime(seconds, _startTime));
 }
 
 /******************************************************************************/
@@ -212,6 +270,38 @@ void AbstractOptimizer::ignoreConstraints()
   {
 		_parameters[i]->removeConstraint();
 	}
+}
+
+/******************************************************************************/
+
+void AbstractOptimizer::fireOptimizationInitializationPerformed(const OptimizationEvent & event)
+{
+  for(unsigned int i = 0; i < _listeners.size(); i++)
+  {
+    _listeners[i]->optimizationInitializationPerformed(event);
+  }
+}
+
+/******************************************************************************/
+
+void AbstractOptimizer::fireOptimizationStepPerformed(const OptimizationEvent & event)
+{
+  for(unsigned int i = 0; i < _listeners.size(); i++)
+  {
+    _listeners[i]->optimizationStepPerformed(event);
+  }
+}
+
+/******************************************************************************/
+
+bool AbstractOptimizer::listenerModifiesParameters() const
+{
+  for(unsigned int i = 0; i < _listeners.size(); i++)
+  {
+    if(_listeners[i]->listenerModifiesParameters())
+      return true;
+  }
+  return false;
 }
 
 /******************************************************************************/

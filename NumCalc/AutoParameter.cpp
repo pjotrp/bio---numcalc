@@ -55,8 +55,8 @@ string AutoParameter::CONSTRAINTS_KEEP   = "keep";
 
 /** Constructors: *************************************************************/
 
-AutoParameter::AutoParameter(const string & name, double value, const Constraint * constraint):
-Parameter(name, value, constraint)
+AutoParameter::AutoParameter(const string & name, double value, Constraint * constraint, bool attachConstraint) throw (ConstraintException):
+Parameter(name, value, constraint, attachConstraint)
 {
 	_messageHandler = &cout;
 }
@@ -83,18 +83,21 @@ AutoParameter & AutoParameter::operator=(const AutoParameter & p)
 void AutoParameter::setValue(double value) throw (ConstraintException)
 {
 	try
-  { // First we try to assign this value:
+  { 
+    // First we try to assign this value:
 		Parameter::setValue(value);
 	}
   catch (ConstraintException & ce)
-  { // Aie, there's a pb here...
+  { 
+    // Aie, there's a pb here...
 		if(_messageHandler != NULL)
     {
 			(* _messageHandler) << "Constraint match at parameter ";
 			(* _messageHandler) << _name;
 			(* _messageHandler) << ", badValue = ";
 			(* _messageHandler) << ce.getBadValue();
-			(* _messageHandler) << endl;
+			(* _messageHandler) << " ";
+      (* _messageHandler) << _constraint->getDescription() << endl;
 		}
 		double limit = _constraint->getLimit(value);
 		try
@@ -102,7 +105,8 @@ void AutoParameter::setValue(double value) throw (ConstraintException)
 			Parameter::setValue(limit);
 		}
     catch(ConstraintException & ce2)
-    { // Aie, the limit is not reachable, so we perform a smaller step...
+    { 
+      // Aie, the limit is not reachable, so we perform a smaller step...
 			//Parameter::setValue((getValue() + limit) / 2);
 			try
       {

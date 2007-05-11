@@ -105,14 +105,13 @@ class GoldenSectionSearch:
 		 *
 		 * @param params The initial parameter list.
 		 */
-		void init(const ParameterList & params) throw (Exception); //redefinition
-		double step() throw (Exception);
-		double optimize() throw (Exception);
 		double getFunctionValue() const throw (NullPointerException);
 		/** @} */
-	
-	public:	
+		
+    void doInit(const ParameterList & params) throw (Exception);
 
+		double doStep() throw (Exception);
+	
 		/**
 		 * @name Specific method
 		 *

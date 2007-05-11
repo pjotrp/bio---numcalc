@@ -1,7 +1,7 @@
 //
-// File: SimpleMultiDimensions.cpp
+// File: SimpleNewtonMultiDimensions.cpp
 // Created by: Julien Dutheil
-// Created on: Tue Nov 16 17:51 2004
+// Created on: Thu Apr 26 15:29 2007
 //
 
 /*
@@ -39,23 +39,23 @@ knowledge of the CeCILL license and that you accept its terms.
 
 /******************************************************************************/
 
-#include "SimpleMultiDimensions.h"
+#include "SimpleNewtonMultiDimensions.h"
 
 /******************************************************************************/
 
-SimpleMultiDimensions::SimpleMultiDimensions(Function * function):
+SimpleNewtonMultiDimensions::SimpleNewtonMultiDimensions(DerivableSecondOrder * function):
   AbstractOptimizer(function)
 {
   _defaultStopCondition = new FunctionStopCondition(this);
   _stopCondition = _defaultStopCondition->clone();
   _nbParams = 0;
-  _optimizer = new BrentOneDimension(function);
+  _optimizer = new NewtonOneDimension(function);
   _stepChar = "";
 }
 
 /******************************************************************************/
 
-SimpleMultiDimensions::SimpleMultiDimensions(const SimpleMultiDimensions & opt):
+SimpleNewtonMultiDimensions::SimpleNewtonMultiDimensions(const SimpleNewtonMultiDimensions & opt):
   AbstractOptimizer(opt)
 {
   _nbParams = opt._nbParams;
@@ -65,7 +65,7 @@ SimpleMultiDimensions::SimpleMultiDimensions(const SimpleMultiDimensions & opt):
 
 /******************************************************************************/
 
-SimpleMultiDimensions & SimpleMultiDimensions::operator=(const SimpleMultiDimensions & opt)
+SimpleNewtonMultiDimensions & SimpleNewtonMultiDimensions::operator=(const SimpleNewtonMultiDimensions & opt)
 {
   AbstractOptimizer::operator=(opt);
   _nbParams = opt._nbParams;
@@ -76,23 +76,22 @@ SimpleMultiDimensions & SimpleMultiDimensions::operator=(const SimpleMultiDimens
 
 /******************************************************************************/
 
-SimpleMultiDimensions::~SimpleMultiDimensions()
+SimpleNewtonMultiDimensions::~SimpleNewtonMultiDimensions()
 {
   delete _optimizer;
 }
 
 /******************************************************************************/
 
-void SimpleMultiDimensions::setFunction(Function * function)
+void SimpleNewtonMultiDimensions::setFunction(Function * function)
 {
   AbstractOptimizer::setFunction(function);
   _optimizer->setFunction(function);
-  _stopCondition->init();
 }
 
 /******************************************************************************/
 
-void SimpleMultiDimensions::doInit(const ParameterList & params) throw (Exception)
+void SimpleNewtonMultiDimensions::doInit(const ParameterList & params) throw (Exception)
 {
   _nbParams = params.size();
   if(_nbParams == 0) return;
@@ -105,12 +104,12 @@ void SimpleMultiDimensions::doInit(const ParameterList & params) throw (Exceptio
   _optimizer->getStopCondition()->setTolerance(getStopCondition()->getTolerance());
   _optimizer->setConstraintPolicy(_constraintPolicy);
   _optimizer->setVerbose( _verbose > 0 ? _verbose - 1 : 0);
-  _optimizer->setInitialInterval(0., 1.); 
+  _optimizer->setMaximumNumberOfCorrections(10);
 }
 
 /******************************************************************************/
 
-double SimpleMultiDimensions::doStep() throw (Exception)
+double SimpleNewtonMultiDimensions::doStep() throw (Exception)
 {
   double f = _function->getValue();
   for(unsigned int i = 0; i < _nbParams; i++)
@@ -121,8 +120,6 @@ double SimpleMultiDimensions::doStep() throw (Exception)
       cout.flush();
     }
     // Re-init optimizer according to new values:
-    double v = _parameters[i]->getValue();
-    _optimizer->setInitialInterval(v - 0.01, v + 0.01);
     _optimizer->init(_parameters.subList(i));
 
     // Optimize through this dimension:

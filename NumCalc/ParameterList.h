@@ -42,6 +42,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "Parameter.h"
 
+// From Utils:
+#include <Utils/Clonable.h>
+
 // From STL:
 #include <vector>
 #include <string>
@@ -55,7 +58,9 @@ using namespace std;
  * This is a vector of Parameter with a few additional methods, mainly for giving
  * name access.
  */
-class ParameterList : public virtual vector<Parameter *>
+class ParameterList:
+  public vector<Parameter *>,
+  public Clonable
 {
 	public:
 		
@@ -72,6 +77,8 @@ class ParameterList : public virtual vector<Parameter *>
 		ParameterList(const ParameterList & pl);
 		
 		ParameterList & operator=(const ParameterList & pl);
+
+    ParameterList * clone() const { return new ParameterList(*this); }
 	
 		virtual ~ParameterList();
 	
@@ -238,6 +245,28 @@ class ParameterList : public virtual vector<Parameter *>
 		virtual void deleteParameter(const string & name) throw (ParameterNotFoundException);
 		
 		/**
+		 * @brief Delete several parameters from the list.
+		 *
+		 * @param name The names of the parameters to delete from the list.
+		 */
+		virtual void deleteParameters(const vector<string> & names) throw (ParameterNotFoundException);
+		
+		/**
+		 * @brief Delete a parameter from the list.
+		 *
+		 * @param index The position of the parameter to delete in the list.
+		 */
+		virtual void deleteParameter(unsigned int index) throw (IndexOutOfBoundsException);
+		
+		/**
+		 * @brief Delete several parameters from the list.
+		 *
+		 * @param index The positions of the parameters to delete in the list.
+     * Duplicated positions will be considered only one time.
+		 */
+		virtual void deleteParameters(const vector<unsigned int> & indices) throw (IndexOutOfBoundsException);
+
+    /**
 		 * @brief Print all parameters.
 		 */
 		virtual void printParameters(ostream & out) const;

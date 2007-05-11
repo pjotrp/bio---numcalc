@@ -59,7 +59,8 @@ class Optimizer;
  * parameter (@see ParametersStopCondition) or function (@see FunctionStopCondition) values,
  * or be specific to a given optimization method.
  */
-class OptimizationStopCondition: public Clonable
+class OptimizationStopCondition:
+  public Clonable
 {
 	public:
 		OptimizationStopCondition() {}
@@ -166,7 +167,8 @@ class AbstractOptimizationStopCondition:
  * where \f$\lambda_{i, t}\f$ is the value of the ith parameter at iteration \f$t\f$,
  * and \f$\lambda_{i, t-1}\f$ is the value of the ith parameter at iteration \f$t-1\f$.
  */
-class ParametersStopCondition: public AbstractOptimizationStopCondition
+class ParametersStopCondition:
+  public AbstractOptimizationStopCondition
 {
 	protected:
 
@@ -209,7 +211,8 @@ class ParametersStopCondition: public AbstractOptimizationStopCondition
  * where \f$f\left(\left\{\lambda_{i, t}\right\}\right)\f$ is the value of the function given the parameter values at iteration \f$t\f$,
  * and \f$f\left(\left\{\lambda_{i, t-1}\right\}\right)\f$ is the value of the function given the parameter velues at iteration \f$t-1\f$.
  */
-class FunctionStopCondition: public virtual AbstractOptimizationStopCondition
+class FunctionStopCondition:
+  public AbstractOptimizationStopCondition
 {
 	protected:
 		/**

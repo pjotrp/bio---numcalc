@@ -280,488 +280,548 @@ void operator/= (vector<T> & v1, const C & c)
 
 /******************************************************************************/
 
-namespace VectorFunctions {
+class VectorTools
+{
+  public:
+    VectorTools() {}
+    virtual ~VectorTools() {}
 
-/**
- * @brief Send the position of the first occurence of 'which'.
- *
- * Comparisons are performed using the == operator.
- * Maximum complexity: O(v.size()).
- *
- * @param v The vector to search.
- * @param which The element to search.
- * @return The position of which in v.
- */
-template<class T>
-unsigned int which(const vector<T> & v, const T & which) throw (ElementNotFoundException<T>)
-{
-	for(unsigned int i = 0; i < v.size(); i++)
-		if(v[i] == which) return i;
-	throw ElementNotFoundException<T>("VectorTools::which.", &v, &which);
-}
-
-/**
- * @brief Send a new vector with unique elements.
- *
- * The input vector is copied, and the copy is sorted using QuickSort algorithm.
- * A one-pass loop then look for duplicates and copy unique element to a result vector.
- * The output vector is hence sorted.
- * 
- * If v is empty, it is passed 'as is' in return (after being copied).
- *
- * @param v the vector to parse.
- */
-template<class T>
-vector<T> unique(const vector<T> & v)
-{
-	if(v.size() == 0) return v;
-	vector<T> sortedV(v.begin(), v.end());
-	sort(sortedV.begin(), sortedV.end());
-	vector<T> uniq;
-	uniq.push_back(sortedV[0]);
-	for(unsigned int i = 1; i < sortedV.size(); i++) {
-		if(sortedV[i] != sortedV[i-1]) uniq.push_back(sortedV[i]);
-	}
-	return uniq;
-}
-
-/**
- * @brief Tell if the vector as unique elements.
- *
- * The input vector is copied, and the copy is sorted using QuickSort algorithm.
- * A one-pass loop then look for duplicates.
- * 
- * If v is empty, the method returns 'true'.
- *
- * @param v the vector to parse.
- */
-template<class T>
-bool isUnique(const vector<T> & v)
-{
-	if(v.size() == 0) return true;
-	vector<T> sortedV(v.begin(), v.end());
-	sort(sortedV.begin(), sortedV.end());
-	for(unsigned int i = 1; i < sortedV.size(); i++) {
-		if(sortedV[i] == sortedV[i-1]) return false;
-	}
-	return true;
-}
-
-/**
- * @return The product of all elements in a vector.
- * @param v1 A vector.
- */
-template<class T>
-T prod(const vector<T> & v1)
-{
-	T p = 1;
-	for(unsigned int i = 0; i < v1.size(); i++) p *= v1[i];
-	return p;
-}
-
-/**
- * @return The sum of all elements in a vector.
- * @param v1 A vector.
- */
-template<class T>
-T sum(const vector<T> & v1)
-{
-	T p = 0;
-	for(unsigned int i = 0; i < v1.size(); i++) p += v1[i];
-	return p;
-}
-
-/**
- * @name These methods apply the corresponding function to each element
- * and return the result in a new vector.
- *
- * @{
- */
-template<class T>
-vector<double> log(const vector<T> & v1)
-{
-	vector<double> v2(v1.size());
-	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::log(v1[i]);
-	return v2;
-}
-template<class T>
-vector<double> log(const vector<T> & v1, double base)
-{
-	vector<double> v2(v1.size());
-	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::log(v1[i]) / std::log(base);
-	return v2;
-}
-
-template<class T>
-vector<double> exp(const vector<T> & v1)
-{
-	vector<double> v2(v1.size());
-	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::exp(v1[i]);
-	return v2;
-}
-
-template<class T>
-vector<double> log10(const vector<T> & v1)
-{
-	vector<double> v2(v1.size());
-	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = std::log10(v1[i]);
-	return v2;
-}
-
-template<class T>
-vector<T> fact(const vector<T> & v1)
-{
-	vector<T> v2(v1.size());
-	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::fact<T>(v1[i]);
-	return v2;
-}
-/** @} */
-
-/**
- * @brief Print a vector to a stream.
- * @param v1 A vector.
- * @param out A stream.
- */
-template<class T>
-void print(const vector<T> & v1, ostream & out = cout)
-{
-	for(unsigned int i = 0; i < v1.size(); i++) {
-		out << v1[i] << " ";
-	}
-	out << endl;
-}
-
-/**
- * @return The scalar product of two vectors.
- * @param v1 First vector.
- * @param v2 Second vector.
- * @throw DimensionException If the two vector do not have the same length.
- */
-template<class T>
-T scalar(const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
-{
-	if(v1.size() != v2.size()) {
-		throw DimensionException("VectorFunctions::scalar", v1.size(), v2.size());
-	}
-	T result = 0;	
-	for(unsigned int i = 0; i < v1.size(); i++) {
-		result += v1[i] * v2[i];
-	}
-	return result;
-}
-
-/**
- * @return The scalar Kronecker product of two vectors.
- * @param v1 First vector.
- * @param v2 Second vector.
- * @throw DimensionException If the two vector do not have the same length.
- */
-template<class T>
-vector<T> kroneckerMult(const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
-{
-  unsigned int n1 = v1.size();
-  unsigned int n2 = v2.size();
-  vector<T> v3(n1*n2);
-  for(unsigned int i = 0; i < n1; i++)
-  {
-    T v1i = v1[i];
-    for(unsigned int j = 0; j < n2; j++)
+  public:
+    /**
+     * @brief Send the position of the first occurence of 'which'.
+     *
+     * Comparisons are performed using the == operator.
+     * Maximum complexity: O(v.size()).
+     *
+     * @param v The vector to search.
+     * @param which The element to search.
+     * @return The position of which in v.
+     */
+    template<class T>
+    static unsigned int which(const vector<T> & v, const T & which) throw (ElementNotFoundException<T>)
     {
-      v3[i*n2+j] = v1i*v2[j];
+	    for(unsigned int i = 0; i < v.size(); i++)
+		    if(v[i] == which) return i;
+	    throw ElementNotFoundException<T>("VectorTools::which.", &v, &which);
     }
-  }
-  return v3;
-}
 
-/**
- * @return The norm of a vector (\f$\sqrt{\sum_i^n x_i^2}\f$).
- * @param v1 A vector.
- */
-template<class InputType, class OutputType>
-OutputType norm(const vector<InputType> & v1)
-{
-	OutputType result = 0;
-	for(unsigned int i = 0; i < v1.size(); i++)
-    result += v1[i] * v1[i];
-	return sqrt(result);
-}
-template<class InputType>
-InputType norm(const vector<InputType> & v1)
-{
-	InputType result = 0;
-	for(unsigned int i = 0; i < v1.size(); i++)
-    result += v1[i] * v1[i];
-	return sqrt(result);
-}
+    /**
+     * @brief Send a new vector with unique elements.
+     *
+     * The input vector is copied, and the copy is sorted using QuickSort algorithm.
+     * A one-pass loop then look for duplicates and copy unique element to a result vector.
+     * The output vector is hence sorted.
+     * 
+     * If v is empty, it is passed 'as is' in return (after being copied).
+     *
+     * @param v the vector to parse.
+     */
+    template<class T>
+    static vector<T> unique(const vector<T> & v)
+    {
+    	if(v.size() == 0) return v;
+    	vector<T> sortedV(v.begin(), v.end());
+    	sort(sortedV.begin(), sortedV.end());
+    	vector<T> uniq;
+    	uniq.push_back(sortedV[0]);
+    	for(unsigned int i = 1; i < sortedV.size(); i++)
+      {
+		    if(sortedV[i] != sortedV[i-1]) uniq.push_back(sortedV[i]);
+    	}
+	    return uniq;
+    }
 
-/**
- * @return The cosinus of the angle of two vectors.
- * @param v1 First vector.
- * @param v2 Second vector.
- * @throw DimensionException If the two vector do not have the same length.
- */
-template<class InputType, class OutputType>
-OutputType cos(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
-{
-	return scalar<InputType,OutputType>(v1, v2)
-    / (norm<InputType,OutputType>(v1) * norm<InputType,OutputType>(v2));
-}
-template<class InputType>
-InputType cos(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
-{
-	return scalar<InputType>(v1, v2)
-    / (norm<InputType>(v1) * norm<InputType>(v2));
-}
+    /**
+     * @brief Tell if the vector as unique elements.
+     *
+     * The input vector is copied, and the copy is sorted using QuickSort algorithm.
+     * A one-pass loop then look for duplicates.
+     * 
+     * If v is empty, the method returns 'true'.
+     *
+     * @param v the vector to parse.
+     */
+    template<class T>
+    static bool isUnique(const vector<T> & v)
+    {
+    	if(v.size() == 0) return true;
+    	vector<T> sortedV(v.begin(), v.end());
+    	sort(sortedV.begin(), sortedV.end());
+    	for(unsigned int i = 1; i < sortedV.size(); i++)
+      {
+    		if(sortedV[i] == sortedV[i-1]) return false;
+    	}
+    	return true;
+    }
 
-/**
- * @name Extrema.
- *
- * @{
- */
+    /**
+     * @return The product of all elements in a vector.
+     * @param v1 A vector.
+     */
+    template<class T>
+    static T prod(const vector<T> & v1)
+    {
+    	T p = 1;
+    	for(unsigned int i = 0; i < v1.size(); i++) p *= v1[i];
+    	return p;
+    }
+
+    /**
+     * @return The sum of all elements in a vector.
+     * @param v1 A vector.
+     */
+    template<class T>
+    static T sum(const vector<T> & v1)
+    {
+    	T p = 0;
+    	for(unsigned int i = 0; i < v1.size(); i++) p += v1[i];
+    	return p;
+    }
+
+    /**
+     * @name These methods apply the corresponding function to each element
+     * and return the result in a new vector.
+     *
+     * @{
+     */
+    template<class T>
+    static vector<double> log(const vector<T> & v1)
+    {
+    	vector<double> v2(v1.size());
+    	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::log(v1[i]);
+    	return v2;
+    }
+    template<class T>
+    static vector<double> log(const vector<T> & v1, double base)
+    {
+    	vector<double> v2(v1.size());
+    	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::log(v1[i]) / std::log(base);
+    	return v2;
+    }
+
+    template<class T>
+    static vector<double> exp(const vector<T> & v1)
+    {
+    	vector<double> v2(v1.size());
+    	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::exp(v1[i]);
+    	return v2;
+    }
+
+    template<class T>
+    static vector<double> log10(const vector<T> & v1)
+    {
+    	vector<double> v2(v1.size());
+    	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = std::log10(v1[i]);
+    	return v2;
+    }
+
+    template<class T>
+    static vector<T> fact(const vector<T> & v1)
+    {
+    	vector<T> v2(v1.size());
+     	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::fact<T>(v1[i]);
+    	return v2;
+    }
+    /** @} */
+
+    /**
+     * @brief Print a vector to a stream.
+     * @param v1 A vector.
+     * @param out A stream.
+     */
+    template<class T>
+    static void print(const vector<T> & v1, ostream & out = cout)
+    {
+    	for(unsigned int i = 0; i < v1.size(); i++)
+      {
+    		out << v1[i] << " ";
+    	}
+    	out << endl;
+    }
+
+    /**
+     * @return The scalar product of two vectors.
+     * @param v1 First vector.
+     * @param v2 Second vector.
+     * @throw DimensionException If the two vector do not have the same length.
+     */
+    template<class T>
+    static T scalar(const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
+    {
+    	if(v1.size() != v2.size())
+      {
+    		throw DimensionException("VectorFunctions::scalar", v1.size(), v2.size());
+    	}
+    	T result = 0;	
+    	for(unsigned int i = 0; i < v1.size(); i++)
+      {
+    		result += v1[i] * v2[i];
+    	}
+    	return result;
+    }
+
+    /**
+     * @return The scalar Kronecker product of two vectors.
+     * @param v1 First vector.
+     * @param v2 Second vector.
+     * @throw DimensionException If the two vector do not have the same length.
+     */
+    template<class T>
+    static vector<T> kroneckerMult(const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
+    {
+      unsigned int n1 = v1.size();
+      unsigned int n2 = v2.size();
+      vector<T> v3(n1*n2);
+      for(unsigned int i = 0; i < n1; i++)
+      {
+        T v1i = v1[i];
+        for(unsigned int j = 0; j < n2; j++)
+        {
+          v3[i * n2 + j] = v1i * v2[j];
+        }
+      }
+      return v3;
+    }
+
+    /**
+     * @return The norm of a vector (\f$\sqrt{\sum_i^n x_i^2}\f$).
+     * @param v1 A vector.
+     */
+    template<class InputType, class OutputType>
+    static OutputType norm(const vector<InputType> & v1)
+    {
+    	OutputType result = 0;
+    	for(unsigned int i = 0; i < v1.size(); i++)
+        result += v1[i] * v1[i];
+    	return sqrt(result);
+    }
+    
+    template<class InputType>
+    static InputType norm(const vector<InputType> & v1)
+    {
+    	InputType result = 0;
+    	for(unsigned int i = 0; i < v1.size(); i++)
+        result += v1[i] * v1[i];
+    	return sqrt(result);
+    }
+
+    /**
+     * @return The cosinus of the angle of two vectors.
+     * @param v1 First vector.
+     * @param v2 Second vector.
+     * @throw DimensionException If the two vector do not have the same length.
+     */
+    template<class InputType, class OutputType>
+    static OutputType cos(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
+    {
+    	return scalar<InputType,OutputType>(v1, v2)
+        / (norm<InputType,OutputType>(v1) * norm<InputType,OutputType>(v2));
+    }
+    template<class InputType>
+    static InputType cos(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
+    {
+    	return scalar<InputType>(v1, v2)
+        / (norm<InputType>(v1) * norm<InputType>(v2));
+    }
+
+    /**
+     * @name Extrema.
+     *
+     * @{
+     */
  
-/**
- * @brief Template function to get the minimum value of a vector.
- *
- * The < operator must be defined for the specified class.
- *
- * @param v The input vector.
- * @return The minimum value in the vector.
- * @throw EmptyVectorException If the input vector is empty.
- */
-template<class T>
-T min(const vector<T> & v) throw (EmptyVectorException<T>)
-{
-	if(v.size() == 0) throw EmptyVectorException<T>("VectorFunctions::min()", & v);
-	T mini = v[0];
-	for(unsigned int i = 1; i < v.size(); i++)
-		if(v[i] < mini) mini = v[i];
-	return mini;
-}
+    /**
+     * @brief Template function to get the minimum value of a vector.
+     *
+     * The < operator must be defined for the specified class.
+     *
+     * @param v The input vector.
+     * @return The minimum value in the vector.
+     * @throw EmptyVectorException If the input vector is empty.
+     */
+    template<class T>
+    static T min(const vector<T> & v) throw (EmptyVectorException<T>)
+    {
+    	if(v.size() == 0) throw EmptyVectorException<T>("VectorFunctions::min()", & v);
+    	T mini = v[0];
+    	for(unsigned int i = 1; i < v.size(); i++)
+    		if(v[i] < mini) mini = v[i];
+    	return mini;
+    }
 
-/**
- * @brief Template function to get the maximum value of a vector.
- *
- * The > operator must be defined for the specified class.
- *
- * @param v The input vector.
- * @return The maximum value in the vector.
- * @throw EmptyVectorException If the input vector is empty.
- */
-template<class T>
-T max(const vector<T> & v) throw (EmptyVectorException<T>)
-{
-	if(v.size() == 0) throw EmptyVectorException<T>("VectorFuntions::max()", & v);
-	T maxi = v[0];
-	for(unsigned int i = 1; i < v.size(); i++)
-		if(v[i] > maxi) maxi = v[i];
-	return maxi;
-}
+    /**
+     * @brief Template function to get the maximum value of a vector.
+     *
+     * The > operator must be defined for the specified class.
+     *
+     * @param v The input vector.
+     * @return The maximum value in the vector.
+     * @throw EmptyVectorException If the input vector is empty.
+     */
+    template<class T>
+    static T max(const vector<T> & v) throw (EmptyVectorException<T>)
+    {
+    	if(v.size() == 0) throw EmptyVectorException<T>("VectorFuntions::max()", & v);
+    	T maxi = v[0];
+    	for(unsigned int i = 1; i < v.size(); i++)
+    		if(v[i] > maxi) maxi = v[i];
+    	return maxi;
+    }
 
-/**
- * @brief Template function to get the index of the minimum value of a vector.
- *
- * The < operator must be defined for the specified class.
- * The position sent is the first one matching the minimum value.
- *
- * @param v The input vector.
- * @return The position of the minimum value in the vector.
- * @throw EmptyVectorException If the input vector is empty.
- */
-template<class T>
-unsigned int posmin(const vector<T> & v) throw (EmptyVectorException<T>)
-{
-	T mini = min(v);
-	for(unsigned int i = 0; i < v.size(); i++)
-		if(v[i] == mini) return i;
-	// This is never reached but must be here, otherwise a warning is issued:
-	return 0;
-}
+    /**
+     * @brief Template function to get the index of the minimum value of a vector.
+     *
+     * The < operator must be defined for the specified class.
+     * The position sent is the first one matching the minimum value.
+     *
+     * @param v The input vector.
+     * @return The position of the minimum value in the vector.
+     * @throw EmptyVectorException If the input vector is empty.
+     */
+    template<class T>
+    static unsigned int posmin(const vector<T> & v) throw (EmptyVectorException<T>)
+    {
+    	T mini = min(v);
+    	for(unsigned int i = 0; i < v.size(); i++)
+    		if(v[i] == mini) return i;
+    	// This is never reached but must be here, otherwise a warning is issued:
+    	return 0;
+    }
 
-/**
- * @brief Template function to get the index of the maximum value of a vector.
- *
- * The > operator must be defined for the specified class.
- * The position sent is the first one matching the maximum value.
- *
- * @param v The input vector.
- * @return The position of the maximum value in the vector.
- * @throw EmptyVectorException If the input vector is empty.
- */
-template<class T>
-unsigned int whichmax(const vector<T> & v) throw (EmptyVectorException<T>)
-{
-	T maxi = max(v);
-	for(unsigned int i = 0; i < v.size(); i++)
-		if(v[i] == maxi) return i;
-	// This is never reached but must be here, otherwise a warning is issued:
-	return 0;
-}
+    /**
+     * @brief Template function to get the index of the maximum value of a vector.
+     *
+     * The > operator must be defined for the specified class.
+     * The position sent is the first one matching the maximum value.
+     *
+     * @param v The input vector.
+     * @return The position of the maximum value in the vector.
+     * @throw EmptyVectorException If the input vector is empty.
+     */
+    template<class T>
+    static unsigned int whichmax(const vector<T> & v) throw (EmptyVectorException<T>)
+    {
+    	T maxi = max(v);
+    	for(unsigned int i = 0; i < v.size(); i++)
+    		if(v[i] == maxi) return i;
+    	// This is never reached but must be here, otherwise a warning is issued:
+    	return 0;
+    }
 
-/** @} */
+    /** @} */
 
-/**
- * @return The mean value of the vector.
- * @param v1 A vector.
- */
-template<class InputType, class OutputType>
-OutputType mean(const vector<InputType> & v1)
-{ 
-  return sum<InputType,OutputType>(v1) / (OutputType)v1.size();
-}
-template<class InputType>
-InputType mean(const vector<InputType> & v1)
-{ 
-  return sum<InputType>(v1) / (InputType)v1.size();
-}
+    /**
+     * @return The mean value of the vector.
+     * @param v1 A vector.
+     */
+    template<class InputType, class OutputType>
+    static OutputType mean(const vector<InputType> & v1)
+    { 
+      return sum<InputType,OutputType>(v1) / (OutputType)v1.size();
+    }
+    template<class InputType>
+    static InputType mean(const vector<InputType> & v1)
+    { 
+      return sum<InputType>(v1) / (InputType)v1.size();
+    }
 
-/**
- * @return The median value of the vector.
- * @param v1 A vector.
- */
-template<class InputType>
-InputType median(const vector<InputType> & v1)
-{
-  InputType med = 0;
-  sort(v1.begin(), v1.end());
-  double size = (double)v1.size() / 2.;
-  unsigned int i = v1.size() / 2;
-  if (i == size)
-  {
-    //Vector size is pair
-    med = double((v1[i-1] + v1[i]) / 2);
-  }
-  else
-  {
-    //Vector size is impair
-    med = v1[i-1];
-  }
-  return med;
-}
+    /**
+     * @return The median value of the vector.
+     * @param v1 A vector.
+     */
+    template<class InputType>
+    static InputType median(const vector<InputType> & v1)
+    {
+      InputType med = 0;
+      sort(v1.begin(), v1.end());
+      double size = (double)v1.size() / 2.;
+      unsigned int i = v1.size() / 2;
+      if (i == size)
+      {
+        //Vector size is pair
+        med = double((v1[i-1] + v1[i]) / 2);
+      }
+      else
+      {
+        //Vector size is impair
+        med = v1[i-1];
+      }
+      return med;
+    }
 
-/**
- * @brief Set the mean of a vector to be 0.
- * 
- * @return A vector with mean 0.
- * @param v1 A vector.
- */
-template<class InputType, class OutputType>
-vector<OutputType> center(const vector<InputType> & v1)
-{ 
-  OutputType m = mean<InputType,OutputType>(v1);
-  vector<OutputType> v(v1.size());
-  for(unsigned int i = 0; i < v1.size(); i++)
-  {
-    v[i] = (OutputType)v1[i] - m;
-  }
-  return v;
-}
-template<class InputType>
-vector<InputType> center(const vector<InputType> & v1)
-{ 
-  InputType m = mean<InputType>(v1);
-  vector<InputType> v(v1.size());
-  for(unsigned int i = 0; i < v1.size(); i++)
-  {
-    v[i] = (InputType)v1[i] - m;
-  }
-  return v;
-}
+    /**
+     * @brief Set the mean of a vector to be 0.
+     * 
+     * @return A vector with mean 0.
+     * @param v1 A vector.
+     */
+    template<class InputType, class OutputType>
+    static vector<OutputType> center(const vector<InputType> & v1)
+    { 
+      OutputType m = mean<InputType,OutputType>(v1);
+      vector<OutputType> v(v1.size());
+      for(unsigned int i = 0; i < v1.size(); i++)
+      {
+        v[i] = (OutputType)v1[i] - m;
+      } 
+      return v;
+    }
+    template<class InputType>
+    static vector<InputType> center(const vector<InputType> & v1)
+    { 
+      InputType m = mean<InputType>(v1);
+      vector<InputType> v(v1.size());
+      for(unsigned int i = 0; i < v1.size(); i++)
+      {
+        v[i] = (InputType)v1[i] - m;
+      }
+      return v;
+    }
 
-/**
- * @return The covariance of two vectors.
- * To have a population estimate you have to multiply by \f$\frac{n}{n-1}\f$.
- * @param v1 First vector.
- * @param v2 Second vector.
- * @throw DimensionException If the two vector do not have the same length.
- */
-template<class InputType, class OutputType>
-OutputType cov(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
-{
-	return scalar<InputType,OutputType>(
-      center<InputType,OutputType>(v1),
-      center<InputType,OutputType>(v2)
-      ) / (OutputType)v1.size();
-}
-template<class InputType>
-InputType cov(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
-{
-	return scalar<InputType>(
-      center<InputType>(v1),
-      center<InputType>(v2)
-      ) / (InputType)v1.size();
-}
+    /**
+     * @return The covariance of two vectors.
+     * To have a population estimate you have to multiply by \f$\frac{n}{n-1}\f$.
+     * @param v1 First vector.
+     * @param v2 Second vector.
+     * @throw DimensionException If the two vector do not have the same length.
+     */
+    template<class InputType, class OutputType>
+    static OutputType cov(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
+    {
+    	return scalar<InputType,OutputType>(
+          center<InputType,OutputType>(v1),
+          center<InputType,OutputType>(v2)
+          ) / (OutputType)v1.size();
+    }
+    template<class InputType>
+    static InputType cov(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
+    {
+    	return scalar<InputType>(
+          center<InputType>(v1),
+          center<InputType>(v2)
+          ) / (InputType)v1.size();
+    }
 
-/**
- * @return The variance of the vector.
- * To have a population estimate you have to multiply by \f$\frac{n}{n-1}\f$.
- * @param v1 The sample vector.
- */
-template<class InputType, class OutputType>
-OutputType var(const vector<InputType> & v1)
-{
-  return cov<InputType,OutputType>(v1, v1);
-}
-template<class InputType>
-InputType var(const vector<InputType> & v1)
-{
-  return cov<InputType>(v1, v1);
-}
+    /**
+     * @return The variance of the vector.
+     * To have a population estimate you have to multiply by \f$\frac{n}{n-1}\f$.
+     * @param v1 The sample vector.
+     */
+    template<class InputType, class OutputType>
+    static OutputType var(const vector<InputType> & v1)
+    {
+      return cov<InputType,OutputType>(v1, v1);
+    }
+    template<class InputType>
+    static InputType var(const vector<InputType> & v1)
+    {
+      return cov<InputType>(v1, v1);
+    }
 
-/**
- * @return The variance of the vector.
- * To have a population estimate you have to multiply by \f$\sqrt{\frac{n}{n-1}}\f$.
- * @param v1 The sample vector.
- */
-template<class InputType, class OutputType>
-OutputType sd(const vector<InputType> & v1)
-{
-  return sqrt(var<InputType,OutputType>(v1));
-}
-template<class InputType>
-InputType sd(const vector<InputType> & v1)
-{
-  return sqrt(var<InputType>(v1));
-}
+    /**
+     * @return The variance of the vector.
+     * To have a population estimate you have to multiply by \f$\sqrt{\frac{n}{n-1}}\f$.
+     * @param v1 The sample vector.
+     */
+    template<class InputType, class OutputType>
+    static OutputType sd(const vector<InputType> & v1)
+    {
+      return sqrt(var<InputType,OutputType>(v1));
+    }
+    template<class InputType>
+    static InputType sd(const vector<InputType> & v1)
+    {
+      return sqrt(var<InputType>(v1));
+    }
 
-/**
- * @return The Pearson correlation coefficient of two vectors.
- * @param v1 First vector.
- * @param v2 Second vector.
- * @throw DimensionException If the two vector do not have the same length.
- */
-template<class InputType, class OutputType>
-OutputType cor(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
-{
-	return cov<InputType,OutputType>(v1, v2)
-    / ( sd<InputType,OutputType>(v1) * sd<InputType,OutputType>(v2) );
-}
-template<class InputType>
-InputType cor(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
-{
-	return cov<InputType>(v1, v2)
-    / ( sd<InputType>(v1) * sd<InputType>(v2) );
-}
+    /**
+     * @return The Pearson correlation coefficient of two vectors.
+     * @param v1 First vector.
+     * @param v2 Second vector.
+     * @throw DimensionException If the two vector do not have the same length.
+     */
+    template<class InputType, class OutputType>
+    static OutputType cor(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
+    {
+    	return cov<InputType,OutputType>(v1, v2)
+        / ( sd<InputType,OutputType>(v1) * sd<InputType,OutputType>(v2) );
+    }
+    template<class InputType>
+    static InputType cor(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
+    {
+    	return cov<InputType>(v1, v2)
+        / ( sd<InputType>(v1) * sd<InputType>(v2) );
+    }
 
-/**
- * @return The Shannon entropy indice of the vector.
- * @param v1 The vector.
- * @param base The base of the logarithm to use.
- */
-template<class T>
-double shannon(const vector<T> & v1, double base = 2.7182818)
-{
-  T s = 0;
-  for(unsigned int i = 0; i < v1.size(); i++) s += v1[i] * std::log(v1[i]) / std::log(base);
-	return -s;
-}
+    /**
+     * @return The Shannon entropy indice of the vector.
+     * @param v1 The vector.
+     * @param base The base of the logarithm to use.
+     */
+    template<class T>
+    static double shannon(const vector<T> & v1, double base = 2.7182818)
+    {
+      T s = 0;
+      for(unsigned int i = 0; i < v1.size(); i++)
+        s += v1[i] * std::log(v1[i]) / std::log(base);
+    	return -s;
+    }
 
-/**
- * @brief Test function.
- * @return true if all tests are passed.
- */
-bool test();
+    /**
+     * @return 'true' if the two vectors contains the same element, whatever their order in the container.
+     * @param v1 First vector.
+     * @param v2 Second vector.
+     */
+    template<class T>
+    static bool haveSameElements(vector<T> v1, vector<T> v2)
+    {
+      if(v1.size() != v2.size()) return false;
+      std::sort(v1.begin(), v1.end());
+      std::sort(v2.begin(), v2.end());
+      return (v1 == v2);
+    }
 
-}
+    /**
+     * @return 'true' if a the input vector contains the given element.
+     * @param vec The vector to check.
+     * @param el The element to look for.
+     */
+    template<class T>
+    static bool contains(vector<T> vec, T el)
+    {
+      for(unsigned int i = 0; i < vec.size(); i++)
+        if(vec[i] == el) return true;
+      return false;
+    }
+
+    /**
+     * @return A vector which is the union of all vectors passed as input.
+     * Duplicate element will be removed.
+     * @param vecElementL A vector of vectors.
+     */
+    template<class T>
+    static vector<T> vectorUnion(vector< vector<T> > & vecElementL)
+    {
+      vector<T> unionEl;
+      for(unsigned int i = 0; i < vecElementL.size(); i++)
+      {
+        for(unsigned int j = 0; j < vecElementL[i].size(); j++)
+        {
+          if(!contains(unionEl, vecElementL[i][j]))
+          unionEl.push_back(vecElementL[i][j]);
+	      }
+      }
+      return unionEl;
+    }
+
+
+    /**
+     * @brief Test function.
+     * @return true if all tests are passed.
+     */
+    static bool test();
+
+};
 
 #endif	//_VECTORTOOLS_H_
 

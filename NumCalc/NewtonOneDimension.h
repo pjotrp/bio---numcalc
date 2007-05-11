@@ -1,14 +1,14 @@
 //
-// File: PowellMultiDimensions.h
+// File: NewtonOneDimension.h
 // Created by: Julien Dutheil
-// Created on: Mon Nov 17 15:16:45 2003
+// Created on: Thu Apr 26 14:16 2007
 //
 
 /*
 Copyright or © or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
-for phylogenetic data analysis.
+for numerical calculus.
 
 This software is governed by the CeCILL  license under French law and
 abiding by the rules of distribution of free software.  You can  use, 
@@ -37,73 +37,36 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _POWELLMULTIDIMENSIONS_H_
-#define _POWELLMULTIDIMENSIONS_H_
+#ifndef _NEWTONONEDIMENSION_H_
+#define _NEWTONONEDIMENSION_H_
 
 #include "AbstractOptimizer.h"
-#include "VectorTools.h"
-#include "DirectionFunction.h"
 
 /**
- * @brief Powell's multi-dimensions optimization algorithm for one parameter.
- *
- * The code is an adaptation of the one discribed in:
- * <pre>
- * NUMERICAL RECIPES IN C: THE ART OF SCIENTIFIC COMPUTING
- * (ISBN 0-521-43108-5)
- * </pre>
+ * @brief Newton's optimization for one parameter.
  */
-class PowellMultiDimensions:
+class NewtonOneDimension:
   public AbstractOptimizer
 {
-	public:
-		class PMDStopCondition:
-      public AbstractOptimizationStopCondition
-		{
-			public:
-				PMDStopCondition(PowellMultiDimensions * pmd):
-          AbstractOptimizationStopCondition(pmd) {}
-				virtual ~PMDStopCondition() {}
-
-        PMDStopCondition * clone() const { return new PMDStopCondition(*this); }
-			
-			public:
-				void init() {}
-				bool isToleranceReached() const;
-		};
-	
-	friend class PMDStopCondition;
-		
 	protected:
-		double _fp;
-		double _fret;
-		ParameterList _pt;
-		VVdouble _xi;
-		
-		unsigned int _ncom;
-		ParameterList _pcom, _xicom;
-		DirectionFunction _f1dim;
-		
-	public:
-		PowellMultiDimensions(Function * function);
-		virtual ~PowellMultiDimensions() {}
+    string _param;
+    unsigned int _maxCorrection;
 
-    PowellMultiDimensions * clone() const { return new PowellMultiDimensions(*this); }
+	public:
+		NewtonOneDimension(DerivableSecondOrder * function = NULL);
+		virtual ~NewtonOneDimension() {}
+
+    NewtonOneDimension * clone() const { return new NewtonOneDimension(*this); }
 	
 	public:		
 		
-		/**
-		 * @name The Optimizer interface.
-		 *
-		 * @{
-		 */		
-		double optimize() throw (Exception);
-		/** @} */
 		void doInit(const ParameterList & params) throw (Exception);
 		
-    double doStep() throw (Exception);	
+    double doStep() throw (Exception);
+
+    void setMaximumNumberOfCorrections(unsigned int mx) { _maxCorrection = mx; }
 	
 };
 
-#endif	//_POWELLMULTIDIMENSIONS_H_
+#endif	//_NEWTONONEDIMENSION_H_
 

@@ -53,9 +53,72 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 
 /**
+ * @brief An event object which indicates that an optimization event occured.
+ */
+class OptimizationEvent
+{
+  protected:
+    Optimizer * _optimizer;
+
+  public:
+
+    /**
+     * @param optimizer A pointer toward the optimizer that launched the event.
+     */
+    OptimizationEvent(Optimizer * optimizer): _optimizer(optimizer) {}
+    virtual ~OptimizationEvent() {}
+
+  public:
+    
+    /**
+     * @return A pointer toward the optimizer that launched the event.
+     */
+    Optimizer * getOptimizer() { return _optimizer; }
+    
+    /**
+     * @return A pointer toward the optimizer that launched the event.
+     */
+    const Optimizer * getOptimizer() const { return _optimizer; }
+};
+
+
+
+
+
+
+/**
+ * @brief The listener interface for receiving optimization events.
+ * 
+ * The class that is interested in processing an optimization event implements this interface,
+ * and the object created with that class is registered with a component,
+ * using the component's addOptimizationListener method.
+ * More kinds of events may be processed in the future.
+ */
+class OptimizationListener
+{
+  public:
+    OptimizationListener() {}
+    virtual ~OptimizationListener() {}
+
+  public:
+    virtual void optimizationInitializationPerformed(const OptimizationEvent & event) = 0;
+    virtual void optimizationStepPerformed(const OptimizationEvent & event) = 0;
+    /**
+     * @return 'true' If this listener modifies the parameter set.
+     */
+    virtual bool listenerModifiesParameters() const = 0;
+};
+
+
+
+
+
+
+/**
  * @brief This is the basal interface for all optimization methods.
  * 
  * An optimizer deals with Function objects.
+ * Optimizer objects are event-driven: they notify listeners when a step is performed.
  */
 class Optimizer:
   public virtual Clonable
@@ -261,6 +324,16 @@ class Optimizer:
 		 * @return The constraint policy.
 		 */
 		virtual string getConstraintPolicy() const = 0;
+
+    /**
+     * @brief Register a listener to this class.
+     *
+     * All registered listeners will be informed when an optimization event occur.
+     * See the documentation of the class to know what kind of events are supported.
+     *
+     * @param listener A listener to be registered with.
+     */
+    virtual void addOptimizationListener(OptimizationListener * listener) = 0; 
 
 };
 

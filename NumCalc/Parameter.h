@@ -67,7 +67,8 @@ class Parameter:
 	protected:
 		string _name;					//Parameter name
 		double _value;					//Parameter value
-		const Constraint * _constraint; 	//A constraint on the value
+		Constraint * _constraint; 	//A constraint on the value
+    bool _attach;
 	
 	public: // Class constructors and destructors:
 		
@@ -77,23 +78,29 @@ class Parameter:
 		 * @param name       The parameter name.
 		 * @param value      The parameter value.
 		 * @param constraint An optional pointer toward a constraint Object.
+     * @param attachConstraint Tell if the constraint must be attached to this parameter, or shared
+     * between different objects (the default behavior, for backward compatibility).
+     * If the first case, the constraint object will be destroyed when the parameter is destroyed,
+     * and duplicated whe the parameter is copied.
 		 * @throw ConstraintException If the parameter value does not match the contraint.
 		 */
-		Parameter(const string & name = "", double value = 0, const Constraint * constraint = NULL)
+		Parameter(const string & name = "", double value = 0, Constraint * constraint = NULL, bool attachConstraint = false)
 		throw (ConstraintException);
 
-		//Copy constructor:
 		/**
 		 * @brief Copy constructor.
 		 */
 		Parameter(const Parameter & param);
-		/**
+		
+    /**
 		 * @brief Assignment operator.
 		 */
 		Parameter & operator=(const Parameter & param);
 	
-		//Destructor:
-		virtual ~Parameter() {}
+		virtual ~Parameter()
+    {
+      if(_attach && _constraint) delete _constraint;
+    }
 		
     Parameter * clone() const { return new Parameter(*this); }
 		
@@ -133,6 +140,13 @@ class Parameter:
 		 * @return A pointer toward the constraint, or NULL if there is no constraint.
 		 */
 		virtual const Constraint * getConstraint() const { return _constraint; }
+		
+    /**
+		 * @brief Return the constraint associated to this parameter if there is one.
+		 *
+		 * @return A pointer toward the constraint, or NULL if there is no constraint.
+		 */
+		virtual Constraint * getConstraint() { return _constraint; }
 
 		/**
 		 * @brief Tells if this parameter has a constraint.
