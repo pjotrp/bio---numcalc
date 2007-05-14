@@ -151,8 +151,8 @@ void AbstractOptimizer::init(const ParameterList & params) throw (Exception)
   }
   profileln("Function\tTime");
 
-  //Assign parameters:
-  _currentValue = _function->f(_parameters);
+  //Parameters must be assigned by doInit:
+  _currentValue = _function->getValue();
   printPoint(_parameters, _currentValue);
   
   // Initialize the StopCondition:
@@ -166,7 +166,6 @@ double AbstractOptimizer::step() throw (Exception)
 {
   if(_verbose > 0) { cout << _stepChar; cout.flush(); }
   _currentValue = doStep();
-  //if(_updateParameters) _parameters.matchParametersValues(_function->getParameters());
   printPoint(_parameters, _currentValue);
   fireOptimizationStepPerformed(OptimizationEvent(this));
   if(listenerModifiesParameters())
@@ -187,9 +186,9 @@ double AbstractOptimizer::step() throw (Exception)
 
 double AbstractOptimizer::optimize() throw (Exception)
 {
-  if(!_isInitialized) throw Exception("AbstractOptimizer::step. Optimizer not initialized: call the 'init' method first!");
+  if(!_isInitialized) throw Exception("AbstractOptimizer::optimize. Optimizer not initialized: call the 'init' method first!");
   _tolIsReached = false;
-  for (_nbEval = 0; _nbEval < _nbEvalMax && ! _tolIsReached; _nbEval++)
+  for (_nbEval = 1; _nbEval < _nbEvalMax && ! _tolIsReached; _nbEval++)
   {
     step();
   }
@@ -228,8 +227,10 @@ void AbstractOptimizer::profileln(const string & s)
 
 void AbstractOptimizer::printPoint(const ParameterList & params, double value)
 {
-	int ndim = params.size();
-	for (int j = 0; j < ndim; j++)
+	unsigned int ndim = params.size();
+  profile(_nbEval);
+  profile("\t");
+	for(unsigned int j = 0; j < ndim; j++)
   {
 		profile(TextTools::toString(params[j]->getValue()));
 		profile("\t"); 

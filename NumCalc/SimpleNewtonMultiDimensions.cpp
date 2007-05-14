@@ -105,6 +105,7 @@ void SimpleNewtonMultiDimensions::doInit(const ParameterList & params) throw (Ex
   _optimizer->setConstraintPolicy(_constraintPolicy);
   _optimizer->setVerbose( _verbose > 0 ? _verbose - 1 : 0);
   _optimizer->setMaximumNumberOfCorrections(10);
+  _function->setParameters(_parameters);
 }
 
 /******************************************************************************/
@@ -125,7 +126,7 @@ double SimpleNewtonMultiDimensions::doStep() throw (Exception)
     // Optimize through this dimension:
     f = _optimizer->optimize();
     if(_verbose > 0) cout << endl;
-    if(_updateParameters) _parameters.matchParametersValues(_function->getParameters());
+    _parameters.matchParametersValues(_function->getParameters());
     _nbEval += _optimizer->getNumberOfEvaluations(); 
   }
   _tolIsReached = _nbParams <= 1;

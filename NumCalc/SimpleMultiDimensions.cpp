@@ -105,7 +105,8 @@ void SimpleMultiDimensions::doInit(const ParameterList & params) throw (Exceptio
   _optimizer->getStopCondition()->setTolerance(getStopCondition()->getTolerance());
   _optimizer->setConstraintPolicy(_constraintPolicy);
   _optimizer->setVerbose( _verbose > 0 ? _verbose - 1 : 0);
-  _optimizer->setInitialInterval(0., 1.); 
+  _optimizer->setInitialInterval(0., 1.);
+  _function->setParameters(_parameters);
 }
 
 /******************************************************************************/
@@ -128,7 +129,7 @@ double SimpleMultiDimensions::doStep() throw (Exception)
     // Optimize through this dimension:
     f = _optimizer->optimize();
     if(_verbose > 0) cout << endl;
-    if(_updateParameters) _parameters.matchParametersValues(_function->getParameters());
+    _parameters.matchParametersValues(_function->getParameters());
     _nbEval += _optimizer->getNumberOfEvaluations(); 
   }
   _tolIsReached = _nbParams <= 1;

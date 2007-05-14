@@ -83,8 +83,6 @@ void DownhillSimplexMethod::doInit(const ParameterList & params) throw (Exceptio
 	// Initialize the simplex:
 	_simplex.resize(nDim + 1);
 	_y.resize(nDim + 1);
-	_simplex[0] = _parameters;
-	_y[0] = _function->f(_simplex[0]);
 	double lambda = 1.;
 	for(unsigned int i = 1; i < nDim + 1; i++)
   {
@@ -98,6 +96,9 @@ void DownhillSimplexMethod::doInit(const ParameterList & params) throw (Exceptio
 		//Compute the corresponding f value:
 		_y[i] = _function->f(_simplex[i]);
 	}
+  //Last function evaluation, setting current value:
+	_simplex[0] = _parameters;
+	_y[0] = _function->f(_simplex[0]);
 	
 	_nbEval = 0;
 	_pSum = getPSum();

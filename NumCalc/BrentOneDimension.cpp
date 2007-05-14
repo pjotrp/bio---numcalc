@@ -80,7 +80,6 @@ double BrentOneDimension::ZEPS  = 1.0e-10;
   
 void BrentOneDimension::doInit(const ParameterList & params) throw (Exception)
 {
-  // Set the initial value (no use here! Use setInitialValues() instead).
   if(params.size() != 1) throw Exception("BrentOneDimension::init(). This optimizer only deals with one parameter.");
 
   // Bracket the minimum.
@@ -118,7 +117,6 @@ void BrentOneDimension::setInitialInterval(double inf, double sup)
 
 double BrentOneDimension::doStep() throw (Exception)
 {
-  if(!_isInitialIntervalSet) throw Exception("BrentOneDimension::step. Initial interval not set: call the 'setInitialInterval' method first!");
   xm   = 0.5 * (a + b);
   tol2 = 2.0 * (tol1 = _stopCondition->getTolerance() * NumTools::abs(x) + ZEPS);
   
@@ -189,6 +187,7 @@ double BrentOneDimension::doStep() throw (Exception)
   
 double BrentOneDimension::optimize() throw (Exception)
 {
+  if(!_isInitialIntervalSet) throw Exception("BrentOneDimension::optimize. Initial interval not set: call the 'setInitialInterval' method first!");
   AbstractOptimizer::optimize();
   // Apply parameters and evaluate function at minimum point:
   _function->f(_parameters);

@@ -213,6 +213,7 @@ class AbstractOptimizer:
      *
      * This is required only for functions that have non-independent parameters,
      * which means that setting one parameter value may modify one or several other parameters.
+     * Depending on the optimizer, this may have no effect.
      *
      * @param yn true/false
      */
@@ -223,6 +224,7 @@ class AbstractOptimizer:
      *
      * This is required only for functions that have non-independent parameters,
      * which means that setting one parameter value may modify one or several other parameters.
+     * Depending on the optimizer, this may have no effect.
      *
      * @return yn true/false
      */
