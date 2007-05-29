@@ -43,11 +43,13 @@ matrix\
 distributions\
 random\
 AbstractNumericalDerivative.h\
+TwoPointsNumericalDerivative.h\
 ThreePointsNumericalDerivative.h\
 FivePointsNumericalDerivative.h\
 DirectionFunction.h\
 NewtonOneDimension.h\
-SimpleNewtonMultiDimensions.h
+SimpleNewtonMultiDimensions.h\
+ConjugateGradientMultiDimensions.h
 
 CPP_FILES = \
 AbstractOptimizer.cpp\
@@ -75,11 +77,13 @@ Uniform01K.cpp\
 Uniform01QD.cpp\
 Uniform01WH.cpp\
 DataTable.cpp\
+TwoPointsNumericalDerivative.cpp\
 ThreePointsNumericalDerivative.cpp\
 FivePointsNumericalDerivative.cpp\
 DirectionFunction.cpp\
 NewtonOneDimension.cpp\
-SimpleNewtonMultiDimensions.cpp
+SimpleNewtonMultiDimensions.cpp\
+ConjugateGradientMultiDimensions.cpp
 
 lib_LTLIBRARIES = libbpp-numcalc.la
 libbpp_numcalc_la_SOURCES = $(H_FILES) $(CPP_FILES)

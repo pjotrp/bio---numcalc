@@ -1,7 +1,7 @@
 //
-// File: ThreePointsNumericalDerivative.h
+// File: TwoPointsNumericalDerivative.h
 // Created by: Julien Dutheil
-// Created on: Thu Aug 17 15:00 2006
+// Created on: Mon May 28 10:33 2007
 //
 
 /*
@@ -37,8 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _THREEPOINTSNUMERICALDERIVATIVE_H_
-#define _THREEPOINTSNUMERICALDERIVATIVE_H_
+#ifndef _TWOPOINTSNUMERICALDERIVATIVE_H_
+#define _TWOPOINTSNUMERICALDERIVATIVE_H_
 
 #include "Functions.h"
 #include "AbstractNumericalDerivative.h"
@@ -49,27 +49,17 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 
 /**
- * @brief Three points numerical derivative function wrapper.
+ * @brief Two points numerical derivative function wrapper.
  *
- * Numerical derivatives use three points to compute the derivatives.
- * @f$x_0@f$ is the focus point, @f$x_{-1} = x_0-h@f$ and @f$x_{+1} = x_0+h@f$
- * are other points, with function values @f$f_0@f$, @f$f_{-1}@f$ and @f$f_{+1}@f$ respectively.
+ * Numerical derivatives use two points to compute the (first order) derivatives.
+ * @f$x_0@f$ is the focus point and @f$x_{+1} = x_0+h@f$ (or @f$x_0-h@f$, if constrained on the right).
+ * Corresponding function values are @f$f_0@f$, @f$f_{-1}@f$ and @f$f_{+1/-1}@f$ respectively.
  * The derivatives are then computed using the central formulas:
  * @f{eqnarray*}
- * \dfrac{\partial   f}{\partial x  } &=& \dfrac{f_{+1}-f_{-1}}{2h}\\
- * \dfrac{\partial^2 f}{\partial x^2} &=& \dfrac{f_{+1}-2f_0+f_{-1}}{h^2}\\
+ * \dfrac{\partial   f}{\partial x  } &=& \dfrac{f_{+1}-f_{0}}{h}\mathrm{\ or}\\
+ * \dfrac{\partial   f}{\partial x  } &=& \dfrac{f_{0}-f_{-1}}{h}\\
  * @f}
- * In case of border limit (when @f$x_{-1}@f$ or @f$x_{+1}@f$ are not computable), 
- * the foreward and backward computations are performed, respectively:
- * @f{eqnarray*}
- * \dfrac{\partial   f}{\partial x  } &=& \dfrac{f_{+1}-f_0}{h}\\
- * \dfrac{\partial^2 f}{\partial x^2} &=& \dfrac{f_{+2}-2f_{+1}+f_0}{h^2}\\
- * @f}
- * and
- * @f{eqnarray*}
- * \dfrac{\partial   f}{\partial x  } &=& \dfrac{f_0-f_{-1}}{h}\\
- * \dfrac{\partial^2 f}{\partial x^2} &=& \dfrac{f_0-2f_{-1}+f_{-2}}{h^2}\\
- * @f}
+ * This class does not allow computation of second order derivatives.
  *
  * The @f$h@f$ parameter is computed in a parameter dependent manner:
  * @f$ h = x \times e@f$, with @f$x \neq 0@f$ being the current parameter value.
@@ -77,21 +67,20 @@ knowledge of the CeCILL license and that you accept its terms.
  * Default value is provided for @f$e@f$ and corresponds to the _h field.
  * The default value works fine in most cases, but you may want to change it using the setInterval method.
  *
- * @see AbstractNumericalDerivative
+ * @see AbstractNumericalDerivative, ThreePointsNumericalDerivative, FivePointsNumericalDerivative
  */
-class ThreePointsNumericalDerivative:
+class TwoPointsNumericalDerivative:
   public AbstractNumericalDerivative
 {
   protected:
-    double _f1, _f2, _f3;
+    double _f1, _f2;
     
 	public:
-		ThreePointsNumericalDerivative (Function * function): AbstractNumericalDerivative(function) {}
-		ThreePointsNumericalDerivative (DerivableFirstOrder * function): AbstractNumericalDerivative(function) {}
-		ThreePointsNumericalDerivative (DerivableSecondOrder * function): AbstractNumericalDerivative(function) {}
-		virtual ~ThreePointsNumericalDerivative() {}
+		TwoPointsNumericalDerivative(Function * function): AbstractNumericalDerivative(function) {}
+		TwoPointsNumericalDerivative(DerivableFirstOrder * function): AbstractNumericalDerivative(function) {}
+		virtual ~TwoPointsNumericalDerivative() {}
 
-    ThreePointsNumericalDerivative * clone() const { return new ThreePointsNumericalDerivative(*this); }
+    TwoPointsNumericalDerivative * clone() const { return new TwoPointsNumericalDerivative(*this); }
 
   public:
     
@@ -100,10 +89,27 @@ class ThreePointsNumericalDerivative:
     
     double getValue() const throw (Exception)
     {
-      return _f2;
+      return _f1;
     }
+    /**
+     * @name The DerivableSecondOrder interface
+     *
+     * @{
+     */
+    double getSecondOrderDerivative(const string & variable) const
+      throw (Exception)
+    {
+      throw Exception("Second order derivative not avalaible with two points method."); 
+    }
+
+		double getSecondOrderDerivative(const string & variable1, const string & variable2) const
+      throw (Exception)
+    {
+      throw Exception("Unimplemented cross derivative.");
+    }
+    /** @} */
     
 };
 
-#endif //_THREEPOINTSNUMERICALDERIVATIVE_H_
+#endif //_TWOPOINTSNUMERICALDERIVATIVE_H_
 

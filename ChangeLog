@@ -1,3 +1,10 @@
+29/05/05 Julien Dutheil
+* Numerical derivative improved.
+
+26/05/07 Julien Dutheil
+* Conjugate gradient method added + numerical derivative classes improved.
+* New nmerical derivatives "two points" method.
+
 04/05/07 Nicolas Galtier & Julien Dutheil
 * Namespace VectorFunction is removed, and static class VectorTools used
 instead.

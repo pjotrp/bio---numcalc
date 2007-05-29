@@ -44,6 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 /**
  * @brief Partial implementation of the Optimizer interface.
+ *
+ * This implementation is designed for unconstrained or simple-bounded optimization.
+ * You should not use it with global contraints.
  */
 class AbstractOptimizer:
   public Optimizer

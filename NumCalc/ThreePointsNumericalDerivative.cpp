@@ -42,64 +42,69 @@ knowledge of the CeCILL license and that you accept its terms.
 void ThreePointsNumericalDerivative::setParameters(const ParameterList & parameters)
 throw (ParameterNotFoundException, ConstraintException)
 {
-  if(_function1) _function1->enableFirstOrderDerivatives(false);
-  if(_function2) _function2->enableSecondOrderDerivatives(false);
-  _function->setParameters(parameters);
-  _function->setParameters(parameters);
-  _f2 = _function->getValue();
-  ParameterList tmp = parameters;
-  for(unsigned int i = 0; i < _variables.size(); i++)
+  if(_computeD1)
   {
-    string var = _variables[i];
-    Parameter * p = tmp.getParameter(var);
-    if(!p) continue;
-    double value = _function->getParameterValue(var);
-    //Compute one other point:
-    try
+    if(_function1) _function1->enableFirstOrderDerivatives(false);
+    if(_function2) _function2->enableSecondOrderDerivatives(false);
+    _function->setParameters(parameters);
+    _f2 = _function->getValue();
+    ParameterList tmp = parameters;
+    for(unsigned int i = 0; i < _variables.size(); i++)
     {
-      p->setValue(value - _h);
-      _function->setParameters(tmp);
-      _f1 = _function->getValue();
+      string var = _variables[i];
+      Parameter * p = tmp.getParameter(var);
+      if(!p) continue;
+      double value = _function->getParameterValue(var);
+      double h = value == 0. ? _h : std::abs(value) * _h; 
+      //Compute one other point:
       try
       {
-        p->setValue(value + _h);
+        p->setValue(value - h);
         _function->setParameters(tmp);
-        _f3 = _function->getValue();
+        _f1 = _function->getValue();
+        try
+        {
+          p->setValue(value + h);
+          _function->setParameters(tmp);
+          _f3 = _function->getValue();
+        }
+        catch(ConstraintException & ce)
+        {
+          //Right limit raised, use backward approximation:
+          p->setValue(value - h);
+          _function->setParameters(tmp);
+          _f1 = _function->getValue();
+          p->setValue(value - 2*h);
+          _function->setParameters(tmp);
+          _f3 = _function->getValue();
+          _der1[i] = (_f2 - _f1) / h;
+          _der2[i] = (_f2 - 2.*_f1 + _f3) / (h*h);        
+        }
+        //No limit raised, use central approximation:
+        _der1[i] = (-_f1 + _f3) / (2.*h);
+        _der2[i] = (_f1 -2*_f2 + _f3) / (h*h);
       }
       catch(ConstraintException & ce)
       {
-        //Right limit raised, use backward approximation:
-        p->setValue(value - _h);
-        _function->setParameters(tmp);
-        _f1 = _function->getValue();
-        p->setValue(value - 2*_h);
+        //Left limit raised, use forward approximation:
+        p->setValue(value + h);
         _function->setParameters(tmp);
         _f3 = _function->getValue();
-        _der1[var] = (_f2 - _f1) / _h;
-        _der2[var] = (_f2 - 2.*_f1 + _f3) / (_h*_h);        
+        p->setValue(value + 2*h);
+        _function->setParameters(tmp);
+        _f1 = _function->getValue();
+        _der1[i] = (_f3 - _f2) / h;
+        _der2[i] = (_f1 - 2.*_f3 + _f2) / (h*h);
       }
-      //No limit raised, use central approximation:
-      _der1[var] = (-_f1 + _f3) / (2.*_h);
-      _der2[var] = (_f1 -2*_f2 + _f3) / (_h*_h);
+      //Reset initial value:
+      p->setValue(value);
     }
-    catch(ConstraintException & ce)
-    {
-      //Left limit raised, use forward approximation:
-      p->setValue(value + _h);
-      _function->setParameters(tmp);
-      _f3 = _function->getValue();
-      p->setValue(value + 2*_h);
-      _function->setParameters(tmp);
-      _f1 = _function->getValue();
-      _der1[var] = (_f3 - _f2) / _h;
-      _der2[var] = (_f1 - 2.*_f3 + _f2) / (_h*_h);
-    }
-    //Reset initial value:
-    p->setValue(value);
   }
   //Reset initial value and compute analytical derivatives if any.
   if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
   if(_function2) _function2->enableSecondOrderDerivatives(_computeD2);
   _function->setParameters(parameters);
+  //Just in case derivatives are not computed:
+  _f2 = _function->getValue();
 }
 

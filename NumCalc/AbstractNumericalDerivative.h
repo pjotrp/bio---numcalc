@@ -68,8 +68,9 @@ class AbstractNumericalDerivative:
     DerivableSecondOrder *_function2;
     double _h;
     vector<string> _variables;
-    mutable map<string, double> _der1;
-    mutable map<string, double> _der2;
+    mutable map<string, unsigned int> _index; //Store positions in array corresponding to variable names.
+    vector<double> _der1;
+    vector<double> _der2;
     bool _computeD1, _computeD2;
     
 	public:
@@ -101,8 +102,11 @@ class AbstractNumericalDerivative:
     void setParametersToDerivate(const vector<string> & variables)
     {
       _variables = variables;
-      _der1.clear();
-      _der2.clear();
+      _index.clear();
+      for(unsigned int i = 0; i < _variables.size(); i++)
+        _index[_variables[i]] = i;
+      _der1.resize(_variables.size());
+      _der2.resize(_variables.size());
     }
     
     /**
@@ -124,8 +128,8 @@ class AbstractNumericalDerivative:
         }
         catch(Exception & e) {}
       }    
-      map<string,double>::iterator it = _der1.find(variable);
-      if(it != _der1.end()) return it->second;
+      map<string, unsigned int>::iterator it = _index.find(variable);
+      if(it != _index.end()) return _der1[it->second];
       else throw Exception("First order derivative not computed for variable " + variable + "."); 
     }
     /** @} */
@@ -138,7 +142,6 @@ class AbstractNumericalDerivative:
 
     void enableSecondOrderDerivatives(bool yn) { _computeD2 = yn; }
     bool enableSecondOrderDerivatives() const { return _computeD2; }
-    /** @} */
 
     double getSecondOrderDerivative(const string & variable) const
       throw (Exception)
@@ -151,8 +154,8 @@ class AbstractNumericalDerivative:
         }
         catch(Exception & e) {}
       }    
-      map<string,double>::iterator it = _der2.find(variable);
-      if(it != _der2.end()) return it->second;
+      map<string, unsigned int>::iterator it = _index.find(variable);
+      if(it != _index.end()) return _der2[it->second];
       else throw Exception("Second order derivative not computed for variable " + variable + "."); 
     }
 
@@ -161,19 +164,18 @@ class AbstractNumericalDerivative:
     {
       throw Exception("Unimplemented cross derivative.");
     }
-	  
-		ParameterList getParameters() const throw (Exception)
-    {
-			return _function->getParameters();	
-		}
     /** @} */
-		
-    
+	   
     /**
      * @name The Function interface
      *
      * @{
      */
+		ParameterList getParameters() const throw (Exception)
+    {
+			return _function->getParameters();	
+		}
+		
 		double getParameterValue(const string & name) const
       throw (ParameterNotFoundException)
     {

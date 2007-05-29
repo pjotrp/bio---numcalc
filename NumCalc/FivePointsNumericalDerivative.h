@@ -71,6 +71,12 @@ knowledge of the CeCILL license and that you accept its terms.
  * \dfrac{\partial^2 f}{\partial x^2} &=& \dfrac{f_0-2f_{-1}+f_{-2}}{h^2}\\
  * @f}
  *
+ * The @f$h@f$ parameter is computed in a parameter dependent manner:
+ * @f$ h = x \times e@f$, with @f$x \neq 0@f$ being the current parameter value.
+ * If @f$x = 0@f$, @f$h = e@f$.
+ * Default value is provided for @f$e@f$ and corresponds to the _h field.
+ * The default value works fine in most cases, but you may want to change it using the setInterval method.
+ *
  * @see AbstractNumericalDerivative
  */
 class FivePointsNumericalDerivative:
@@ -85,11 +91,7 @@ class FivePointsNumericalDerivative:
 		FivePointsNumericalDerivative (DerivableSecondOrder * function): AbstractNumericalDerivative(function) {}
 		virtual ~FivePointsNumericalDerivative() {}
 
-#if defined(NO_VIRTUAL_COV)
-    Clonable * clone() const { return new FivePointsNumericalDerivative(*this); }
-#else
     FivePointsNumericalDerivative * clone() const { return new FivePointsNumericalDerivative(*this); }
-#endif
 
   public:
     

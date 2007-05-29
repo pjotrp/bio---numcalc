@@ -1,7 +1,7 @@
 //
-// File: FivePointsNumericalDerivative.cpp
+// File: TwoPointsNumericalDerivative.cpp
 // Created by: Julien Dutheil
-// Created on: Thu Aug 17 15:00 2006
+// Created on: Mon May 28 10:33 2007
 //
 
 /*
@@ -37,9 +37,9 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "FivePointsNumericalDerivative.h"
+#include "TwoPointsNumericalDerivative.h"
 
-void FivePointsNumericalDerivative::setParameters(const ParameterList & parameters)
+void TwoPointsNumericalDerivative::setParameters(const ParameterList & parameters)
 throw (ParameterNotFoundException, ConstraintException)
 {
   if(_computeD1)
@@ -47,7 +47,7 @@ throw (ParameterNotFoundException, ConstraintException)
     if(_function1) _function1->enableFirstOrderDerivatives(false);
     if(_function2) _function2->enableSecondOrderDerivatives(false);
     _function->setParameters(parameters);
-    _f3 = _function->getValue();
+    _f1 = _function->getValue();
     ParameterList tmp = parameters;
     for(unsigned int i = 0; i < _variables.size(); i++)
     {
@@ -56,52 +56,31 @@ throw (ParameterNotFoundException, ConstraintException)
       if(!p) continue;
       double value = _function->getParameterValue(var);
       double h = value == 0. ? _h : std::abs(value) * _h; 
-      //Compute four other points:
+      //Compute one other point:
       try
       {
-        p->setValue(value - 2*h);
-        _function->setParameters(tmp);
-        _f1 = _function->getValue();
-        try
-        {
-          p->setValue(value + 2*h);
-          _function->setParameters(tmp);
-          _f5 = _function->getValue();
-        }
-        catch(ConstraintException & ce)
-        {
-          //Right limit raised, use backward approximation:
-          p->setValue(value - h);
-          _function->setParameters(tmp);
-          _f2 = _function->getValue();
-          p->setValue(value - 2*h);
-          _function->setParameters(tmp);
-          _f1 = _function->getValue();
-          _der1[i] = (_f3 - _f2) / h;
-          _der2[i] = (_f3 - 2.*_f2 + _f1) / (h*h);        
-        }
-        //No limit raised, use central approximation:
-        p->setValue(value - h);
-        _function->setParameters(tmp);
-        _f2 = _function->getValue();
         p->setValue(value + h);
         _function->setParameters(tmp);
-        _f4 = _function->getValue();
-        _der1[i] = (_f1 - 8.*_f2 + 8.*_f4 - _f5) / (12.*h);
-        _der2[i] = (-_f1 + 16.*_f2 -30.*_f3 + 16.*_f4 - _f5) / (12.*h*h);
+        _f2 = _function->getValue();
       }
       catch(ConstraintException & ce)
       {
-        //Left limit raised, use forward approximation:
-        p->setValue(value + h);
-        _function->setParameters(tmp);
-        _f4 = _function->getValue();
-        p->setValue(value + 2*h);
-        _function->setParameters(tmp);
-        _f5 = _function->getValue();
-        _der1[i] = (_f4 - _f3) / h;
-        _der2[i] = (_f5 - 2.*_f4 + _f3) / (h*h);
+        //Right limit raised, use backward approximation:
+        try
+        {
+          p->setValue(value - h);
+          _function->setParameters(tmp);
+          _f2 = _function->getValue();
+          _der1[i] = (_f1 - _f2) / h;
+        }
+        catch(ConstraintException & ce)
+        {
+          //PB: can't compute derivative, because of a two narrow interval (lower than h)
+          throw ce;
+        }
       }
+      //No limit raised, use forward approximation:
+      _der1[i] = (_f2 - _f1) / h;
       //Reset initial value:
       p->setValue(value);
     }
@@ -110,7 +89,7 @@ throw (ParameterNotFoundException, ConstraintException)
   if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
   if(_function2) _function2->enableSecondOrderDerivatives(_computeD2);
   _function->setParameters(parameters);
-  //Just in  case derivatives are not computed:
-  _f3 = _function->getValue();
+  //Just in case derivatives are not computed:
+  _f1 = _function->getValue();
 }
 

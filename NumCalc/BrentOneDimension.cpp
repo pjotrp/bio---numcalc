@@ -98,11 +98,19 @@ void BrentOneDimension::doInit(const ParameterList & params) throw (Exception)
   // a and b must be in ascending order, but input abscissa need not be.
   a = (bracket.a.x < bracket.c.x ? bracket.a.x : bracket.c.x);
   b = (bracket.a.x > bracket.c.x ? bracket.a.x : bracket.c.x);
-  
   // Initializations...
-  x = w = v = bracket.b.x;
-  _parameters[0]->setValue(x);
-  fw = fv = fx = _function->f(_parameters);  
+  fw = fv = fx = _function->f(_parameters);
+  if(fx < bracket.b.f)
+  {
+    //We don't want to lose our initial guess!
+    x = w = v = bracket.b.x = _parameters[0]->getValue();
+  }
+  else
+  {
+    x = w = v = bracket.b.x;
+    _parameters[0]->setValue(x);
+    fw = fv = fx = _function->f(_parameters);
+  }
 }
 
 /******************************************************************************/

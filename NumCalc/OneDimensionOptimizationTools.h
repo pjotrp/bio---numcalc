@@ -82,7 +82,7 @@ class OneDimensionOptimizationTools
 {
 	public:
 		OneDimensionOptimizationTools() {}
-		 ~OneDimensionOptimizationTools() {}
+		virtual ~OneDimensionOptimizationTools() {}
 
 	public:
 		

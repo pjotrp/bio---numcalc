@@ -167,7 +167,7 @@ unsigned int OneDimensionOptimizationTools::lineMinimization(DirectionFunction &
   singleParameter.addParameter(Parameter("x", 0.0));
   bod.init(singleParameter);
   bod.optimize();
-  //Required if the function modifies the parameter set (global constraint):
+  //Update parameters:
   parameters.matchParametersValues(f1dim.getFunction()->getParameters());
   
   double xmin = f1dim.getParameters()[0]->getValue();

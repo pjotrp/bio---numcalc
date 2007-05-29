@@ -60,7 +60,7 @@ class BrentOneDimension:
 		{
       public:
 				BODStopCondition(BrentOneDimension * bod):
-          AbstractOptimizationStopCondition(bod) {}
+          AbstractOptimizationStopCondition(bod) { _burnin = 3; }
 				virtual ~BODStopCondition() {}
 
         BODStopCondition * clone() const { return new BODStopCondition(*this); } 
