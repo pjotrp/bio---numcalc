@@ -56,6 +56,7 @@ throw (ParameterNotFoundException, ConstraintException)
       if(!p) continue;
       double value = _function->getParameterValue(var);
       double h = value == 0. ? _h : std::abs(value) * _h; 
+      //double h = (1 + std::abs(value)) * _h; 
       //Compute one other point:
       try
       {
