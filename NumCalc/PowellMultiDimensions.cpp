@@ -109,8 +109,7 @@ double PowellMultiDimensions::doStep() throw (Exception)
       //xit[j] = _xi[i][j];
     }
     fptt = _fret;
-    _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, xit, _stopCondition->getTolerance(), _profiler, _messageHandler, _verbose > 0 ? _verbose - 1 : 0);
-    //_fret = _f1dim.getValue();
+    _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, xit, _stopCondition->getTolerance(), NULL, _messageHandler, _verbose > 0 ? _verbose - 1 : 0);
     _fret = _function->f(_parameters);
     printPoint(_parameters, _fret);
     if (fptt - _fret > del)
@@ -139,6 +138,7 @@ double PowellMultiDimensions::doStep() throw (Exception)
       //cout << endl << "New direction: drection " << ibig << " removed." << endl;
       // Move to the minimum of the new direction, and save the new direction.
       _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, xit, _stopCondition->getTolerance(), NULL, _messageHandler, _verbose);
+      _fret = _function->f(_parameters);
       for(unsigned int j = 0; j < n; j++)
       {
         _xi[j][ibig]  = _xi[j][n - 1];

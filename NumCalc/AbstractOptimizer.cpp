@@ -87,8 +87,12 @@ AbstractOptimizer::AbstractOptimizer(const AbstractOptimizer & opt)
   _nbEval                 = opt._nbEval;
   _verbose                = opt._verbose;
   //In case of AutoParameter instances, we must actualize the pointers toward _messageHandler:
-  if(_function) init(_parameters);
   _isInitialized          = opt._isInitialized;
+	if(_isInitialized)
+  {
+         if(_constraintPolicy == AutoParameter::CONSTRAINTS_AUTO)   autoParameter();
+	  else if(_constraintPolicy == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
+  }
   _updateParameters       = opt._updateParameters;
   _stepChar               = opt._stepChar;
 }
