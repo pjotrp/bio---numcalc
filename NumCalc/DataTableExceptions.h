@@ -55,15 +55,16 @@ using namespace std;
 /**
  * @brief Exception thrown when a given name is not found is a DataTable object.
  */
-class TableNameNotFoundException: public Exception
+class TableNameNotFoundException:
+  public Exception
 {
 	protected:
 		string _name;
 		
 	public:
 		TableNameNotFoundException(const string & text, const string & name) :
-			Exception("NameNotFoundException: " + name + ". " + text), _name(name) {}
-		~TableNameNotFoundException() throw() {}
+			Exception("TableNameNotFoundException: " + name + ". " + text), _name(name) {}
+		virtual ~TableNameNotFoundException() throw() {}
 
 	public:
 		string getName() const { return _name; }		
@@ -72,91 +73,99 @@ class TableNameNotFoundException: public Exception
 /**
  * @brief Exception thrown when a given row name is not found is a DataTable object.
  */
-class TableRowNameNotFoundException: public TableNameNotFoundException
+class TableRowNameNotFoundException:
+  public TableNameNotFoundException
 {
 	public:
 		TableRowNameNotFoundException(const string & text, const string & name) :
-			TableNameNotFoundException("RowNameNotFoundException: " + name + ". " + text, name) {}
-		~TableRowNameNotFoundException() throw() {}
+			TableNameNotFoundException("TableRowNameNotFoundException: " + name + ". " + text, name) {}
+		virtual ~TableRowNameNotFoundException() throw() {}
 };
 
 /**
  * @brief Exception thrown when a given column name is not found is a DataTable object.
  */
-class TableColumnNameNotFoundException: public TableNameNotFoundException
+class TableColumnNameNotFoundException:
+  public TableNameNotFoundException
 {
 	public:
 		TableColumnNameNotFoundException(const string & text, const string & name) :
-			TableNameNotFoundException("ColumnNameNotFoundException: " + name + ". " + text, name) {}
-		~TableColumnNameNotFoundException() throw() {}
+			TableNameNotFoundException("TableColumnNameNotFoundException: " + name + ". " + text, name) {}
+		virtual ~TableColumnNameNotFoundException() throw() {}
 };
 
 /**
  * @brief Exception thrown when trying to retrieve a row by its name
  * and no row names have been specified.
  */
-class NoTableRowNamesException: public Exception
+class NoTableRowNamesException:
+  public Exception
 {
 	public:
 		NoTableRowNamesException(const string & text) :
 			Exception("NoTableRowNamesException: "+text) {}
-		~NoTableRowNamesException() throw() {}
+		virtual ~NoTableRowNamesException() throw() {}
 };
 
 /**
  * @brief Exception thrown when trying to retrieve a column by its name
  * and no column names have been specified.
  */
-class NoTableColumnNamesException: public Exception
+class NoTableColumnNamesException:
+  public Exception
 {
 	public:
 		NoTableColumnNamesException(const string & text) :
 			Exception("NoTableColumnNamesException: "+text) {}
-		~NoTableColumnNamesException() throw() {}
+		virtual ~NoTableColumnNamesException() throw() {}
 };
 
 /**
  * @brief General exception class dealing with row names.
  */
-class TableRowNamesException: public Exception
+class TableRowNamesException:
+  public Exception
 {
 	public:
 		TableRowNamesException(const string & text) :
 			Exception("TableRowNamesException: "+text) {}
-		~TableRowNamesException() throw() {}
+		virtual ~TableRowNamesException() throw() {}
 };
 
 /**
  * @brief General exception class dealing with column names.
  */
-class TableColumnNamesException: public Exception
+class TableColumnNamesException:
+  public Exception
 {
 	public:
 		TableColumnNamesException(const string & text) :
 			Exception("TableColumnNamesException: "+text) {}
-		~TableColumnNamesException() throw() {}
+		virtual ~TableColumnNamesException() throw() {}
 };
 
 /**
  * @brief Exception thrown when attempting to duplicate a row name.
  */
-class DuplicatedTableRowNameException: public Exception
+class DuplicatedTableRowNameException:
+  public Exception
 {
 	public:
 		DuplicatedTableRowNameException(const string & text) :
 			Exception("DuplicatedTableRowNameException: "+text) {}
-		~DuplicatedTableRowNameException() throw() {}
+		virtual ~DuplicatedTableRowNameException() throw() {}
 };
 
 /**
  * @brief Excpetion thrown when attempting to duplicate a column name.
  */
-class DuplicatedTableColumnNameException: public Exception
+class DuplicatedTableColumnNameException:
+  public Exception
 {
 	public:
 		DuplicatedTableColumnNameException(const string & text) :
 			Exception("DuplicatedTableColumnNameException: "+text) {}
-		~DuplicatedTableColumnNameException() throw() {}
+		virtual ~DuplicatedTableColumnNameException() throw() {}
 };
 
 #endif //_DataTableExceptions_H_
