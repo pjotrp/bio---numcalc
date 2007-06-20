@@ -1,3 +1,7 @@
+16/06/07 Julien Dutheil
+* DataTable is now Clonable, with appropriate copy constructor and assigment
+operator.
+
 29/05/05 Julien Dutheil
 * Numerical derivative improved.
 

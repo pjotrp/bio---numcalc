@@ -74,6 +74,27 @@ DataTable::DataTable(const vector<string> & colNames) throw (DuplicatedTableColu
   setColumnNames(colNames); //May throw an exception.  
 }
   
+DataTable::DataTable(const DataTable & table) :
+  _nRow(table._nRow), _nCol(table._nCol), _data(table._data), _rowNames(NULL), _colNames(NULL)
+{
+  if(table._rowNames) _rowNames = new vector<string>(*table._rowNames);
+  if(table._colNames) _colNames = new vector<string>(*table._colNames);
+}
+
+DataTable & DataTable::operator=(const DataTable & table)
+{
+  _nRow = table._nRow;
+  _nCol = table._nCol;
+  _data = table._data;
+  if(_rowNames) delete _rowNames;
+  if(_colNames) delete _colNames;
+  _rowNames = NULL;
+  _colNames = NULL;
+  if(table._rowNames) _rowNames = new vector<string>(*table._rowNames);
+  if(table._colNames) _colNames = new vector<string>(*table._colNames);
+  return *this;
+}
+
 /******************************************************************************/
 
 DataTable::~DataTable()

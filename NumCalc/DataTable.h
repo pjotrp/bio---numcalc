@@ -46,6 +46,7 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/Exceptions.h>
 #include <Utils/TextTools.h>
+#include <Utils/Clonable.h>
 
 // From the STL:
 #include <string>
@@ -60,7 +61,9 @@ using namespace std;
  * A DataTable object is hence similar to a ColMatrix<string>.object.
  * (NB: for now, only the RowMatrix class is defined!)
  */
-class DataTable {
+class DataTable:
+  public Clonable
+{
 	
 	protected:
 		unsigned int _nRow, _nCol;
@@ -93,7 +96,13 @@ class DataTable {
 		 */
 		DataTable(const vector<string> & colNames) throw (DuplicatedTableColumnNameException);
 
-		~DataTable();
+    DataTable(const DataTable & table);
+
+    DataTable & operator=(const DataTable & table);
+
+    DataTable * clone() const { return new DataTable(*this); }
+
+		virtual ~DataTable();
 
 	public:
 

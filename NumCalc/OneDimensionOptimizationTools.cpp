@@ -45,7 +45,7 @@ knowledge of the CeCILL license and that you accept its terms.
  *                              The Point class                               *
  ******************************************************************************/
  
-inline void Point::set(double x, double f) { this -> x = x; this -> f = f; }	
+inline void Point::set(double x, double f) { this->x = x; this->f = f; }	
 
 /******************************************************************************
  *                             The Bracket class                              *
@@ -159,7 +159,8 @@ unsigned int OneDimensionOptimizationTools::lineMinimization(DirectionFunction &
   BrentOneDimension bod(&f1dim);
   bod.setMessageHandler(messenger);
   bod.setProfiler(profiler);
-  //bod.setVerbose(verbose > 1 ? 1 : 0);
+  bod.setVerbose(verbose >= 1 ? 1 : 0);
+  bod.setOptimizationProgressCharacter(".");
   bod.getStopCondition()->setTolerance(0.01);
   bod.setInitialInterval(ax, xx);
   bod.setConstraintPolicy(AutoParameter::CONSTRAINTS_KEEP);
