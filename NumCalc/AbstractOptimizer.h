@@ -236,7 +236,7 @@ class AbstractOptimizer:
     /**
      * @brief Set the character to be displayed during optimization.
      *
-     * @param A character.
+     * @param c A character.
      */
     void setOptimizationProgressCharacter(const string & c) { _stepChar = c; }
     /**

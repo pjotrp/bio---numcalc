@@ -1,4 +1,4 @@
-AC_INIT(Bio++ NumCalc, 1.2.0, Julien.Dutheil@univ-montp2.fr, Bpp-NumCalc)
+AC_INIT(Bio++ NumCalc, 1.3.0, Julien.Dutheil@univ-montp2.fr, Bpp-NumCalc)
 AC_CONFIG_SRCDIR(NumCalc/NumTools.h)
 AM_INIT_AUTOMAKE()
 AC_LANG_CPLUSPLUS

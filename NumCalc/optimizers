@@ -8,4 +8,7 @@
 #include "SimpleMultiDimensions.h"
 #include "PowellMultiDimensions.h"
 #include "MultiDimensionsOptimizationTools.h"
+#include "ConjugateGradientMultiDimensions.h"
+#include "NewtonOneDimension.h"
+#include "SimpleNewtonMultiDimensions.h"
 

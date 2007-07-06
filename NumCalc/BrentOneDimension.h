@@ -96,11 +96,11 @@ class BrentOneDimension:
 		 *
 		 * Brent's algorithm needs 2 initial guesses, so you must call the
 		 * setInitialInterval() method first. This function actually performs:
-		 * - Parameter list actualisation;
-		 * - Initial bracketting;
-		 * - Function evaluation count reseting.
-		 *
-		 * @param params The initial parameter list.
+     * <ul>
+		 * <li>Parameter list actualisation;</li>
+		 * <li>Initial bracketting;</li>
+		 * <li>Function evaluation count reseting.</li>
+     * </ul>
 		 */
     double optimize() throw (Exception); //redefinition
 		/** @} */

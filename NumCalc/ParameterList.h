@@ -84,7 +84,7 @@ class ParameterList:
 	
 	public:
 		
-		/**
+		/**i
 		 * @brief Get the parameter with name <i>name</i>.
 		 *
 		 * @param name The name of the parameter to look for.
@@ -247,7 +247,7 @@ class ParameterList:
 		/**
 		 * @brief Delete several parameters from the list.
 		 *
-		 * @param name The names of the parameters to delete from the list.
+		 * @param names The names of the parameters to delete from the list.
 		 */
 		virtual void deleteParameters(const vector<string> & names) throw (ParameterNotFoundException);
 		
@@ -261,7 +261,7 @@ class ParameterList:
 		/**
 		 * @brief Delete several parameters from the list.
 		 *
-		 * @param index The positions of the parameters to delete in the list.
+		 * @param indices The positions of the parameters to delete in the list.
      * Duplicated positions will be considered only one time.
 		 */
 		virtual void deleteParameters(const vector<unsigned int> & indices) throw (IndexOutOfBoundsException);

@@ -96,14 +96,12 @@ class GoldenSectionSearch:
 		 * @brief Initialize optimizer.
 		 *
 		 * The golden section search needs 2 initial guesses, so you must call the
-		 * setInitialInterval() method first. this function actually performs:
+		 * setInitialInterval() method first. This function actually performs:
 		 * <ul>
 		 * <li>Parameter list actualisation;</li>
 		 * <li>Initial bracketting;</li>
 		 * <li>Function evaluation count reseting.</li>
 		 * </ul>
-		 *
-		 * @param params The initial parameter list.
 		 */
 		double getFunctionValue() const throw (NullPointerException);
 		/** @} */
