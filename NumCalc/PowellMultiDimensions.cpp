@@ -137,7 +137,7 @@ double PowellMultiDimensions::doStep() throw (Exception)
     {
       //cout << endl << "New direction: drection " << ibig << " removed." << endl;
       // Move to the minimum of the new direction, and save the new direction.
-      _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, xit, _stopCondition->getTolerance(), NULL, _messageHandler, _verbose);
+      _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, xit, _stopCondition->getTolerance(), NULL, _messageHandler, _verbose > 0 ? _verbose - 1 : 0);
       _fret = _function->f(_parameters);
       for(unsigned int j = 0; j < n; j++)
       {
