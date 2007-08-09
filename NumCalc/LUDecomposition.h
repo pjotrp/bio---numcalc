@@ -47,7 +47,6 @@ knowledge of the CeCILL license and that you accept its terms.
 //for min(), max() below
 
 using namespace std;
-using namespace NumTools;
 
 
  /** 
@@ -162,7 +161,7 @@ class LUDecomposition
 
         unsigned int p = j;
         for (unsigned int i = j+1; i < m; i++) {
-          if (abs<Real>(LUcolj[i]) > abs<Real>(LUcolj[p])) {
+          if (NumTools::abs<Real>(LUcolj[i]) > NumTools::abs<Real>(LUcolj[p])) {
             p = i;
           }
         }
@@ -201,7 +200,7 @@ class LUDecomposition
      	 	// Find pivot.
       	unsigned int p = k;
       	for (unsigned int i = k+1; i < m; i++) {
-	        if (abs<Real>(LU(i,k)) > abs<Real>(LU(p,k))) {
+	        if (NumTools::abs<Real>(LU(i,k)) > NumTools::abs<Real>(LU(p,k))) {
   	        p = i;
     	    }
       	}

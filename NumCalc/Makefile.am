@@ -65,7 +65,6 @@ ParameterList.cpp\
 AbstractDiscreteDistribution.cpp\
 SimpleDiscreteDistribution.cpp\
 SimpleMultiDimensions.cpp\
-NumTools.cpp\
 PowellMultiDimensions.cpp\
 Domain.cpp\
 OneDimensionOptimizationTools.cpp\

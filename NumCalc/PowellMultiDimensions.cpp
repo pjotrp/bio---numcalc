@@ -43,8 +43,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "BrentOneDimension.h"
 #include "OneDimensionOptimizationTools.h"
 
-using namespace NumTools;
-
 /******************************************************************************/
 
 bool PowellMultiDimensions::PMDStopCondition::isToleranceReached() const
@@ -132,7 +130,7 @@ double PowellMultiDimensions::doStep() throw (Exception)
   fptt = _function->f(ptt);
   if (fptt < _fp)
   {
-    double t = 2.0 * (_fp - 2.0 * _fret + fptt) * sqr(_fp - _fret - del) - del * sqr(_fp - fptt);
+    double t = 2.0 * (_fp - 2.0 * _fret + fptt) * NumTools::sqr(_fp - _fret - del) - del * NumTools::sqr(_fp - fptt);
     if (t < 0.0)
     {
       //cout << endl << "New direction: drection " << ibig << " removed." << endl;

@@ -41,8 +41,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "NumTools.h"
 #include "OneDimensionOptimizationTools.h"
 
-using namespace NumTools;
-
 // From Utils:
 #include <Utils/TextTools.h>
 
@@ -148,14 +146,14 @@ double BrentOneDimension::doStep() throw (Exception)
       d = p / q; // Take the parabolic step.
       u = x + d;
       if (u - a < tol2 || b - u < tol2)
-        d = sign(tol1, xm - x);
+        d = NumTools::sign(tol1, xm - x);
     }
   }
   else
   {
     d = CGOLD * (e = (x >= xm ? a - x : b - x));
   }
-  u = (NumTools::abs(d) >= tol1 ? x + d : x + sign(tol1, d));
+  u = (NumTools::abs(d) >= tol1 ? x + d : x + NumTools::sign(tol1, d));
 
   // This is the one function evaluate per iteration.
   ParameterList pl = _parameters;
@@ -166,8 +164,8 @@ double BrentOneDimension::doStep() throw (Exception)
   {
     if (u >= x) a = x; else b = x;
     // Here is the house keeping:
-    shift(v, w, x, u);
-    shift(fv, fw, fx, fu);
+    NumTools::shift(v, w, x, u);
+    NumTools::shift(fv, fw, fx, fu);
   }
   else
   {

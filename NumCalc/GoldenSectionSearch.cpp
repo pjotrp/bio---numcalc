@@ -41,8 +41,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "NumTools.h"
 #include "OneDimensionOptimizationTools.h"
 
-using namespace NumTools;
-
 // From Utils:
 #include <Utils/TextTools.h>
 

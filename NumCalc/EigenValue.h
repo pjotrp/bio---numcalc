@@ -167,7 +167,7 @@ class EigenValue
        Real h = 0.0;
        for (int k = 0; k < i; k++)
        {
-         scale = scale + abs<Real>(d[k]);
+         scale = scale + NumTools::abs<Real>(d[k]);
        }
        if (scale == 0.0)
        {
@@ -305,13 +305,13 @@ class EigenValue
      {
        // Find small subdiagonal element
    
-       tst1 = max(tst1,abs<Real>(d[l]) + abs<Real>(e[l]));
+       tst1 = max(tst1,NumTools::abs<Real>(d[l]) + NumTools::abs<Real>(e[l]));
        int m = l;
 
        // Original while-loop from Java code
        while (m < n)
        {
-         if (abs<Real>(e[m]) <= eps*tst1)
+         if (NumTools::abs<Real>(e[m]) <= eps*tst1)
          {
            break;
          }
@@ -385,7 +385,7 @@ class EigenValue
    
            // Check for convergence.
    
-         } while (abs<Real>(e[l]) > eps*tst1);
+         } while (NumTools::abs<Real>(e[l]) > eps*tst1);
        }
        d[l] = d[l] + f;
        e[l] = 0.0;
@@ -439,7 +439,7 @@ class EigenValue
        Real scale = 0.0;
        for (int i = m; i <= high; i++)
        {
-         scale = scale + abs<Real>(H(i,m-1));
+         scale = scale + NumTools::abs<Real>(H(i,m-1));
        }
        if (scale != 0.0)
        {
@@ -537,7 +537,7 @@ class EigenValue
    void cdiv(Real xr, Real xi, Real yr, Real yi)
    {
      Real r,d;
-     if (abs<Real>(yr) > abs<Real>(yi))
+     if (NumTools::abs<Real>(yr) > NumTools::abs<Real>(yi))
      {
        r = yi/yr;
        d = yr + r*yi;
@@ -585,7 +585,7 @@ class EigenValue
       }
       for (int j = max(i-1,0); j < nn; j++)
       {
-        norm = norm + abs<Real>(H(i,j));
+        norm = norm + NumTools::abs<Real>(H(i,j));
       }
     }
    
@@ -599,12 +599,12 @@ class EigenValue
       int l = n;
       while (l > low)
       {
-        s = abs<Real>(H(l-1,l-1)) + abs<Real>(H(l,l));
+        s = NumTools::abs<Real>(H(l-1,l-1)) + NumTools::abs<Real>(H(l,l));
         if (s == 0.0)
         {
           s = norm;
         }
-        if (abs<Real>(H(l,l-1)) < eps * s)
+        if (NumTools::abs<Real>(H(l,l-1)) < eps * s)
         {
           break;
         }
@@ -630,7 +630,7 @@ class EigenValue
         w = H(n,n-1) * H(n-1,n);
         p = (H(n-1,n-1) - H(n,n)) / 2.0;
         q = p * p + w;
-        z = sqrt(abs<Real>(q));
+        z = sqrt(NumTools::abs<Real>(q));
         H(n,n) = H(n,n) + exshift;
         H(n-1,n-1) = H(n-1,n-1) + exshift;
         x = H(n,n);
@@ -656,7 +656,7 @@ class EigenValue
           e[n-1] = 0.0;
           e[n] = 0.0;
           x = H(n,n-1);
-          s = abs<Real>(x) + abs<Real>(z);
+          s = NumTools::abs<Real>(x) + NumTools::abs<Real>(z);
           p = x / s;
           q = z / s;
           r = sqrt(p * p+q * q);
@@ -728,7 +728,7 @@ class EigenValue
           {
             H(i,i) -= x;
           }
-          s = abs<Real>(H(n,n-1)) + abs<Real>(H(n-1,n-2));
+          s = NumTools::abs<Real>(H(n,n-1)) + NumTools::abs<Real>(H(n-1,n-2));
           x = y = 0.75 * s;
           w = -0.4375 * s * s;
         }
@@ -768,7 +768,7 @@ class EigenValue
           p = (r * s - w) / H(m+1,m) + H(m,m+1);
           q = H(m+1,m+1) - z - r - s;
           r = H(m+2,m+1);
-          s = abs<Real>(p) + abs<Real>(q) + abs<Real>(r);
+          s = NumTools::abs<Real>(p) + NumTools::abs<Real>(q) + NumTools::abs<Real>(r);
           p = p / s;
           q = q / s;
           r = r / s;
@@ -776,9 +776,9 @@ class EigenValue
           {
             break;
           }
-          if (abs<Real>(H(m,m-1)) * (abs<Real>(q) + abs<Real>(r)) <
-               eps * (abs<Real>(p) * (abs<Real>(H(m-1,m-1)) + abs<Real>(z) +
-               abs<Real>(H(m+1,m+1)))))
+          if (NumTools::abs<Real>(H(m,m-1)) * (NumTools::abs<Real>(q) + NumTools::abs<Real>(r)) <
+               eps * (NumTools::abs<Real>(p) * (NumTools::abs<Real>(H(m-1,m-1)) + NumTools::abs<Real>(z) +
+               NumTools::abs<Real>(H(m+1,m+1)))))
           {
             break;
           }
@@ -804,7 +804,7 @@ class EigenValue
             p = H(k,k-1);
             q = H(k+1,k-1);
             r = (notlast ? H(k+2,k-1) : 0.0);
-            x = abs<Real>(p) + abs<Real>(q) + abs<Real>(r);
+            x = NumTools::abs<Real>(p) + NumTools::abs<Real>(q) + NumTools::abs<Real>(r);
             if (x != 0.0)
             {
               p = p / x;
@@ -939,7 +939,7 @@ class EigenValue
               q = (d[i] - p) * (d[i] - p) + e[i] * e[i];
               t = (x * s - z * r) / q;
               H(i,n) = t;
-              if (abs<Real>(x) > abs<Real>(z))
+              if (NumTools::abs<Real>(x) > NumTools::abs<Real>(z))
               {
                 H(i+1,n) = (-r - w * t) / x;
               }
@@ -951,7 +951,7 @@ class EigenValue
    
             // Overflow control
    
-            t = abs<Real>(H(i,n));
+            t = NumTools::abs<Real>(H(i,n));
             if ((eps * t) * t > 1)
             {
               for (int j = i; j <= n; j++)
@@ -971,7 +971,7 @@ class EigenValue
 
         // Last vector component imaginary so matrix is triangular
    
-        if (abs<Real>(H(n,n-1)) > abs<Real>(H(n-1,n)))
+        if (NumTools::abs<Real>(H(n,n-1)) > NumTools::abs<Real>(H(n-1,n)))
         {
           H(n-1,n-1) = q / H(n,n-1);
           H(n-1,n) = -(H(n,n) - p) / H(n,n-1);
@@ -1021,13 +1021,13 @@ class EigenValue
               vi = (d[i] - p) * 2.0 * q;
               if ((vr == 0.0) && (vi == 0.0))
               {
-                vr = eps * norm * (abs<Real>(w) + abs<Real>(q) +
-                abs<Real>(x) + abs<Real>(y) + abs<Real>(z));
+                vr = eps * norm * (NumTools::abs<Real>(w) + NumTools::abs<Real>(q) +
+                NumTools::abs<Real>(x) + NumTools::abs<Real>(y) + NumTools::abs<Real>(z));
               }
               cdiv(x*r-z*ra+q*sa,x*s-z*sa-q*ra,vr,vi);
               H(i,n-1) = cdivr;
               H(i,n) = cdivi;
-              if (abs<Real>(x) > (abs<Real>(z) + abs<Real>(q)))
+              if (NumTools::abs<Real>(x) > (NumTools::abs<Real>(z) + NumTools::abs<Real>(q)))
               {
                 H(i+1,n-1) = (-ra - w * H(i,n-1) + q * H(i,n)) / x;
                 H(i+1,n) = (-sa - w * H(i,n) - q * H(i,n-1)) / x;
@@ -1041,7 +1041,7 @@ class EigenValue
             }
  
             // Overflow control
-            t = max(abs<Real>(H(i,n-1)),abs<Real>(H(i,n)));
+            t = max(NumTools::abs<Real>(H(i,n-1)),NumTools::abs<Real>(H(i,n)));
             if ((eps * t) * t > 1)
             {
               for (int j = i; j <= n; j++)

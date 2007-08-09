@@ -41,7 +41,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Optimizer.h"
 #include "VectorTools.h"
 #include "NumTools.h"
-using namespace NumTools;
 
 /******************************************************************************/
 

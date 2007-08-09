@@ -68,16 +68,16 @@ bool VectorTools::test()
 
   print(x1);
   print(x2);
-  float m1 = mean(x1);
-  float m2 = mean(x2);
-  float v1 = var(x1);
-  float v2 = var(x2);
+  float m1 = mean<float, float>(x1);
+  float m2 = mean<float, float>(x2);
+  float v1 = var<float, float>(x1);
+  float v2 = var<float, float>(x2);
   cout << "Mean x1 = " << m1 << "\tVar x1 = " << v1 << endl;
   cout << "Mean x2 = " << m2 << "\tVar x2 = " << v2 << endl;
-  cov(x1,x2);
-  cor(x1,x2);
-  cos(x1,x2);
-  shannon(x1);
+  cov<float, float>(x1,x2);
+  cor<float, float>(x1,x2);
+  cos<float, float>(x1,x2);
+  shannon<float, float>(x1);
   return m1 == -0.2 && m2 == 0.04 && v1 == 6.565 && v2 == 27.603;
 }
 

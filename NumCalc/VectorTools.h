@@ -41,9 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _VECTORTOOLS_H_
 
 #include "VectorExceptions.h"
-
 #include "NumTools.h"
-using namespace NumTools;
 
 #include <vector>
 #include <cmath>
@@ -422,6 +420,22 @@ class VectorTools
      	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::fact<T>(v1[i]);
     	return v2;
     }
+
+    template<class T>
+    static vector<T> sqr(const vector<T> & v1)
+    {
+    	vector<T> v2(v1.size());
+     	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::sqr<T>(v1[i]);
+    	return v2;
+    }
+
+    template<class T>
+    static vector<T> pow(const vector<T> & v1, T & b)
+    {
+    	vector<T> v2(v1.size());
+     	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::pow<T>(v1[i], b);
+    	return v2;
+    }
     /** @} */
 
     /**
@@ -445,17 +459,51 @@ class VectorTools
      * @param v2 Second vector.
      * @throw DimensionException If the two vector do not have the same length.
      */
-    template<class T>
-    static T scalar(const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
+    template<class InputType, class OutputType>
+    static OutputType scalar(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
     {
     	if(v1.size() != v2.size())
       {
     		throw DimensionException("VectorFunctions::scalar", v1.size(), v2.size());
     	}
-    	T result = 0;	
+    	OutputType result = 0;	
     	for(unsigned int i = 0; i < v1.size(); i++)
       {
     		result += v1[i] * v2[i];
+    	}
+    	return result;
+    }
+    /**
+     * This dt product correspond to the dot product <v1,v2> in the space defined by
+     * @f[
+     * M =
+     * \begin{pmatrix}
+     * w_1 & \ldots & \\
+     * \vdot & w_2  & \ldots\\
+     *       & \vdots & \ddtots\\
+     * \end{pmatrix}
+     * @f]
+     * @return The "weighted" scalar product of two vectors.
+     * @param v1 First vector.
+     * @param v2 Second vector.
+     * @param w A vector of weights.
+     * @throw DimensionException If the two vector do not have the same length or do not match the length of the weights.
+     */
+    template<class InputType, class OutputType>
+    static OutputType scalar(const vector<InputType> & v1, const vector<InputType> & v2, const vector<InputType> & w) throw (DimensionException)
+    {
+    	if(v1.size() != w.size())
+      {
+    		throw DimensionException("VectorFunctions::scalar", v1.size(), w.size());
+    	}
+    	if(v2.size() != w.size())
+      {
+    		throw DimensionException("VectorFunctions::scalar", v2.size(), w.size());
+    	}
+    	OutputType result = 0;	
+    	for(unsigned int i = 0; i < v1.size(); i++)
+      {
+    		result += v1[i] * v2[i] * w[i];
     	}
     	return result;
     }
@@ -484,7 +532,7 @@ class VectorTools
     }
 
     /**
-     * @return The norm of a vector (\f$\sqrt{\sum_i^n x_i^2}\f$).
+     * @return The norm of a vector (@f$\sqrt{\sum_i^n x_i^2}@f$).
      * @param v1 A vector.
      */
     template<class InputType, class OutputType>
@@ -496,15 +544,26 @@ class VectorTools
     	return sqrt(result);
     }
     
-    template<class InputType>
-    static InputType norm(const vector<InputType> & v1)
-    {
-    	InputType result = 0;
+    /**
+     * @return The "weighted" norm of a vector (@f$\sqrt{\sum_i^n x_i^2}@f$).
+     * @param v1 A vector.
+     * @param w A vector of weights.
+     * @throw DimensionException If v1 and w do not have the same length.
+     * @see scalar.
+     */
+    template<class InputType, class OutputType>
+    static OutputType norm(const vector<InputType> & v1, const vector<InputType> & w) throw (DimensionException)
+    { 
+      if(v1.size() != w.size())
+      {
+    		throw DimensionException("VectorFunctions::norm", v1.size(), w.size());
+    	}
+    	OutputType result = 0;
     	for(unsigned int i = 0; i < v1.size(); i++)
-        result += v1[i] * v1[i];
+        result += v1[i] * v1[i] * w[i];
     	return sqrt(result);
     }
-
+    
     /**
      * @return The cosinus of the angle of two vectors.
      * @param v1 First vector.
@@ -514,14 +573,22 @@ class VectorTools
     template<class InputType, class OutputType>
     static OutputType cos(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
     {
-    	return scalar<InputType,OutputType>(v1, v2)
-        / (norm<InputType,OutputType>(v1) * norm<InputType,OutputType>(v2));
+    	return scalar<InputType, OutputType>(v1, v2)
+        / (norm<InputType, OutputType>(v1) * norm<InputType, OutputType>(v2));
     }
-    template<class InputType>
-    static InputType cos(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
+
+    /**
+     * @return The weighted cosinus of the angle of two vectors.
+     * @param v1 First vector.
+     * @param v2 Second vector.
+     * @param w A vector of weights.
+     * @throw DimensionException If the two vector do not have the same length.
+     */
+    template<class InputType, class OutputType>
+    static OutputType cos(const vector<InputType> & v1, const vector<InputType> & v2, const vector<InputType> & w) throw (DimensionException)
     {
-    	return scalar<InputType>(v1, v2)
-        / (norm<InputType>(v1) * norm<InputType>(v2));
+    	return scalar<InputType, OutputType>(v1, v2, w)
+        / (norm<InputType, OutputType>(v1, w) * norm<InputType, OutputType>(v2, w));
     }
 
     /**
@@ -617,12 +684,26 @@ class VectorTools
     template<class InputType, class OutputType>
     static OutputType mean(const vector<InputType> & v1)
     { 
-      return sum<InputType,OutputType>(v1) / (OutputType)v1.size();
+      return (OutputType)sum<InputType>(v1) / (OutputType)v1.size();
     }
-    template<class InputType>
-    static InputType mean(const vector<InputType> & v1)
+    /**
+     * @return The weighted mean value of the vector.
+     * @param v1 A vector.
+     * @param w A vector of weights.
+     * @param normalizeWeights Tell if weights should be normalized so that they sum to 1.
+     */
+    template<class InputType, class OutputType>
+    static OutputType mean(const vector<InputType> & v1, const vector<InputType> & w, bool normalizeWeights = true)
     { 
-      return sum<InputType>(v1) / (InputType)v1.size();
+      if(normalizeWeights) 
+      {
+        vector<InputType> wn = w / sum(w);
+        return scalar<InputType, OutputType>(v1, wn);
+      }
+      else
+      {
+        return scalar<InputType, OutputType>(v1, w);
+      }
     }
 
     /**
@@ -666,72 +747,133 @@ class VectorTools
       } 
       return v;
     }
-    template<class InputType>
-    static vector<InputType> center(const vector<InputType> & v1)
+    /**
+     * @brief Set the weighted mean of a vector to be 0.
+     * 
+     * @return A vector with mean 0.
+     * @param v1 A vector.
+     * @param w A vector of weights.
+     * @param normalizeWeights Tell if weights should be normalized so that they sum to 1.
+     */
+    template<class InputType, class OutputType>
+    static vector<OutputType> center(const vector<InputType> & v1, const vector<InputType> & w, bool normalizeWeights = true)
     { 
-      InputType m = mean<InputType>(v1);
-      vector<InputType> v(v1.size());
+      OutputType m = mean<InputType, OutputType>(v1, w, normalizeWeights);
+      vector<OutputType> v(v1.size());
       for(unsigned int i = 0; i < v1.size(); i++)
       {
-        v[i] = (InputType)v1[i] - m;
-      }
+        v[i] = (OutputType)v1[i] - m;
+      } 
       return v;
     }
-
+ 
     /**
      * @return The covariance of two vectors.
-     * To have a population estimate you have to multiply by \f$\frac{n}{n-1}\f$.
      * @param v1 First vector.
      * @param v2 Second vector.
+     * @param unbiased Tell if an unbiased estimate must be computed.
      * @throw DimensionException If the two vector do not have the same length.
      */
     template<class InputType, class OutputType>
-    static OutputType cov(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
+    static OutputType cov(const vector<InputType> & v1, const vector<InputType> & v2, bool unbiased = true) throw (DimensionException)
     {
-    	return scalar<InputType,OutputType>(
-          center<InputType,OutputType>(v1),
-          center<InputType,OutputType>(v2)
-          ) / (OutputType)v1.size();
-    }
-    template<class InputType>
-    static InputType cov(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
-    {
-    	return scalar<InputType>(
-          center<InputType>(v1),
-          center<InputType>(v2)
-          ) / (InputType)v1.size();
+      OutputType n = (OutputType)v1.size();
+    	OutputType x =  scalar<InputType,OutputType>(
+          center<InputType, OutputType>(v1),
+          center<InputType, OutputType>(v2)
+          ) / n;
+      if(unbiased) x = x * n / (n - 1);
+      return x;
     }
 
     /**
-     * @return The variance of the vector.
+     * @return The weighted covariance of two vectors.
      * To have a population estimate you have to multiply by \f$\frac{n}{n-1}\f$.
-     * @param v1 The sample vector.
+     * @param v1 First vector.
+     * @param v2 Second vector.
+     * @param w A vector of weights.
+     * @param unbiased Tell if an unbiased estimate must be computed.
+     * @param normalizeWeights Tell if weights should be normalized so that they sum to 1.
+     * @throw DimensionException If the two vector do not have the same length.
      */
     template<class InputType, class OutputType>
-    static OutputType var(const vector<InputType> & v1)
-    {
-      return cov<InputType,OutputType>(v1, v1);
+    static OutputType cov(const vector<InputType> & v1, const vector<InputType> & v2, const vector<InputType> & w, bool unbiased = true, bool normalizeWeights = true) throw (DimensionException)
+    { 
+      if(normalizeWeights) 
+      {
+        vector<InputType> wn = w / sum(w);
+    	  OutputType x = scalar<InputType, OutputType>(
+            center<InputType, OutputType>(v1, wn, false),
+            center<InputType, OutputType>(v2, wn, false),
+            wn
+          );
+        if(unbiased)
+        {
+          x = x / (1 - sum(sqr<double>(wn)));
+        }
+        return x;
+      }
+      else
+      {
+    	   OutputType x = scalar<InputType, OutputType>(
+            center<InputType, OutputType>(v1, w, false),
+            center<InputType, OutputType>(v2, w, false),
+            w
+          );
+        if(unbiased)
+        {
+          x = x / (1 - sum(sqr(w)));
+        }
+        return x;
+      }
     }
-    template<class InputType>
-    static InputType var(const vector<InputType> & v1)
+    /**
+     * @return The variance of the vector.
+     * @param v1 The sample vector.
+     * @param unbiased Tell if an unbiased estimate must be computed.
+     */
+    template<class InputType, class OutputType>
+    static OutputType var(const vector<InputType> & v1, bool unbiased = true)
     {
-      return cov<InputType>(v1, v1);
+      return cov<InputType, OutputType>(v1, v1, unbiased);
+    }
+    /**
+     * @return The weighted variance of the vector.
+     * @param v1 The sample vector.
+     * @param w A vector of weights.
+     * @param unbiased Tell if an unbiased estimate must be computed.
+     * @param normalizeWeights Tell if weights should be normalized so that they sum to 1.
+     * @throw DimensionException If v1 and w do not have the same length.
+     */
+    template<class InputType, class OutputType>
+    static OutputType var(const vector<InputType> & v1, const vector<InputType> & w, bool unbiased = true, bool normalizeWeights = true) throw (DimensionException)
+    {
+      return cov<InputType, OutputType>(v1, v1, w, unbiased, normalizeWeights);
     }
 
     /**
-     * @return The variance of the vector.
-     * To have a population estimate you have to multiply by \f$\sqrt{\frac{n}{n-1}}\f$.
+     * @return The standard deviation of the vector.
      * @param v1 The sample vector.
+     * @param unbiased Tell if an unbiased estimate must be computed.
      */
     template<class InputType, class OutputType>
-    static OutputType sd(const vector<InputType> & v1)
+    static OutputType sd(const vector<InputType> & v1, bool unbiased = true)
     {
-      return sqrt(var<InputType,OutputType>(v1));
+      return sqrt(var<InputType, OutputType>(v1, unbiased));
     }
-    template<class InputType>
-    static InputType sd(const vector<InputType> & v1)
+
+    /**
+     * @return The weighted standard deviation of the vector.
+     * @param v1 The sample vector.
+     * @param w A vector of weights.
+     * @param unbiased Tell if an unbiased estimate must be computed.
+     * @param normalizeWeights Tell if weights should be normalized so that they sum to 1.
+     * @throw DimensionException If v1 and w do not have the same length.
+     */
+    template<class InputType, class OutputType>
+    static OutputType sd(const vector<InputType> & v1, const vector<InputType> & w, bool unbiased = true, bool normalizeWeights = true) throw (DimensionException)
     {
-      return sqrt(var<InputType>(v1));
+      return sqrt(var<InputType, OutputType>(v1, w, unbiased, normalizeWeights));
     }
 
     /**
@@ -743,14 +885,32 @@ class VectorTools
     template<class InputType, class OutputType>
     static OutputType cor(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
     {
-    	return cov<InputType,OutputType>(v1, v2)
-        / ( sd<InputType,OutputType>(v1) * sd<InputType,OutputType>(v2) );
+    	return cov<InputType, OutputType>(v1, v2)
+        / ( sd<InputType, OutputType>(v1) * sd<InputType, OutputType>(v2) );
     }
-    template<class InputType>
-    static InputType cor(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
+
+    /**
+     * @return The weighted Pearson correlation coefficient of two vectors.
+     * @param v1 First vector.
+     * @param v2 Second vector.
+     * @param w A vector of weights.
+     * @param normalizeWeights Tell if weights should be normalized so that they sum to 1.
+     * @throw DimensionException If the two vector do not have the same length.
+     */
+    template<class InputType, class OutputType>
+    static OutputType cor(const vector<InputType> & v1, const vector<InputType> & v2, const vector<InputType> & w, bool normalizeWeights = true) throw (DimensionException)
     {
-    	return cov<InputType>(v1, v2)
-        / ( sd<InputType>(v1) * sd<InputType>(v2) );
+      if(normalizeWeights) 
+      {
+        vector<InputType> wn = w / sum(w);
+    	  return cov<InputType, OutputType>(v1, v2, wn, false, false)
+          / ( sd<InputType, OutputType>(v1, wn, false, false) * sd<InputType, OutputType>(v2, wn, false, false) );
+      }
+      else
+      {
+    	  return cov<InputType, OutputType>(v1, v2, w, false, false)
+          / ( sd<InputType, OutputType>(v1, w, false, false) * sd<InputType, OutputType>(v2, w, false, false) );
+      }
     }
 
     /**
@@ -758,10 +918,10 @@ class VectorTools
      * @param v1 The vector.
      * @param base The base of the logarithm to use.
      */
-    template<class T>
-    static double shannon(const vector<T> & v1, double base = 2.7182818)
+    template<class InputType, class OutputType>
+    static double shannon(const vector<InputType> & v1, double base = 2.7182818)
     {
-      T s = 0;
+      OutputType s = 0;
       for(unsigned int i = 0; i < v1.size(); i++)
         s += v1[i] * std::log(v1[i]) / std::log(base);
     	return -s;

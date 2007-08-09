@@ -39,7 +39,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "DownhillSimplexMethod.h"
 #include "NumTools.h"
-using namespace NumTools;
 
 /******************************************************************************/
 
