@@ -84,7 +84,7 @@ class ParameterList:
 	
 	public:
 		
-		/**i
+		/**
 		 * @brief Get the parameter with name <i>name</i>.
 		 *
 		 * @param name The name of the parameter to look for.

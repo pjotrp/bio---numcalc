@@ -175,6 +175,11 @@ class AbstractNumericalDerivative:
     {
 			return _function->getParameters();	
 		}
+
+    Parameter getParameter(const string & name) const throw (ParameterNotFoundException)
+    {
+      return _function->getParameter(name);
+    }
 		
 		double getParameterValue(const string & name) const
       throw (ParameterNotFoundException)

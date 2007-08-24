@@ -1,3 +1,6 @@
+24/08/07 Julien Dutheil
+* New method getParameter(name) in interface Parametrizable.
+
 24/07/07 Julien Dutheil
 * VectorTools function templates updated and simplified. New weighted
   functions (mean, var, cov, cor, etc.)

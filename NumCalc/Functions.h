@@ -305,6 +305,11 @@ class InfinityFunctionWrapper:
       return _function->getParameters();  
     }
 
+    Parameter getParameter(const string & name) const throw (ParameterNotFoundException)
+    {
+      return _function->getParameter(name);
+    }
+
     double getValue() const throw (Exception)
     {
       return _constraintMatch ? -log(0.) :  _function->getValue();

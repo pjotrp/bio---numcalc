@@ -69,6 +69,15 @@ class Parametrizable:
 		 * @return A list with all parameters available.
 		 */
 		virtual ParameterList getParameters() const = 0;
+
+    /**
+     * @brief Get the parameter with specified name.
+     *
+     * @param name The name of the parameter to look for.
+     * @return The parameter with given name.
+     * @throw ParameterNotFoundException if no parameter with this name is found.
+     */
+    virtual Parameter getParameter(const string & name) const throw (ParameterNotFoundException) = 0;
 	
 		/**
 		 * @brief Get the value for parameter of name 'name'.
@@ -152,6 +161,7 @@ class ParametrizableAdapter:
 		 * @{
 		 */
 		ParameterList getParameters() const { return ParameterList(); }
+    Parameter getParameter(const string & name) const throw (ParameterNotFoundException) { return Parameter(); }
 		double getParameterValue(const string & name) const
 			throw (ParameterNotFoundException) { return 0; };
 		void setAllParametersValues(const ParameterList & parameters) 
@@ -190,6 +200,13 @@ class AbstractParametrizable:
 	public:
 
 		ParameterList getParameters() const { return _parameters; }
+    
+    Parameter getParameter(const string & name) const throw (ParameterNotFoundException)
+    {
+      const Parameter * p = _parameters.getParameter(name);
+      if(p) return *p;
+      else throw ParameterNotFoundException("AbstractParametrizable::getParameter.", name);
+    }
 	
 		double getParameterValue(const string & name) const
 			throw (ParameterNotFoundException)
