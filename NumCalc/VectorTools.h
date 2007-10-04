@@ -928,7 +928,7 @@ class VectorTools
     }
 
     /**
-     * @return 'true' if the two vectors contains the same element, whatever their order in the container.
+     * @return 'true' if the two vectors contains the same elements, whatever their order in the container.
      * @param v1 First vector.
      * @param v2 Second vector.
      */
@@ -955,6 +955,24 @@ class VectorTools
     }
 
     /**
+     * @return A vector which is the union of two vectors passed as input.
+     * Duplicate element will be removed.
+     * @param vec1 Vector 1.
+     * @param vec2 Vector 2.
+     */
+    template<class T>
+    static vector<T> vectorUnion(vector<T> & vec1, vector<T> & vec2)
+    {
+      vector<T> unionEl = vec1;
+      for(unsigned int j = 0; j < vec2.size(); j++)
+      {
+        if(!contains(unionEl, vec2[j]))
+        unionEl.push_back(vec2[j]);
+	    }
+      return unionEl;
+    }
+
+    /**
      * @return A vector which is the union of all vectors passed as input.
      * Duplicate element will be removed.
      * @param vecElementL A vector of vectors.
@@ -974,6 +992,43 @@ class VectorTools
       return unionEl;
     }
 
+    /**
+     * @return A vector which is the intersection of two vectors passed as input.
+     * @param vec1 Vector 1.
+     * @param vec2 Vector 2.
+     */
+    template<class T>
+    static vector<T> vectorIntersection(vector<T> & vec1, vector<T> & vec2)
+    {
+      vector<T> interEl;
+      for(unsigned int i = 0; i < vec1.size(); i++)
+      {
+        if(contains(vec2, vec1[i])) interEl.push_back(vec1[i]);
+      }
+      return interEl;
+    }
+
+    /**
+     * @return A vector which is the intersection of all vectors passed as input.
+     * @param vecElementL A vector of vectors.
+     */
+    template<class T>
+    static vector<T> vectorIntersection(vector< vector<T> > & vecElementL)
+    {
+      if(vecElementL.size() == 1) return vecElementL[0];
+      vector<T> interEl;
+      if(vecElementL.size() == 0) return interEl;
+      for(unsigned int i = 0; i < vecElementL[0].size(); i++)
+      {
+        bool test = true;
+        for(unsigned int j = 1; test && j < vecElementL.size(); j++)
+        {
+          if(!contains(vecElementL[j], vecElementL[0][i])) test = false;
+	      }
+        if(test) interEl.push_back(vecElementL[0][i]);
+      }
+      return interEl;
+    }
 
     /**
      * @brief Test function.
