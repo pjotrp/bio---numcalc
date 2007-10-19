@@ -196,7 +196,7 @@ double BrentOneDimension::optimize() throw (Exception)
   if(!_isInitialIntervalSet) throw Exception("BrentOneDimension::optimize. Initial interval not set: call the 'setInitialInterval' method first!");
   AbstractOptimizer::optimize();
   // Apply parameters and evaluate function at minimum point:
-  _function->f(_parameters);
+  _currentValue = _function->f(_parameters);
   return _currentValue;
 }
 

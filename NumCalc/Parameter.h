@@ -64,105 +64,105 @@ using namespace std;
 class Parameter:
   public Clonable
 {
-	protected:
-		string _name;					//Parameter name
-		double _value;					//Parameter value
-		Constraint * _constraint; 	//A constraint on the value
+  protected:
+    string _name;             //Parameter name
+    double _value;            //Parameter value
+    Constraint * _constraint; //A constraint on the value
     bool _attach;
-	
-	public: // Class constructors and destructors:
-		
-		/**
-		 * @brief Build a new parameter.
-		 *
-		 * @param name       The parameter name.
-		 * @param value      The parameter value.
-		 * @param constraint An optional pointer toward a constraint Object.
+  
+  public: // Class constructors and destructors:
+    
+    /**
+     * @brief Build a new parameter.
+     *
+     * @param name       The parameter name.
+     * @param value      The parameter value.
+     * @param constraint An optional pointer toward a constraint Object.
      * @param attachConstraint Tell if the constraint must be attached to this parameter, or shared
      * between different objects (the default behavior, for backward compatibility).
      * If the first case, the constraint object will be destroyed when the parameter is destroyed,
      * and duplicated whe the parameter is copied.
-		 * @throw ConstraintException If the parameter value does not match the contraint.
-		 */
-		Parameter(const string & name = "", double value = 0, Constraint * constraint = NULL, bool attachConstraint = false)
-		throw (ConstraintException);
+     * @throw ConstraintException If the parameter value does not match the contraint.
+     */
+    Parameter(const string & name = "", double value = 0, Constraint * constraint = NULL, bool attachConstraint = false)
+    throw (ConstraintException);
 
-		/**
-		 * @brief Copy constructor.
-		 */
-		Parameter(const Parameter & param);
-		
     /**
-		 * @brief Assignment operator.
-		 */
-		Parameter & operator=(const Parameter & param);
-	
-		virtual ~Parameter()
+     * @brief Copy constructor.
+     */
+    Parameter(const Parameter & param);
+    
+    /**
+     * @brief Assignment operator.
+     */
+    Parameter & operator=(const Parameter & param);
+  
+    virtual ~Parameter()
     {
       if(_attach && _constraint) delete _constraint;
     }
-		
+    
     Parameter * clone() const { return new Parameter(*this); }
-		
-	public:
+    
+  public:
 
-		/**
-		 * @brief Set the name of this parameter.
-		 *
-		 * @param name the new parameter name.
-		 */
-		virtual void setName(const string & name) { _name = name; }
-	
-		/**
-		 * @brief Set the value of this parameter.
-		 *
-		 * @param value the new parameter value.
-		 */
-		virtual void setValue(double value) throw (ConstraintException);
-	
-		/**
-		 * @brief Get the name of this parameter.
-		 *
-		 * @return The parameter name.
-		 */
-		virtual string getName() const { return _name; }
-	
-		/**
-		 * @brief Get the value of this parameter.
-		 *
-		 * @return The parameter value.
-		 */
-		virtual double getValue() const { return _value; }
-		
-		/**
-		 * @brief Return the constraint associated to this parameter if there is one.
-		 *
-		 * @return A pointer toward the constraint, or NULL if there is no constraint.
-		 */
-		virtual const Constraint * getConstraint() const { return _constraint; }
-		
     /**
-		 * @brief Return the constraint associated to this parameter if there is one.
-		 *
-		 * @return A pointer toward the constraint, or NULL if there is no constraint.
-		 */
-		virtual Constraint * getConstraint() { return _constraint; }
+     * @brief Set the name of this parameter.
+     *
+     * @param name the new parameter name.
+     */
+    virtual void setName(const string & name) { _name = name; }
+  
+    /**
+     * @brief Set the value of this parameter.
+     *
+     * @param value the new parameter value.
+     */
+    virtual void setValue(double value) throw (ConstraintException);
+  
+    /**
+     * @brief Get the name of this parameter.
+     *
+     * @return The parameter name.
+     */
+    virtual string getName() const { return _name; }
+  
+    /**
+     * @brief Get the value of this parameter.
+     *
+     * @return The parameter value.
+     */
+    virtual double getValue() const { return _value; }
+    
+    /**
+     * @brief Return the constraint associated to this parameter if there is one.
+     *
+     * @return A pointer toward the constraint, or NULL if there is no constraint.
+     */
+    virtual const Constraint * getConstraint() const { return _constraint; }
+    
+    /**
+     * @brief Return the constraint associated to this parameter if there is one.
+     *
+     * @return A pointer toward the constraint, or NULL if there is no constraint.
+     */
+    virtual Constraint * getConstraint() { return _constraint; }
 
-		/**
-		 * @brief Tells if this parameter has a constraint.
-		 *
-		 * @return True if this parameter has a contraint.
-		 */
-		virtual bool hasConstraint() const { return _constraint != NULL; }
-		
-		/**
-		 * @brief Remove the constraint associated to this parameter.
-		 *
-		 * Warning! The contraint objet is not deleted.
-		 *
-		 * @return A pointer toward the formerly used contraint.
-		 */
-		virtual const Constraint * removeConstraint();
+    /**
+     * @brief Tells if this parameter has a constraint.
+     *
+     * @return True if this parameter has a contraint.
+     */
+    virtual bool hasConstraint() const { return _constraint != NULL; }
+    
+    /**
+     * @brief Remove the constraint associated to this parameter.
+     *
+     * Warning! The contraint objet is not deleted.
+     *
+     * @return A pointer toward the formerly used contraint.
+     */
+    virtual const Constraint * removeConstraint();
 
     virtual void setConstraint(Constraint * constraint) throw (ConstraintException)
     {
@@ -170,11 +170,13 @@ class Parameter:
         _constraint = constraint;
       else throw ConstraintException("Parameter::setConstraint", this, _value);
     }
-	
-	public:
-		static IncludingPositiveReal R_PLUS;
-		static ExcludingPositiveReal R_PLUS_STAR;
+  
+  public:
+    static IncludingPositiveReal R_PLUS;
+    static ExcludingPositiveReal R_PLUS_STAR;
+    static IncludingInterval PROP_CONSTRAINT_IN;
+    static ExcludingInterval PROP_CONSTRAINT_EX;
 };
 
-#endif	//_PARAMETER_H_
+#endif  //_PARAMETER_H_
 

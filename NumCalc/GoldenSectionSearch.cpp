@@ -157,7 +157,8 @@ double GoldenSectionSearch::doStep() throw (Exception)
 double GoldenSectionSearch::getFunctionValue() const throw (NullPointerException)
 {
   if(_function == NULL) throw NullPointerException("GoldenSectionSearch::getFunctionValue. No function associated to this optimizer.");
-  return NumTools::min(f1, f2); 
+  //return NumTools::min(f1, f2); 
+  return _currentValue; 
 }
 
 /******************************************************************************/

@@ -109,7 +109,7 @@ double PowellMultiDimensions::doStep() throw (Exception)
     fptt = _fret;
     _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, xit, _stopCondition->getTolerance(), NULL, _messageHandler, _verbose > 0 ? _verbose - 1 : 0);
     _fret = _function->f(_parameters);
-    printPoint(_parameters, _fret);
+    //printPoint(_parameters, _fret);
     if (fptt - _fret > del)
     {
       del = fptt - _fret;
@@ -144,6 +144,7 @@ double PowellMultiDimensions::doStep() throw (Exception)
       }
     }
   }
+  else _function->setParameters(_parameters);
 
   return _fret;
 }

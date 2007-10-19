@@ -49,7 +49,8 @@ FivePointsNumericalDerivative.h\
 DirectionFunction.h\
 NewtonOneDimension.h\
 SimpleNewtonMultiDimensions.h\
-ConjugateGradientMultiDimensions.h
+ConjugateGradientMultiDimensions.h\
+MetaOptimizer.h
 
 CPP_FILES = \
 AbstractOptimizer.cpp\
@@ -82,7 +83,8 @@ FivePointsNumericalDerivative.cpp\
 DirectionFunction.cpp\
 NewtonOneDimension.cpp\
 SimpleNewtonMultiDimensions.cpp\
-ConjugateGradientMultiDimensions.cpp
+ConjugateGradientMultiDimensions.cpp\
+MetaOptimizer.cpp
 
 lib_LTLIBRARIES = libbpp-numcalc.la
 libbpp_numcalc_la_SOURCES = $(H_FILES) $(CPP_FILES)

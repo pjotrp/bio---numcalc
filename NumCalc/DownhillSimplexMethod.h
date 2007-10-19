@@ -91,7 +91,7 @@ class DownhillSimplexMethod:
     Simplex _simplex;
     Vdouble _y;
     ParameterList _pSum;
-    int _iHighest, _iNextHighest, _iLowest;
+    unsigned int _iHighest, _iNextHighest, _iLowest;
   
   public:
 

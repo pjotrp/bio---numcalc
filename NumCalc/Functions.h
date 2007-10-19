@@ -93,7 +93,7 @@ class Function:
      *
      * @param parameters The parameter set to pass to the function.
      */
-    virtual void setParameters(const ParameterList & parameters) throw (ParameterNotFoundException, ConstraintException) = 0;
+    virtual void setParameters(const ParameterList & parameters) throw (ParameterNotFoundException, ConstraintException, Exception) = 0;
 
     /**
      * @brief Get the value of the function at the current point.
