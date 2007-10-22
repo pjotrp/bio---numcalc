@@ -62,220 +62,220 @@ class ParameterList:
   public vector<Parameter *>,
   public Clonable
 {
-	public:
-		
-		/**
-		 * @brief Build a new ParameterList object.
-		 */
-		ParameterList();
-	
+  public:
+    
+    /**
+     * @brief Build a new ParameterList object.
+     */
+    ParameterList();
+  
     /**
      * @brief Copy constructor
      *
      * All parameters in the list will be cloned.
      */
-		ParameterList(const ParameterList & pl);
-		
-		ParameterList & operator=(const ParameterList & pl);
+    ParameterList(const ParameterList & pl);
+    
+    ParameterList & operator=(const ParameterList & pl);
 
     ParameterList * clone() const { return new ParameterList(*this); }
-	
-		virtual ~ParameterList();
-	
-	public:
-		
-		/**
-		 * @brief Get the parameter with name <i>name</i>.
-		 *
-		 * @param name The name of the parameter to look for.
-		 * @return A const pointer toward the parameter with name <i>name</i>, or NULL if not found.
-		 */
-		virtual const Parameter * getParameter(const string & name) const;
-	
-		/**
-		 * @brief Get the parameter with name <i>name</i>.
-		 *
-		 * @param name The name of the parameter to look for.
-		 * @return A pointer toward the parameter with name <i>name</i>, or NULL if not found.
-		 */
-		virtual Parameter * getParameter(const string & name);
-
-		/**
-		 * @brief Get given parameters as a sublist.
-		 *
-		 * @param names Name of the parameters to be included in the list.
-		 * @return A list with all parameters specified.
-		 */
-		virtual ParameterList subList(const vector<string> & names) const ;
-		
-		/**
-		 * @brief Get given parameter as a sublist.
-		 *
-		 * @param name Name of the parameter to be included in the list.
-		 * @return A list with the parameter specified.
-		 */
-		virtual ParameterList subList(const string & name) const;
-
-		/**
-		 * @brief Get given parameters as a sublist.
-		 *
-		 * @param parameters Positions of the parameters to be included in the list.
-		 * @return A list with all parameters specified.
-		 */
-		virtual ParameterList subList(vector<unsigned int> parameters) const;
-
-		/**
-		 * @brief Get given parameter as a sublist.
-		 *
-		 * @param parameter Position of the parameters to be included in the list.
-		 * @return A list with the parameter specified.
-		 */
-		virtual ParameterList subList(unsigned int parameter) const;
-
-		/**
-		 * @brief Get the sublist containing all common parameter between this list and pl.
-		 *
-		 * @param params The list to compare to.
-		 * @return A list with all common parameters.
-		 */
-		virtual ParameterList getCommonParametersWith(const ParameterList & params) const;
-	
-		/**
-		 * @brief Get all parameter names in the list.
-		 *
-		 * @return A vector with all names in the same order as the parameters in the list.
-		 */
-		virtual vector<string> getParameterNames() const;
-	
-		/**
-		 * @brief Add a new parameter at the end of the list.
-		 *
-		 * @param param The parameter to add to the list.
-		 */
-		virtual void addParameter(const Parameter & param) throw (ParameterException);
-		
-		/**
-		 * @brief Add new parameters at the end of the list.
-		 *
-		 * @param params The parameter list containing the new paramters to add to the list.
-		 */
-		virtual void addParameters(const ParameterList & params) throw (ParameterException);
-		
-		/**
-		 * @brief Set the value of parameter with name <i>name</i> to be equal to <i>value</i>.
-		 *
-		 * @param name the name of the parameter to set.
-		 * @param value The value of the parameter.
-		 */
-		virtual void setParameterValue(const string & name, double value) 
-			throw (ParameterNotFoundException, ConstraintException);
-
-		/**
-		 * @brief Set the parameters to be equals to <i>params</i>.
-		 *
-		 * The list must contain exactly the same parameters (ie same names)
-		 * than the parameters available.
-		 *
-		 * @param params A list with all parameters.
-		 * @see setParameters(), matchParameters();
-		 */
-		virtual void setAllParametersValues(const ParameterList & params)
-			throw (ParameterNotFoundException, ConstraintException);
-
-		/**
-		 * @brief Update the parameters from <i>params</i>.
-		 *
-		 * <i>params</i> must be a subset of all parameters available.
-		 *
-		 * @param params A list containing all parameters to update.
-		 * @see setAllParameters(), matchParameters()
-		 */
-		virtual void setParametersValues(const ParameterList & params)
-			throw (ParameterNotFoundException, ConstraintException);
-
-		/**
-		 * @brief Update the parameters from <i>params</i>.
-		 *
-		 * Only common parameters with <i>params</i> will be updated.
-		 *
-		 * @param params A list of parameters.
-		 * @see setParameters(), setAllParameters()
-		 */
-		virtual void matchParametersValues(const ParameterList & params)
-			throw (ConstraintException);
-
-		/**
-		 * @brief Set the parameters to be equals to <i>params</i>.
-		 *
-		 * The list must contain exactly the same parameters (ie same names)
-		 * than the parameters available.
-		 *
-		 * @param params A list with all parameters.
-		 * @see setParameters(), matchParameters();
-		 */
-		virtual void setAllParameters(const ParameterList & params)
-			throw (ParameterNotFoundException);
-
-		/**
-		 * @brief Update the parameters from <i>params</i>.
-		 *
-		 * <i>params</i> must be a subset of all parameters available.
-		 *
-		 * @param params A list containing all parameters to update.
-		 * @see setAllParameters(), matchParameters()
-		 */
-		virtual void setParameters(const ParameterList & params)
-			throw (ParameterNotFoundException);
-
-		/**
-		 * @brief Update the parameters from <i>params</i>.
-		 *
-		 * Only common parameters with <i>params</i> will be updated.
-		 *
-		 * @param params A list of parameters.
-		 * @see setParameters(), setAllParameters()
-		 */
-		virtual void matchParameters(const ParameterList & params);
-
-		/**
-		 * @brief Delete a parameter from the list.
-		 *
-		 * @param name The name of the parameter to delete from the list.
-		 */
-		virtual void deleteParameter(const string & name) throw (ParameterNotFoundException);
-		
-		/**
-		 * @brief Delete several parameters from the list.
-		 *
-		 * @param names The names of the parameters to delete from the list.
-		 */
-		virtual void deleteParameters(const vector<string> & names) throw (ParameterNotFoundException);
-		
-		/**
-		 * @brief Delete a parameter from the list.
-		 *
-		 * @param index The position of the parameter to delete in the list.
-		 */
-		virtual void deleteParameter(unsigned int index) throw (IndexOutOfBoundsException);
-		
-		/**
-		 * @brief Delete several parameters from the list.
-		 *
-		 * @param indices The positions of the parameters to delete in the list.
-     * Duplicated positions will be considered only one time.
-		 */
-		virtual void deleteParameters(const vector<unsigned int> & indices) throw (IndexOutOfBoundsException);
+  
+    virtual ~ParameterList();
+  
+  public:
+    
+    /**
+     * @brief Get the parameter with name <i>name</i>.
+     *
+     * @param name The name of the parameter to look for.
+     * @return A const pointer toward the parameter with name <i>name</i>, or NULL if not found.
+     */
+    virtual const Parameter * getParameter(const string & name) const;
+  
+    /**
+     * @brief Get the parameter with name <i>name</i>.
+     *
+     * @param name The name of the parameter to look for.
+     * @return A pointer toward the parameter with name <i>name</i>, or NULL if not found.
+     */
+    virtual Parameter * getParameter(const string & name);
 
     /**
-		 * @brief Print all parameters.
-		 */
-		virtual void printParameters(ostream & out) const;
-		
-		/**
-		 * @brief Reset the list: delete all parameters.
-		 */
-		virtual void reset();
+     * @brief Get given parameters as a sublist.
+     *
+     * @param names Name of the parameters to be included in the list.
+     * @return A list with all parameters specified.
+     */
+    virtual ParameterList subList(const vector<string> & names) const ;
+    
+    /**
+     * @brief Get given parameter as a sublist.
+     *
+     * @param name Name of the parameter to be included in the list.
+     * @return A list with the parameter specified.
+     */
+    virtual ParameterList subList(const string & name) const;
+
+    /**
+     * @brief Get given parameters as a sublist.
+     *
+     * @param parameters Positions of the parameters to be included in the list.
+     * @return A list with all parameters specified.
+     */
+    virtual ParameterList subList(vector<unsigned int> parameters) const;
+
+    /**
+     * @brief Get given parameter as a sublist.
+     *
+     * @param parameter Position of the parameters to be included in the list.
+     * @return A list with the parameter specified.
+     */
+    virtual ParameterList subList(unsigned int parameter) const;
+
+    /**
+     * @brief Get the sublist containing all common parameter between this list and pl.
+     *
+     * @param params The list to compare to.
+     * @return A list with all common parameters.
+     */
+    virtual ParameterList getCommonParametersWith(const ParameterList & params) const;
+  
+    /**
+     * @brief Get all parameter names in the list.
+     *
+     * @return A vector with all names in the same order as the parameters in the list.
+     */
+    virtual vector<string> getParameterNames() const;
+  
+    /**
+     * @brief Add a new parameter at the end of the list.
+     *
+     * @param param The parameter to add to the list.
+     */
+    virtual void addParameter(const Parameter & param) throw (ParameterException);
+    
+    /**
+     * @brief Add new parameters at the end of the list.
+     *
+     * @param params The parameter list containing the new paramters to add to the list.
+     */
+    virtual void addParameters(const ParameterList & params) throw (ParameterException);
+    
+    /**
+     * @brief Set the value of parameter with name <i>name</i> to be equal to <i>value</i>.
+     *
+     * @param name the name of the parameter to set.
+     * @param value The value of the parameter.
+     */
+    virtual void setParameterValue(const string & name, double value) 
+      throw (ParameterNotFoundException, ConstraintException);
+
+    /**
+     * @brief Set the parameters to be equals to <i>params</i>.
+     *
+     * The list must contain exactly the same parameters (ie same names)
+     * than the parameters available.
+     *
+     * @param params A list with all parameters.
+     * @see setParameters(), matchParameters();
+     */
+    virtual void setAllParametersValues(const ParameterList & params)
+      throw (ParameterNotFoundException, ConstraintException);
+
+    /**
+     * @brief Update the parameters from <i>params</i>.
+     *
+     * <i>params</i> must be a subset of all parameters available.
+     *
+     * @param params A list containing all parameters to update.
+     * @see setAllParameters(), matchParameters()
+     */
+    virtual void setParametersValues(const ParameterList & params)
+      throw (ParameterNotFoundException, ConstraintException);
+
+    /**
+     * @brief Update the parameters from <i>params</i>.
+     *
+     * Only common parameters with <i>params</i> will be updated.
+     *
+     * @param params A list of parameters.
+     * @see setParameters(), setAllParameters()
+     */
+    virtual void matchParametersValues(const ParameterList & params)
+      throw (ConstraintException);
+
+    /**
+     * @brief Set the parameters to be equals to <i>params</i>.
+     *
+     * The list must contain exactly the same parameters (ie same names)
+     * than the parameters available.
+     *
+     * @param params A list with all parameters.
+     * @see setParameters(), matchParameters();
+     */
+    virtual void setAllParameters(const ParameterList & params)
+      throw (ParameterNotFoundException);
+
+    /**
+     * @brief Update the parameters from <i>params</i>.
+     *
+     * <i>params</i> must be a subset of all parameters available.
+     *
+     * @param params A list containing all parameters to update.
+     * @see setAllParameters(), matchParameters()
+     */
+    virtual void setParameters(const ParameterList & params)
+      throw (ParameterNotFoundException);
+
+    /**
+     * @brief Update the parameters from <i>params</i>.
+     *
+     * Only common parameters with <i>params</i> will be updated.
+     *
+     * @param params A list of parameters.
+     * @see setParameters(), setAllParameters()
+     */
+    virtual void matchParameters(const ParameterList & params);
+
+    /**
+     * @brief Delete a parameter from the list.
+     *
+     * @param name The name of the parameter to delete from the list.
+     */
+    virtual void deleteParameter(const string & name) throw (ParameterNotFoundException);
+    
+    /**
+     * @brief Delete several parameters from the list.
+     *
+     * @param names The names of the parameters to delete from the list.
+     */
+    virtual void deleteParameters(const vector<string> & names) throw (ParameterNotFoundException);
+    
+    /**
+     * @brief Delete a parameter from the list.
+     *
+     * @param index The position of the parameter to delete in the list.
+     */
+    virtual void deleteParameter(unsigned int index) throw (IndexOutOfBoundsException);
+    
+    /**
+     * @brief Delete several parameters from the list.
+     *
+     * @param indices The positions of the parameters to delete in the list.
+     * Duplicated positions will be considered only one time.
+     */
+    virtual void deleteParameters(const vector<unsigned int> & indices) throw (IndexOutOfBoundsException);
+
+    /**
+     * @brief Print all parameters.
+     */
+    virtual void printParameters(ostream & out) const;
+    
+    /**
+     * @brief Reset the list: delete all parameters.
+     */
+    virtual void reset();
 };
 
-#endif	//_PARAMETERLIST_H_
+#endif  //_PARAMETERLIST_H_
 

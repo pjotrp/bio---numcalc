@@ -52,16 +52,26 @@ throw (ParameterNotFoundException, ConstraintException)
     for(unsigned int i = 0; i < _variables.size(); i++)
     {
       string var = _variables[i];
-      Parameter * p = tmp.getParameter(var);
-      if(!p) continue;
+      if(parameters.getParameter(var) == NULL) continue;
+      ParameterList p;
+      if(i > 0)
+      {
+        vector<string> vars(2);
+        vars[0] = var;
+        vars[1] = _variables[i-1];
+        p = parameters.subList(vars);
+      }
+      else
+      {
+        p = parameters.subList(var);
+      }
       double value = _function->getParameterValue(var);
-      double h = value == 0. ? _h : std::abs(value) * _h; 
-      //double h = (1 + std::abs(value)) * _h; 
+      double h = (1 + std::abs(value)) * _h; 
       //Compute one other point:
       try
       {
-        p->setValue(value + h);
-        _function->setParameters(tmp);
+        p[0]->setValue(value + h);
+        _function->setParameters(p);
         _f2 = _function->getValue();
       }
       catch(ConstraintException & ce)
@@ -69,8 +79,8 @@ throw (ParameterNotFoundException, ConstraintException)
         //Right limit raised, use backward approximation:
         try
         {
-          p->setValue(value - h);
-          _function->setParameters(tmp);
+          p[0]->setValue(value - h);
+          _function->setParameters(p);
           _f2 = _function->getValue();
           _der1[i] = (_f1 - _f2) / h;
         }
@@ -82,15 +92,20 @@ throw (ParameterNotFoundException, ConstraintException)
       }
       //No limit raised, use forward approximation:
       _der1[i] = (_f2 - _f1) / h;
-      //Reset initial value:
-      p->setValue(value);
     }
+    //Reset last parameter and compute analytical derivatives if any>
+    string var = _variables[_variables.size() - 1];
+    if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
+    _function->setParameters(parameters.subList(var));
   }
-  //Reset initial value and compute analytical derivatives if any.
-  if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
-  if(_function2) _function2->enableSecondOrderDerivatives(_computeD2);
-  _function->setParameters(parameters);
-  //Just in case derivatives are not computed:
-  _f1 = _function->getValue();
+  else
+  {
+    //Reset initial value and compute analytical derivatives if any.
+    if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
+    if(_function2) _function2->enableSecondOrderDerivatives(_computeD2);
+    //Just in case derivatives are not computed:
+    _function->setParameters(parameters);
+    _f1 = _function->getValue();
+  }
 }
 

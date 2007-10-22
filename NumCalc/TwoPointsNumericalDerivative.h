@@ -75,10 +75,10 @@ class TwoPointsNumericalDerivative:
   protected:
     double _f1, _f2;
     
-	public:
-		TwoPointsNumericalDerivative(Function * function): AbstractNumericalDerivative(function) {}
-		TwoPointsNumericalDerivative(DerivableFirstOrder * function): AbstractNumericalDerivative(function) {}
-		virtual ~TwoPointsNumericalDerivative() {}
+  public:
+    TwoPointsNumericalDerivative(Function * function): AbstractNumericalDerivative(function) {}
+    TwoPointsNumericalDerivative(DerivableFirstOrder * function): AbstractNumericalDerivative(function) {}
+    virtual ~TwoPointsNumericalDerivative() {}
 
     TwoPointsNumericalDerivative * clone() const { return new TwoPointsNumericalDerivative(*this); }
 
@@ -102,7 +102,7 @@ class TwoPointsNumericalDerivative:
       throw Exception("Second order derivative not avalaible with two points method."); 
     }
 
-		double getSecondOrderDerivative(const string & variable1, const string & variable2) const
+    double getSecondOrderDerivative(const string & variable1, const string & variable2) const
       throw (Exception)
     {
       throw Exception("Unimplemented cross derivative.");

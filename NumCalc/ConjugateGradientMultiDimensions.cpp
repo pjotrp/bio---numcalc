@@ -58,6 +58,7 @@ void ConjugateGradientMultiDimensions::doInit(const ParameterList & params) thro
   _g.resize(nbParams);
   _h.resize(nbParams);
   _xi.resize(nbParams);
+  dynamic_cast<DerivableFirstOrder *>(_function)->enableFirstOrderDerivatives(true);
   _function->setParameters(params);
   getGradient(_xi);
   for(unsigned int i = 0; i < nbParams; i++)

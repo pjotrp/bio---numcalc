@@ -182,6 +182,7 @@ class MetaOptimizer:
     unsigned int _n;
     double _precisionStep;
     unsigned int _stepCount;
+    double _initialValue;
 		
 	public:
     /**

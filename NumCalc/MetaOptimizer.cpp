@@ -141,11 +141,12 @@ void MetaOptimizer::doInit(const ParameterList & parameters)
   // Actualize parameters:
   _parameters.matchParametersValues(_function->getParameters());
   
-  // Reset counter:
-  _stepCount = 0;
-  // Recompute step if precision has changed:
-  _precisionStep = log10(_stopCondition->getTolerance()) / _n;
   _function->setParameters(_parameters);
+  _initialValue = _function->getValue();
+  // Reset counter:
+  _stepCount = 1;
+  // Recompute step if precision has changed:
+  _precisionStep = (log10(_stopCondition->getTolerance()) - log10(_initialValue)) / _n;
 }
 
 /**************************************************************************/
@@ -156,9 +157,9 @@ double MetaOptimizer::doStep() throw (Exception)
   
   int tolTest = 0;
   double tol = _stopCondition->getTolerance();
-  if(_stepCount < _n)
+  if(_stepCount <= _n)
   {
-    tol = pow(10, _stepCount * _precisionStep);
+    tol = _initialValue * pow(10, _stepCount * _precisionStep);
   }
   
   for(unsigned int i = 0; i < _optDesc->getNumberOfOptimizers(); i++)
