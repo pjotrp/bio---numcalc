@@ -1,5 +1,6 @@
 22/10/07 Julien Dutheil
 * Numerical derivatives improved.
+* Bug fixed in UniformK01, now works on 64bits computers! 
 
 18/10/07 Julien Dutheil
 * Added new MetaOptimizer class.
