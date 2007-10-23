@@ -479,8 +479,8 @@ class VectorTools
      * M =
      * \begin{pmatrix}
      * w_1 & \ldots & \\
-     * \vdot & w_2  & \ldots\\
-     *       & \vdots & \ddtots\\
+     * \vdots & w_2  & \ldots\\
+     *        & \vdots & \ddots\\
      * \end{pmatrix}
      * @f]
      * @return The "weighted" scalar product of two vectors.
