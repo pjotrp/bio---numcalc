@@ -1,3 +1,6 @@
+24/10/07 Julien Dutheil
+* Added missing references in VectorTools + new methods 'append'.
+
 22/10/07 Julien Dutheil
 * Numerical derivatives improved.
 * Bug fixed in UniformK01, now works on 64bits computers! 

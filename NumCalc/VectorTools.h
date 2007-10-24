@@ -933,7 +933,7 @@ class VectorTools
      * @param v2 Second vector.
      */
     template<class T>
-    static bool haveSameElements(vector<T> v1, vector<T> v2)
+    static bool haveSameElements(const vector<T> & v1, const vector<T> & v2)
     {
       if(v1.size() != v2.size()) return false;
       std::sort(v1.begin(), v1.end());
@@ -947,7 +947,7 @@ class VectorTools
      * @param el The element to look for.
      */
     template<class T>
-    static bool contains(vector<T> vec, T el)
+    static bool contains(const vector<T> & vec, T el)
     {
       for(unsigned int i = 0; i < vec.size(); i++)
         if(vec[i] == el) return true;
@@ -961,7 +961,7 @@ class VectorTools
      * @param vec2 Vector 2.
      */
     template<class T>
-    static vector<T> vectorUnion(vector<T> & vec1, vector<T> & vec2)
+    static vector<T> vectorUnion(const vector<T> & vec1, const vector<T> & vec2)
     {
       vector<T> unionEl = vec1;
       for(unsigned int j = 0; j < vec2.size(); j++)
@@ -978,7 +978,7 @@ class VectorTools
      * @param vecElementL A vector of vectors.
      */
     template<class T>
-    static vector<T> vectorUnion(vector< vector<T> > & vecElementL)
+    static vector<T> vectorUnion(const vector< const vector<T> > & vecElementL)
     {
       vector<T> unionEl;
       for(unsigned int i = 0; i < vecElementL.size(); i++)
@@ -998,7 +998,7 @@ class VectorTools
      * @param vec2 Vector 2.
      */
     template<class T>
-    static vector<T> vectorIntersection(vector<T> & vec1, vector<T> & vec2)
+    static vector<T> vectorIntersection(const vector<T> & vec1, const vector<T> & vec2)
     {
       vector<T> interEl;
       for(unsigned int i = 0; i < vec1.size(); i++)
@@ -1013,7 +1013,7 @@ class VectorTools
      * @param vecElementL A vector of vectors.
      */
     template<class T>
-    static vector<T> vectorIntersection(vector< vector<T> > & vecElementL)
+    static vector<T> vectorIntersection(const vector< const vector<T> > & vecElementL)
     {
       if(vecElementL.size() == 1) return vecElementL[0];
       vector<T> interEl;
@@ -1028,6 +1028,37 @@ class VectorTools
         if(test) interEl.push_back(vecElementL[0][i]);
       }
       return interEl;
+    }
+
+    /**
+     * @brief Append the content of a vector to another one.
+     * @param vec1 Vector 1.
+     * @param vec2 Vector 2.
+     */
+    template<class T>
+    static vector<T> append(vector<T> & vec1, const vector<T> & vec2)
+    {
+      for(unsigned int i = 0; i < vec2.size(); i++)
+      {
+        vec1.push_back(vec2[i]);
+      }
+    }
+
+    /**
+     * @return A single vector made of the concatenation of the vectors passed as input.
+     * @param vecElementL A vector of vectors.
+     */
+    template<class T>
+    static vector<T> append(const vector< const vector<T> > & vecElementL)
+    {
+      if(vecElementL.size() == 1) return vecElementL[0];
+      vector<T> v;
+      if(vecElementL.size() == 0) return v;
+      for(unsigned int i = 0; i < vecElementL[0].size(); i++)
+      {
+        v.push_back(vecElementL[0][i]);
+      }
+      return v;
     }
 
     /**
