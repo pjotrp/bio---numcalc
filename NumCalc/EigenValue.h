@@ -51,6 +51,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 
 #include "Matrix.h"
+#include "NumTools.h"
 
 /** 
  * @brief Computes eigenvalues and eigenvectors of a real (non-complex) matrix. 
@@ -305,7 +306,7 @@ class EigenValue
      {
        // Find small subdiagonal element
    
-       tst1 = max(tst1,NumTools::abs<Real>(d[l]) + NumTools::abs<Real>(e[l]));
+       tst1 = max(tst1, NumTools::abs<Real>(d[l]) + NumTools::abs<Real>(e[l]));
        int m = l;
 
        // Original while-loop from Java code

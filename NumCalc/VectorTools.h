@@ -935,6 +935,25 @@ class VectorTools
     template<class T>
     static bool haveSameElements(const vector<T> & v1, const vector<T> & v2)
     {
+      vector<T> u1(v1);
+      vector<T> u2(v2);
+      if(u1.size() != u2.size()) return false;
+      std::sort(u1.begin(), u1.end());
+      std::sort(u2.begin(), u2.end());
+      return (u1 == u2);
+    }
+
+    /**
+     * @return 'true' if the two vectors contains the same elements, whatever their order in the container.
+     *
+     * @warning The two input vectors will be sorted.
+     *
+     * @param v1 First vector.
+     * @param v2 Second vector.
+     */
+    template<class T>
+    static bool haveSameElements(vector<T> & v1, vector<T> & v2)
+    {
       if(v1.size() != v2.size()) return false;
       std::sort(v1.begin(), v1.end());
       std::sort(v2.begin(), v2.end());
@@ -978,7 +997,7 @@ class VectorTools
      * @param vecElementL A vector of vectors.
      */
     template<class T>
-    static vector<T> vectorUnion(const vector< const vector<T> > & vecElementL)
+    static vector<T> vectorUnion(const vector< vector<T> > & vecElementL)
     {
       vector<T> unionEl;
       for(unsigned int i = 0; i < vecElementL.size(); i++)
@@ -1013,7 +1032,7 @@ class VectorTools
      * @param vecElementL A vector of vectors.
      */
     template<class T>
-    static vector<T> vectorIntersection(const vector< const vector<T> > & vecElementL)
+    static vector<T> vectorIntersection(const vector< vector<T> > & vecElementL)
     {
       if(vecElementL.size() == 1) return vecElementL[0];
       vector<T> interEl;
@@ -1036,7 +1055,7 @@ class VectorTools
      * @param vec2 Vector 2.
      */
     template<class T>
-    static vector<T> append(vector<T> & vec1, const vector<T> & vec2)
+    static void append(vector<T> & vec1, const vector<T> & vec2)
     {
       for(unsigned int i = 0; i < vec2.size(); i++)
       {
@@ -1049,7 +1068,7 @@ class VectorTools
      * @param vecElementL A vector of vectors.
      */
     template<class T>
-    static vector<T> append(const vector< const vector<T> > & vecElementL)
+    static vector<T> append(const vector< vector<T> > & vecElementL)
     {
       if(vecElementL.size() == 1) return vecElementL[0];
       vector<T> v;
