@@ -165,11 +165,11 @@ double DownhillSimplexMethod::doStep() throw (Exception)
     {
 			// Can't seem to get rid of that high point.
 			// Better contract around the lowest (best) point.
-			for(int i = 0; i < mpts; i++)
+			for(unsigned int i = 0; i < mpts; i++)
       {
 				if(i != _iLowest)
         {
-					for(int j = 0; j < nDim; j++)
+					for(unsigned int j = 0; j < nDim; j++)
           {
 						_pSum[j]->setValue(0.5 * (_simplex[i][j]->getValue() + _simplex[_iLowest][j]->getValue()));
 						_simplex[i][j]->setValue(_pSum[j]->getValue());

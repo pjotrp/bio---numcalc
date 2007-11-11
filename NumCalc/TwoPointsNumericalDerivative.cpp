@@ -93,7 +93,7 @@ throw (ParameterNotFoundException, ConstraintException)
       //No limit raised, use forward approximation:
       _der1[i] = (_f2 - _f1) / h;
     }
-    //Reset last parameter and compute analytical derivatives if any>
+    //Reset last parameter and compute analytical derivatives if any:
     string var = _variables[_variables.size() - 1];
     if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
     _function->setParameters(parameters.subList(var));
