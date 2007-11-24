@@ -1,3 +1,10 @@
+24/11/07 Julien Dutheil
+* Another bug fixed in numerical derivatives!
+
+13/11/07 Julien Dutheil
+* New class ExponentialDiscreteDistribution + bug fixed in Gamma when classes
+are not distinguishables.
+
 24/10/07 Julien Dutheil
 * Added missing references in VectorTools + new methods 'append'.
 

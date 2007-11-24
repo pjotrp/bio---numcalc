@@ -1,7 +1,7 @@
 #include "DiscreteDistribution.h"
 #include "AbstractDiscreteDistribution.h"
 #include "GammaDiscreteDistribution.h"
-#include "GoldenSectionSearch.h"
+#include "ExponentialDiscreteDistribution.h"
 #include "SimpleDiscreteDistribution.h"
 #include "ConstantDistribution.h"
 

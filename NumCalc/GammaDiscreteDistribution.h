@@ -75,11 +75,7 @@ class GammaDiscreteDistribution:
 
 		virtual ~GammaDiscreteDistribution();
 
-#if defined(NO_VIRTUAL_COV)
-    Clonable * clone() const { return new GammaDiscreteDistribution(*this); }
-#else
     GammaDiscreteDistribution * clone() const { return new GammaDiscreteDistribution(*this); }
-#endif
 	
 	public:
     Domain getDomain() const;
@@ -93,8 +89,8 @@ class GammaDiscreteDistribution:
     
 	protected:
 		void applyParameters(unsigned int numberOfCategories);
-		static vector<double> computeBounds(unsigned int nbClasses, double alfa, double beta);
-		static vector<double> computeValues(unsigned int nbClasses, double alfa, double beta, bool median);
+		static vector<double> computeBounds(unsigned int nbClasses, double alpha, double beta);
+		static vector<double> computeValues(unsigned int nbClasses, double alpha, double beta, bool median);
 		
 };
 

@@ -10,4 +10,5 @@
 #include "ConjugateGradientMultiDimensions.h"
 #include "NewtonOneDimension.h"
 #include "SimpleNewtonMultiDimensions.h"
+#include "MetaOptimizer.h"
 

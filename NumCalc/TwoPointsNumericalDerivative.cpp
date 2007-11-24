@@ -42,13 +42,13 @@ knowledge of the CeCILL license and that you accept its terms.
 void TwoPointsNumericalDerivative::setParameters(const ParameterList & parameters)
 throw (ParameterNotFoundException, ConstraintException)
 {
-  if(_computeD1)
+  if(_computeD1 && _variables.size() > 0)
   {
     if(_function1) _function1->enableFirstOrderDerivatives(false);
     if(_function2) _function2->enableSecondOrderDerivatives(false);
     _function->setParameters(parameters);
     _f1 = _function->getValue();
-    ParameterList tmp = parameters;
+    string lastVar;
     for(unsigned int i = 0; i < _variables.size(); i++)
     {
       string var = _variables[i];
@@ -58,12 +58,14 @@ throw (ParameterNotFoundException, ConstraintException)
       {
         vector<string> vars(2);
         vars[0] = var;
-        vars[1] = _variables[i-1];
+        vars[1] = lastVar;
+        lastVar = var;
         p = parameters.subList(vars);
       }
       else
       {
         p = parameters.subList(var);
+        lastVar = var;
       }
       double value = _function->getParameterValue(var);
       double h = (1 + std::abs(value)) * _h; 
@@ -94,9 +96,8 @@ throw (ParameterNotFoundException, ConstraintException)
       _der1[i] = (_f2 - _f1) / h;
     }
     //Reset last parameter and compute analytical derivatives if any:
-    string var = _variables[_variables.size() - 1];
     if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
-    _function->setParameters(parameters.subList(var));
+    _function->setParameters(parameters.subList(lastVar));
   }
   else
   {

@@ -9,6 +9,7 @@ OneDimensionOptimizationTools.h\
 PowellMultiDimensions.h\
 BrentOneDimension.h\
 GammaDiscreteDistribution.h\
+ExponentialDiscreteDistribution.h\
 OptimizationStopCondition.h\
 RandomTools.h\
 ConstantDistribution.h\
@@ -56,6 +57,7 @@ CPP_FILES = \
 AbstractOptimizer.cpp\
 AutoParameter.cpp\
 GammaDiscreteDistribution.cpp\
+ExponentialDiscreteDistribution.cpp\
 Parameter.cpp\
 BrentOneDimension.cpp\
 GoldenSectionSearch.cpp\

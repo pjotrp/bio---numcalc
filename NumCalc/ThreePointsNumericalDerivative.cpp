@@ -48,6 +48,7 @@ throw (ParameterNotFoundException, ConstraintException)
     if(_function2) _function2->enableSecondOrderDerivatives(false);
     _function->setParameters(parameters);
     _f2 = _function->getValue();
+    string lastVar;
     for(unsigned int i = 0; i < _variables.size(); i++)
     {
       string var = _variables[i];
@@ -57,12 +58,14 @@ throw (ParameterNotFoundException, ConstraintException)
       {
         vector<string> vars(2);
         vars[0] = var;
-        vars[1] = _variables[i-1];
+        vars[1] = lastVar;
+        lastVar = var;
         p = parameters.subList(vars);
       }
       else
       {
         p = parameters.subList(var);
+        lastVar = var;
       }
       double value = _function->getParameterValue(var);
       double h = (1. + std::abs(value)) * _h; 
@@ -108,11 +111,10 @@ throw (ParameterNotFoundException, ConstraintException)
         _der2[i] = (_f1 - 2.*_f3 + _f2) / (h*h);
       }
     }
-    //Reset last parameter and compute analytical derivatives if any>
-    string var = _variables[_variables.size() - 1];
+    //Reset last parameter and compute analytical derivatives if any.
     if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
     if(_function2) _function2->enableSecondOrderDerivatives(_computeD2);
-    _function->setParameters(parameters.subList(var));
+    _function->setParameters(parameters.subList(lastVar));
   }
   else
   {
