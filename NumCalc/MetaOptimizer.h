@@ -72,9 +72,21 @@ class MetaOptimizerInfos:
     {
       _optimizers     = infos._optimizers;
       _parameterNames = infos._parameterNames;
+      _derivatives    = infos._derivatives;
       _itTypes        = infos._itTypes;
       for(unsigned int i = 0; i < _optimizers.size(); i++)
         _optimizers[i] = dynamic_cast<Optimizer *>(infos._optimizers[i]->clone());
+    }
+
+    MetaOptimizerInfos& operator=(const MetaOptimizerInfos & infos)
+    {
+      _optimizers     = infos._optimizers;
+      _parameterNames = infos._parameterNames;
+      _derivatives    = infos._derivatives;
+      _itTypes        = infos._itTypes;
+      for(unsigned int i = 0; i < _optimizers.size(); i++)
+        _optimizers[i] = dynamic_cast<Optimizer *>(infos._optimizers[i]->clone());
+      return *this;
     }
 
     virtual ~MetaOptimizerInfos()
@@ -144,11 +156,11 @@ class MetaOptimizerInfos:
     /**
      * @return True if the ith optimizer in the set requires first order derivatives.
      */
-    virtual bool requiresFirstOrderDerivatives(unsigned int i)const { return _derivatives[i] > 0; }  
+    virtual bool requiresFirstOrderDerivatives(unsigned int i) const { return _derivatives[i] > 0; }  
     /**
      * @return True if the ith optimizer in the set requires second order derivatives.
      */
-    virtual bool requiresSecondOrderDerivatives(unsigned int i)const { return _derivatives[i] > 1; }  
+    virtual bool requiresSecondOrderDerivatives(unsigned int i) const { return _derivatives[i] > 1; }  
 
     /**
      * @return The number of optimizers in the set.

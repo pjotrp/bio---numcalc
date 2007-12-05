@@ -48,14 +48,8 @@ ParameterList::ParameterList() : vector<Parameter *>() {}
 /** Copy constructor: *********************************************************/
 	
 ParameterList::ParameterList(const ParameterList & pl):
-  vector<Parameter*>(pl)
+  vector<Parameter*>(pl.size())
 {
-	// First delete all parameters:
-	//reset();
-	
-	// Then resize the vector:
-	//resize(pl.size());
-	
 	// Now copy all parameters:
 	for(unsigned int i = 0; i < size(); i++)
   {
@@ -72,7 +66,8 @@ ParameterList & ParameterList::operator=(const ParameterList & pl)
 		
 	// Then resize the vector:
 	resize(pl.size());
-	// Now copy all parameters:
+	
+  // Now copy all parameters:
 	for(unsigned int i = 0; i < pl.size(); i++)
   {
 		(*this)[i] = dynamic_cast<Parameter *>(pl[i]->clone());

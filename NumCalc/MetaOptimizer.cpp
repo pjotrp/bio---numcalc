@@ -66,7 +66,7 @@ MetaOptimizer::MetaOptimizer(
   _precisionStep = log10(_stopCondition->getTolerance()) / _n;
   _stepCount = 0;
   _stepChar = "";
-  _parameters.resize(desc->getNumberOfOptimizers());
+  _optParameters.resize(desc->getNumberOfOptimizers());
   _nbParameters.resize(desc->getNumberOfOptimizers());
 }
 
