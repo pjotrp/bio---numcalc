@@ -38,7 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _NUMTOOLS_H_
-#define _NUMTOOLS_H_
+#define _NUMTOOLS_H_#include "Functions.h"
 
 /**
  * @brief Some utilitary function for numerical calculus.
@@ -140,6 +140,21 @@ public:
 
   template<class T> static T fact(T n) { return (n == 0) ? 1 : n * fact(n - 1); }
 
+  /**************************************************************************/
+  
+  /**
+   * @Brief Find one root of the given function.
+   *
+   * @param f The function to analyse.
+   * @param param The name of the parameter to solve.
+   * @param a Lower bound of initial interval.
+   * @param b Upper bound of initial interval.
+   * @param tolerance The final precision requested.
+   * @return The value of the parameter for which the function is zero.
+   * @throw Exception If something bad happened or if the initial interval do not contains a root.
+   */
+  static double uniRoot(Function & f, const string & param, double a, double b, double tolerance) throw (Exception);
+  
   /**************************************************************************/
 
 };

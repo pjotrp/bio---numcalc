@@ -86,7 +86,8 @@ DirectionFunction.cpp\
 NewtonOneDimension.cpp\
 SimpleNewtonMultiDimensions.cpp\
 ConjugateGradientMultiDimensions.cpp\
-MetaOptimizer.cpp
+MetaOptimizer.cpp\
+NumTools.cpp
 
 lib_LTLIBRARIES = libbpp-numcalc.la
 libbpp_numcalc_la_SOURCES = $(H_FILES) $(CPP_FILES)
