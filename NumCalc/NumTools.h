@@ -38,7 +38,9 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _NUMTOOLS_H_
-#define _NUMTOOLS_H_#include "Functions.h"
+#define _NUMTOOLS_H_
+
+#include "Functions.h"
 
 /**
  * @brief Some utilitary function for numerical calculus.
