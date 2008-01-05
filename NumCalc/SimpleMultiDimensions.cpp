@@ -123,7 +123,8 @@ double SimpleMultiDimensions::doStep() throw (Exception)
     }
     // Re-init optimizer according to new values:
     double v = _parameters[i]->getValue();
-    _optimizer->setInitialInterval(v - 0.01, v + 0.01);
+    double t = std::max(0.000001, std::min(std::abs(v), getStopCondition()->getTolerance()));
+    _optimizer->setInitialInterval(v - t, v + t);
     _optimizer->init(_parameters.subList(i));
 
     // Optimize through this dimension:

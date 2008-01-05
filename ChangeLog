@@ -1,3 +1,6 @@
+24/12/07 Julien Dutheil
+* New class InvariantMixedDiscreteDistribution.
+
 05/12/07 Julien Dutheil
 * Bug fixed in recopy of MetaOptimizer.
 

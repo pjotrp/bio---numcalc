@@ -51,7 +51,9 @@ DirectionFunction.h\
 NewtonOneDimension.h\
 SimpleNewtonMultiDimensions.h\
 ConjugateGradientMultiDimensions.h\
-MetaOptimizer.h
+MetaOptimizer.h\
+InvariantMixedDiscreteDistribution.h
+
 
 CPP_FILES = \
 AbstractOptimizer.cpp\
@@ -87,7 +89,9 @@ NewtonOneDimension.cpp\
 SimpleNewtonMultiDimensions.cpp\
 ConjugateGradientMultiDimensions.cpp\
 MetaOptimizer.cpp\
-NumTools.cpp
+NumTools.cpp\
+InvariantMixedDiscreteDistribution.cpp
+
 
 lib_LTLIBRARIES = libbpp-numcalc.la
 libbpp_numcalc_la_SOURCES = $(H_FILES) $(CPP_FILES)

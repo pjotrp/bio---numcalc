@@ -81,7 +81,6 @@ class GammaDiscreteDistribution:
     Domain getDomain() const;
 		void fireParameterChanged(const ParameterList & parameters);
 	
-  public:
     double randC() const throw (Exception)
     {
       return RandomTools::randGamma(_parameters.getParameter("alpha")->getValue());
