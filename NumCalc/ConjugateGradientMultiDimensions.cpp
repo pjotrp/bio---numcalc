@@ -40,6 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "ConjugateGradientMultiDimensions.h"
 #include "OneDimensionOptimizationTools.h"
 
+using namespace bpp;
 /******************************************************************************/
 
 ConjugateGradientMultiDimensions::ConjugateGradientMultiDimensions(DerivableFirstOrder * function):

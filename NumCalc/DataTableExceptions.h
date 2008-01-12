@@ -52,6 +52,9 @@ knowledge of the CeCILL license and that you accept its terms.
 //#include <map>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief Exception thrown when a given name is not found is a DataTable object.
  */
@@ -167,6 +170,8 @@ class DuplicatedTableColumnNameException:
 			Exception("DuplicatedTableColumnNameException: "+text) {}
 		virtual ~DuplicatedTableColumnNameException() throw() {}
 };
+
+} //end of namespace bpp.
 
 #endif //_DataTableExceptions_H_
 

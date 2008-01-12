@@ -1,3 +1,9 @@
+09/01/08 Julien Dutheil
+* All classes included in the new 'bpp' namespace.
+
+13/12/07 Julien Dutheil
+* New method uniRoot in NumTools.
+
 24/12/07 Julien Dutheil
 * New class InvariantMixedDiscreteDistribution.
 

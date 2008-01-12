@@ -42,10 +42,12 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From Utils:
 #include <Utils/MapTools.h>
+using namespace bpp;
 
 // From the STL:
 #include <cmath>
-
+using namespace std;
+  
 const double ExponentialDiscreteDistribution::VERYBIG = static_cast<double>(1.7E+23);
 
 /** Constructor: **************************************************************/

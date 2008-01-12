@@ -42,6 +42,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "VectorTools.h"
 #include "RandomTools.h"
 
+using namespace bpp;
+
 /******************************************************************************/
 	
 unsigned int AbstractDiscreteDistribution::getNumberOfCategories() const

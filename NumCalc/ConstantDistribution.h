@@ -42,6 +42,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractDiscreteDistribution.h"
 
+namespace bpp
+{
+
 /**
  * @brief Constant discrete distribution.
  *
@@ -75,6 +78,8 @@ class ConstantDistribution :
     double randC() const throw (Exception) { return _value; }
   
 };
+
+} //end of namespace bpp.
 
 #endif  //_CONSTANTDISTRIBUTION_H_
 

@@ -51,6 +51,9 @@ using namespace std;
 //From Utils:
 #include <Utils/Clonable.h>
 
+namespace bpp
+{
+
 /**
  * @brief This class is designed to facilitate the manipulation of parameters.
  *
@@ -177,6 +180,8 @@ class Parameter:
     static IncludingInterval PROP_CONSTRAINT_IN;
     static ExcludingInterval PROP_CONSTRAINT_EX;
 };
+
+} //end of namespace bpp.
 
 #endif  //_PARAMETER_H_
 

@@ -42,6 +42,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "ParameterList.h"
 
+namespace bpp
+{
+
 class Optimizer;
 	
 /******************************************************************************/
@@ -246,6 +249,8 @@ class FunctionStopCondition:
 };
 
 /******************************************************************************/
+
+} //end of namespace bpp.
 
 #endif	//_OPTIMIZATIONSTOPCONDITION_H_
 

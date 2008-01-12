@@ -40,6 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "RandomTools.h"
 #include "Uniform01K.h"
 
+using namespace bpp;
+
 RandomFactory * RandomTools::DEFAULT_GENERATOR = new Uniform01K(time(NULL));
 
 // Initiate random seed :
@@ -47,7 +49,7 @@ RandomFactory * RandomTools::DEFAULT_GENERATOR = new Uniform01K(time(NULL));
 
 void RandomTools::setSeed(long seed)
 {
-	DEFAULT_GENERATOR -> setSeed(seed);
+	DEFAULT_GENERATOR->setSeed(seed);
 }
 
 // Method to get a double random value (between 0 and specified range)

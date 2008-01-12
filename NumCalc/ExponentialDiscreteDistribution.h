@@ -44,6 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Constraints.h"
 #include "RandomTools.h"
 
+namespace bpp
+{
+
 /**
  * @brief Discretized Exponential distribution.
  */
@@ -92,6 +95,8 @@ class ExponentialDiscreteDistribution:
 		void discretize(unsigned int nbClasses, double lambda, bool median);
 		
 };
+
+} //end of namespace bpp.
 
 #endif	//_EXPONENTIALDISCRETEDISTRIBUTION_H_
 

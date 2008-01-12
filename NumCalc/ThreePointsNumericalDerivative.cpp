@@ -39,6 +39,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "ThreePointsNumericalDerivative.h"
 
+using namespace bpp;
+
 void ThreePointsNumericalDerivative::setParameters(const ParameterList & parameters)
 throw (ParameterNotFoundException, ConstraintException)
 {

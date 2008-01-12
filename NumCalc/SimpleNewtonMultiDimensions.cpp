@@ -41,6 +41,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "SimpleNewtonMultiDimensions.h"
 
+using namespace bpp;
+
 /******************************************************************************/
 
 SimpleNewtonMultiDimensions::SimpleNewtonMultiDimensions(DerivableSecondOrder * function):

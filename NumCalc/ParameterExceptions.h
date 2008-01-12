@@ -47,6 +47,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 using namespace std;
 
+namespace bpp
+{
+
 class Parameter;
 
 /**
@@ -163,6 +166,8 @@ class ParameterNotFoundException : public Exception {
 		 */
 		virtual string getParameter() const;		
 };
+
+} //end of namespace bpp.
 
 #endif	//_PARAMETEREXCEPTIONS_H_
 

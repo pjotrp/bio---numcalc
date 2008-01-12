@@ -52,6 +52,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief An event object which indicates that an optimization event occured.
  */
@@ -336,6 +339,8 @@ class Optimizer:
     virtual void addOptimizationListener(OptimizationListener * listener) = 0; 
 
 };
+
+} //end of namespace bpp.
 
 #endif	//_OPTIMIZER_H_
 

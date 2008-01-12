@@ -48,6 +48,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
 
  /** 
 	* @brief LU Decomposition.
@@ -399,6 +401,8 @@ class LUDecomposition
     }
 
 }; /* class LU */
+
+} //end of namespace bpp.
 
 #endif //_LU_H_
 

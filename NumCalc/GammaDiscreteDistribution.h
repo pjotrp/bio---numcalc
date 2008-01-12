@@ -44,6 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Constraints.h"
 #include "RandomTools.h"
 
+namespace bpp
+{
+
 /**
  * @brief Discretized Gamma distribution.
  */
@@ -92,6 +95,8 @@ class GammaDiscreteDistribution:
 		static vector<double> computeValues(unsigned int nbClasses, double alpha, double beta, bool median);
 		
 };
+
+} //end of namespace bpp.
 
 #endif	//_GAMMADISCRETEDISTRIBUTION_H_
 

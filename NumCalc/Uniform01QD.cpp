@@ -39,10 +39,15 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "Uniform01QD.h"
 
+using namespace bpp;
+
 #include <cmath>
 
+using namespace std;
+
 //** Class constructor: *******************************************************/
-Uniform01QD::Uniform01QD(long seed) {
+Uniform01QD::Uniform01QD(long seed)
+{
 	setSeed(seed);
 }
 
@@ -50,11 +55,14 @@ Uniform01QD::Uniform01QD(long seed) {
 Uniform01QD::~Uniform01QD() {}
 
 //** Other methods: *********************************************************/
-void Uniform01QD::setSeed(long seed) {
+
+void Uniform01QD::setSeed(long seed)
+{
 	_seed = seed;
 }
 
-double Uniform01QD::drawNumber() const {
+double Uniform01QD::drawNumber() const
+{
 	_seed = _seed * 1103515245 + 12345;
 	if (_seed < 0) _seed = -_seed;
 	return _seed / 2147483648.0;

@@ -45,6 +45,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/TextTools.h>
 #include <Utils/StringTokenizer.h>
 
+using namespace bpp;
+
 /******************************************************************************/
 
 DataTable::DataTable(unsigned int nRow, unsigned int nCol) :

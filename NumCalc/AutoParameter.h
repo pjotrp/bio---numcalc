@@ -42,6 +42,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "Parameter.h"
 
+namespace bpp
+{
+
 /**
  * @brief The AutoParameter class.
  *
@@ -134,6 +137,8 @@ class AutoParameter:
 		static string CONSTRAINTS_IGNORE;
 		static string CONSTRAINTS_KEEP;
 };
+
+} //end of namespace bpp.
 
 #endif	//_AUTOPARAMETER_H_
 

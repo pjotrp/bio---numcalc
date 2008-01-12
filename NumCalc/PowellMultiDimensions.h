@@ -44,6 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "VectorTools.h"
 #include "DirectionFunction.h"
 
+namespace bpp
+{
+
 /**
  * @brief Powell's multi-dimensions optimization algorithm for one parameter.
  *
@@ -104,6 +107,8 @@ class PowellMultiDimensions:
     double doStep() throw (Exception);	
 	
 };
+
+} //end of namespace bpp.
 
 #endif	//_POWELLMULTIDIMENSIONS_H_
 

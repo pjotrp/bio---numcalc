@@ -45,6 +45,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Parametrizable.h"
 #include "AutoParameter.h"
 
+namespace bpp
+{
+
 class DirectionFunction:
   public Function,
   public ParametrizableAdapter
@@ -82,6 +85,8 @@ class DirectionFunction:
     ParameterList getFunctionParameters() const { return _p; }
 
 };
+
+} //end of namespace bpp.
 
 #endif //_DIRECTIONFUNCTION_H_
 

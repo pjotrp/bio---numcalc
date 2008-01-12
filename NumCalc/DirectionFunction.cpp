@@ -40,6 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "DirectionFunction.h"
 
+using namespace bpp;
+
 /******************************************************************************/
 
 void DirectionFunction::setParameters(const ParameterList & params)

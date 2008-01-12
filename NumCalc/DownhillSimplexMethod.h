@@ -45,6 +45,10 @@ knowledge of the CeCILL license and that you accept its terms.
 
 // From the STL:
 #include <cmath>
+using namespace std;
+
+namespace bpp
+{
 
 /**
  * @brief This implements the Downhill Simplex method in multidimensions.
@@ -157,6 +161,8 @@ class DownhillSimplexMethod:
 
     /** @} */
 };
+
+} //end of namespace bpp.
 
 #endif  //_DOWNHILLSIMPLEXMETHOD_H_
 

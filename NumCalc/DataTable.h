@@ -53,6 +53,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <map>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief This class corresponds to a 'dataset', <i>i.e.</i> a table with data by rows
  * and variable by columns.
@@ -419,6 +422,8 @@ class DataTable:
 		 */
 			static void write(const DataTable & data, ostream & out, const string & sep = "\t");
 };
+
+} //end of namespace bpp.
 
 #endif //_DataTable_H_
 

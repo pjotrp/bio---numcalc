@@ -50,6 +50,9 @@ using namespace std;
 
 #include "RandomFactory.h"
 
+namespace bpp
+{
+
 /**
  * @brief Utilitary function dealing with random numbers.
  *
@@ -249,6 +252,8 @@ class RandomTools
 		static double DblGammaGreaterThanOne(double dblAlpha, const RandomFactory * generator);
 		static double DblGammaLessThanOne(double dblAlpha, const RandomFactory * generator);
 };
+
+} //end of namespace bpp.
 
 #endif	//_RANDOMTOOLS_H_
 

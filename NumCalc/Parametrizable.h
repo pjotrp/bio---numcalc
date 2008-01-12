@@ -49,6 +49,9 @@ using namespace std;
 
 #include "ParameterList.h"
 
+namespace bpp
+{
+
 /**
  * @brief This is the interface for all objects that imply parameters.
  *
@@ -250,6 +253,8 @@ class AbstractParametrizable:
 		virtual void fireParameterChanged(const ParameterList & parameters) = 0;
 
 };
+
+} //end of namespace bpp.
 
 #endif	//_PARAMETRIZABLE_H_
 

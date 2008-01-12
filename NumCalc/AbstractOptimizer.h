@@ -42,6 +42,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "Optimizer.h"
 
+namespace bpp
+{
+
 /**
  * @brief Partial implementation of the Optimizer interface.
  *
@@ -341,6 +344,8 @@ class AbstractOptimizer:
     /** @} */
   
 };
+
+} //end of namespace bpp.
 
 #endif  //_ABSTRACTOPTIMIZER_H_
 

@@ -44,8 +44,12 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <iomanip>
 #include <time.h>
 
+using namespace std;
+
 // From Utils:
 #include <Utils/TextTools.h>
+
+using namespace bpp;
 
 /******************************************************************************/
 

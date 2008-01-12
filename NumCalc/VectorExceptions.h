@@ -48,6 +48,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief General Exception dealing with vectors.
  */
@@ -140,6 +143,8 @@ template<class T> class ElementNotFoundException : public VectorException<T>
 	public:
 		virtual const T * getElement() const { return _element; }
 };
+
+} //end of namespace bpp.
 
 #endif //_VECTOREXCEPTIONS_H_
 

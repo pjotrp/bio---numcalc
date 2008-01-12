@@ -44,6 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "BrentOneDimension.h"
 #include "DirectionFunction.h"
 
+namespace bpp
+{
+
 class ConjugateGradientMultiDimensions:
   public AbstractOptimizer
 {
@@ -75,6 +78,8 @@ class ConjugateGradientMultiDimensions:
     void getGradient(vector<double> & gradient) const;
     
 };
+
+} //end of namespace bpp.
 
 #endif //_CONJUGATEGRADIENTMULTIDIMENSIONS_H_
 

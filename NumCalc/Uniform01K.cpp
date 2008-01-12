@@ -41,6 +41,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "NumTools.h"
 
+using namespace bpp;
+
 const long Uniform01K::MAXNUMBER = 1000000000;
 const long Uniform01K::ZERO = 0;
 const long Uniform01K::MODSEED = 256434901;

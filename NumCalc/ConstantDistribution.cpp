@@ -39,6 +39,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "ConstantDistribution.h"
 
+using namespace bpp;
+
 /******************************************************************************/
 
 ConstantDistribution::ConstantDistribution(double value) : AbstractDiscreteDistribution(), _value(value)

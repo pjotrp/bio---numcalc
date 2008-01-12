@@ -46,6 +46,8 @@ using namespace std;
 // Utils:
 #include "Utils/TextTools.h"
 
+using namespace bpp;
+
 /******************************************************************************/
 
 double AutoParameter::TINY = .000000000001;

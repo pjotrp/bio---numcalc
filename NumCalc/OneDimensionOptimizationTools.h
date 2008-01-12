@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Functions.h"
 #include "DirectionFunction.h"
 
+namespace bpp
+{
+
 class Point
 {		
 	public: // Constructor and destructor:
@@ -114,6 +117,8 @@ class OneDimensionOptimizationTools
 		static double TINY;
 	
 };
+
+} //end of namespace bpp.
 
 #endif	//_ONEDIMENSIONOPTIMIZATIONTOOLS_H_
 

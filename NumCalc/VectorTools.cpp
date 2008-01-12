@@ -41,7 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/TextTools.h>
 
 #include "VectorTools.h"
-using namespace VectorOperators;
+using namespace bpp;
 
 // From the STL:
 #include <cmath>

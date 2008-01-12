@@ -48,6 +48,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <iostream>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief Functions dealing with matrices.
  */
@@ -575,5 +578,7 @@ namespace MatrixOperators {
 
 };
 */
+
+} //end of namespace bpp.
 
 #endif	//_MATRIXTOOLS_H_

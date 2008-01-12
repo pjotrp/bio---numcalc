@@ -51,6 +51,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <cmath>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief This is the function abstract class.
  *
@@ -442,6 +445,8 @@ class InfinityDerivableSecondOrderWrapper:
       return getSecondOrderDerivative(variable1, variable2);
     }
 };
+
+} //end of namespace bpp.
 
 #endif  //_FUNCTIONS_H_
 

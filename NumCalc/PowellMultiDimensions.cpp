@@ -43,6 +43,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "BrentOneDimension.h"
 #include "OneDimensionOptimizationTools.h"
 
+using namespace bpp;
+
 /******************************************************************************/
 
 bool PowellMultiDimensions::PMDStopCondition::isToleranceReached() const

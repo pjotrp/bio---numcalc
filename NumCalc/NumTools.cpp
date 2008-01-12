@@ -39,6 +39,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "NumTools.h"
 
+using namespace bpp;
+
 /******************************************************************************/
   
 double NumTools::uniRoot(Function & f, const string & param, double a, double b, double tolerance) throw (Exception)

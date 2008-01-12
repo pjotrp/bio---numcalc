@@ -46,6 +46,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/Exceptions.h>
 #include <Utils/TextTools.h>
 
+namespace bpp
+{
+
 /**
  * @brief Exception thrown when a value do not match the domain interval.
  */
@@ -167,6 +170,8 @@ class Domain
 		virtual unsigned int getIndex(double x) const throw (OutOfRangeException);
 		
 };
+
+} //end of namespace bpp.
 
 #endif	//_DOMAIN_H_
 

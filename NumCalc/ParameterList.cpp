@@ -39,7 +39,10 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "ParameterList.h"
 
+using namespace bpp;
+
 #include <iostream>
+using namespace std;
 
 /** Constructors: *************************************************************/
 

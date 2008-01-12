@@ -42,6 +42,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractOptimizer.h"
 
+namespace bpp
+{
+
 /**
  * @brief Newton's optimization for one parameter.
  */
@@ -67,6 +70,8 @@ class NewtonOneDimension:
     void setMaximumNumberOfCorrections(unsigned int mx) { _maxCorrection = mx; }
 	
 };
+
+} //end of namespace bpp.
 
 #endif	//_NEWTONONEDIMENSION_H_
 

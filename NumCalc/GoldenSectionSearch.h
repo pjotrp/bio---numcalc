@@ -42,6 +42,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractOptimizer.h"
 
+namespace bpp
+{
+
 /**
  * @brief Golden Section Search optimization algorithm for one parameter.
  *
@@ -135,6 +138,8 @@ class GoldenSectionSearch:
 		static double R;
 		static double C;
 };
+
+} //end of namespace bpp.
 
 #endif	//_GOLDENSECTIONSEARCH_H_
 

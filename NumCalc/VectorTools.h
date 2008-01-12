@@ -49,6 +49,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <algorithm>
 using namespace std;
 
+namespace bpp
+{
+
 typedef vector<double> Vdouble;
 typedef vector<Vdouble> VVdouble;
 typedef vector<VVdouble> VVVdouble;
@@ -61,8 +64,8 @@ typedef vector<VVVint> VVVVint;
 
 /**
  * @name Element-wise operations.
+ * @{
  */
-namespace VectorOperators {
 
 template<class T>
 vector<T>	operator+ (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
@@ -273,8 +276,7 @@ void operator/= (vector<T> & v1, const C & c)
 		v1[i] /= c;
 	}
 }
-
-}
+/** @} */
 
 /******************************************************************************/
 
@@ -1087,6 +1089,8 @@ class VectorTools
     static bool test();
 
 };
+
+} //end of namespace bpp.
 
 #endif	//_VECTORTOOLS_H_
 

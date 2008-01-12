@@ -42,6 +42,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractOptimizer.h"
 
+namespace bpp
+{
+
 /**
  * @brief Brent's optimization for one parameter.
  *
@@ -137,6 +140,8 @@ class BrentOneDimension:
 	static double ZEPS;
 
 };
+
+} //end of namespace bpp.
 
 #endif	//_BRENTONEDIMENSION_H_
 

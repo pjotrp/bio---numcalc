@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "FivePointsNumericalDerivative.h"
+using namespace bpp;
 
 void FivePointsNumericalDerivative::setParameters(const ParameterList & parameters)
 throw (ParameterNotFoundException, ConstraintException)

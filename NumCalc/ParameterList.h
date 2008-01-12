@@ -52,6 +52,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief The parameter list object.
  * 
@@ -276,6 +279,8 @@ class ParameterList:
      */
     virtual void reset();
 };
+
+} //end of namespace bpp.
 
 #endif  //_PARAMETERLIST_H_
 

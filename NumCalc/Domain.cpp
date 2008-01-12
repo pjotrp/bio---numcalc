@@ -42,6 +42,8 @@ knowledge of the CeCILL license and that you accept its terms.
 // From Utils:
 #include <Utils/TextTools.h>
 
+using namespace bpp;
+
 Domain::Domain(double a, double b, unsigned int n)
 {
 	double mini = min(a, b);

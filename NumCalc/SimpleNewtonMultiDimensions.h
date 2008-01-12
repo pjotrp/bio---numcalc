@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AbstractOptimizer.h"
 #include "NewtonOneDimension.h"
 
+namespace bpp
+{
+
 /**
  * @brief This Optimizer is a simple multi-dimensions optimizer, calling
  * the Newton one dimensional optimizer on each parameter.
@@ -92,6 +95,8 @@ class SimpleNewtonMultiDimensions:
      */
     const Optimizer * getOneDimensionOptimizer() const { return _optimizer; } 
 };
+
+} //end of namespace bpp.
 
 #endif //_SIMPLENEWTONMULTIDIMENSIONS_H_
 

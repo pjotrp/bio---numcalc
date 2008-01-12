@@ -49,6 +49,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief Provide a list of optimizer and corresponding options to be used with the MetaOptimizer class.
  */
@@ -239,6 +242,8 @@ class MetaOptimizer:
     const MetaOptimizerInfos * getOptimizers() const { return _optDesc; }
 
 };
+
+} //end of namespace bpp.
 
 #endif //_METAOPTIMIZER_H_
 

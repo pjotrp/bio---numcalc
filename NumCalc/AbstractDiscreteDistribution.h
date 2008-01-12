@@ -46,6 +46,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief Partial implementation of the DiscreteDistribution interface.
  *
@@ -107,6 +110,8 @@ class AbstractDiscreteDistribution:
 		/** @} */
 		
 };
+
+} //end of namespace bpp.
 
 #endif	//_ABSTRACTDISCRETEDISTRIBUTION_H_
 

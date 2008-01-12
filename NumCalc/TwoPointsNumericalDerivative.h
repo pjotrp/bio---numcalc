@@ -48,6 +48,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 #include <string>
 
+namespace bpp
+{
+
 /**
  * @brief Two points numerical derivative function wrapper.
  *
@@ -110,6 +113,8 @@ class TwoPointsNumericalDerivative:
     /** @} */
     
 };
+
+} //end of namespace bpp.
 
 #endif //_TWOPOINTSNUMERICALDERIVATIVE_H_
 

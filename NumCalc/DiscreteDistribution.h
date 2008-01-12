@@ -48,6 +48,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <iostream>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief Interface for discret distribution objects.
  *
@@ -190,6 +193,8 @@ class DiscreteDistribution:
 		virtual void print(ostream & out) const = 0;
 
 };
+
+} //end of namespace bpp.
 
 #endif	//_DISCRETEDISTRIBUTION_H_
 

@@ -39,6 +39,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "TwoPointsNumericalDerivative.h"
 
+using namespace bpp;
+
 void TwoPointsNumericalDerivative::setParameters(const ParameterList & parameters)
 throw (ParameterNotFoundException, ConstraintException)
 {

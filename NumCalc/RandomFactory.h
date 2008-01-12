@@ -40,6 +40,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _RANDOMFACTORY_H_
 #define _RANDOMFACTORY_H_
 
+namespace bpp
+{
+
 /**
  * @brief This is the interface for the Random Number Generators.
  *
@@ -62,6 +65,8 @@ class RandomFactory {
 		 */
 		virtual double drawNumber() const = 0;
 };
+
+} //end of namespace bpp.
 
 #endif // _RANDOMFACTORY_H_
 

@@ -46,6 +46,9 @@ using namespace std;
 
 #include <Utils/Clonable.h>
 
+namespace bpp
+{
+
 /**
  * @brief The matrix template interface.
  */
@@ -198,6 +201,8 @@ class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 		}
 
 };
+
+} //end of namespace bpp.
 
 #endif //_MATRIX_H_
 

@@ -46,6 +46,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <map>
 using namespace std;
 
+namespace bpp
+{
+
 /**
  * @brief A DiscreteDistribution object builds from a map<double,double> object.
  *
@@ -74,6 +77,8 @@ class SimpleDiscreteDistribution:
     void fireParameterChanged(const ParameterList & parameters) {}
     Domain getDomain() const;
 };
+
+} //end of namespace bpp.
 
 #endif  //_SIMPLEDISCRETEDISTRIBUTION_H_
 

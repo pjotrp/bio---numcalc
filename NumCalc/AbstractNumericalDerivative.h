@@ -47,6 +47,11 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 #include <string>
 
+using namespace std;
+
+namespace bpp
+{
+
 /**
  * @brief Numerical derivative function wrapper, partial implementation.
  *
@@ -213,6 +218,8 @@ class AbstractNumericalDerivative:
     /** @} */
     
 };
+
+} //end of namespace bpp.
 
 #endif //_ABSTRACTNUMERICALDERIVATIVE_H_
 

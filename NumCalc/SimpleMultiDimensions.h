@@ -43,6 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AbstractOptimizer.h"
 #include "BrentOneDimension.h"
 
+namespace bpp
+{
+
 /**
  * @brief This Optimizer is a very simple multi-dimensions optimizer, calling
  * a one dimensional optimizer on each parameter.
@@ -93,6 +96,8 @@ class SimpleMultiDimensions:
      */
     const Optimizer * getOneDimensionOptimizer() const { return _optimizer; } 
 };
+
+} //end of namespace bpp.
 
 #endif //_SIMPLEMULTIDIMENSIONS_H_
 

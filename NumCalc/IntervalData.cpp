@@ -38,8 +38,10 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "IntervalData.h"
+using namespace bpp;
 
 #include <cmath>
+using namespace std;
 
 IntervalData::IntervalData(const Domain & domain, const string & name):
 	_domain(domain), _name(name)

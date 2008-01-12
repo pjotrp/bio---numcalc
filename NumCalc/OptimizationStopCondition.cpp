@@ -42,6 +42,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "VectorTools.h"
 #include "NumTools.h"
 
+using namespace bpp;
+
 /******************************************************************************/
 
 AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(const Optimizer * optimizer):

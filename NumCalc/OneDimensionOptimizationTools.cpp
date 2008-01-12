@@ -41,6 +41,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "NumTools.h"
 #include "BrentOneDimension.h"
 
+using namespace bpp;
+
 /******************************************************************************
  *                              The Point class                               *
  ******************************************************************************/

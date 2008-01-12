@@ -42,6 +42,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractDiscreteDistribution.h"
 
+namespace bpp
+{
+
 /**
  * @brief Discrete mixed distribution, with a one-category fixed value (called "invariant") and a user-specified multi-categories distribution.
  *
@@ -106,6 +109,8 @@ class InvariantMixedDiscreteDistribution:
     void applyParameters();
 
 };
+
+} //end of namespace bpp.
 
 #endif //_INVARIANTMIXEDDISCRETEDISTRIBUTION_H_
 

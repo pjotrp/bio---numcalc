@@ -39,7 +39,11 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "Uniform01WH.h"
 
+using namespace bpp;
+
 #include <cmath>
+
+using namespace std;
 
 //** Class constructor: *******************************************************/
 Uniform01WH::Uniform01WH(long seed) {

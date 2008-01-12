@@ -42,6 +42,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "Functions.h"
 
+namespace bpp
+{
+
 /**
  * @brief Some utilitary function for numerical calculus.
  */
@@ -160,6 +163,8 @@ public:
   /**************************************************************************/
 
 };
+
+} //end of namespace bpp.
 
 #endif	//_NUMTOOLS_H_
 

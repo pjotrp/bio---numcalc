@@ -1,11 +1,11 @@
 //
 // File: EigenValue.h
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: Julien Dutheil
 // Created on: Tue Apr 7 16:24 2004
 //
 
 /*
-Copyright or © or Copr. Julien Dutheil, (November 17, 2004)
+Copyright or © or Copr. CNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus. This file is part of the Bio++ project.
@@ -52,6 +52,9 @@ using namespace std;
 
 #include "Matrix.h"
 #include "NumTools.h"
+
+namespace bpp
+{
 
 /** 
  * @brief Computes eigenvalues and eigenvectors of a real (non-complex) matrix. 
@@ -1222,6 +1225,8 @@ class EigenValue
       }
     }
 };
+
+} //end of namespace bpp.
 
 #endif //_EIGENVALUE_H_
 

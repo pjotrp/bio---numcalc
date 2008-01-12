@@ -48,6 +48,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 #include <string>
 
+namespace bpp
+{
+
 /**
  * @brief Five points numerical derivative function wrapper.
  *
@@ -104,6 +107,8 @@ class FivePointsNumericalDerivative:
     }
  
 };
+
+} //end of namespace bpp.
 
 #endif //_FIVEPOINTSNUMERICALDERIVATIVE_H_
 

@@ -48,6 +48,9 @@ using namespace std;
 #include <Utils/Clonable.h>
 #include <Utils/TextTools.h>
 
+namespace bpp
+{
+
 /**
  * @brief The constraint interface.
  *
@@ -344,6 +347,8 @@ class ExcludingIncludingInterval: public Interval
       		      	+ TextTools::toString(_upper) + " ]";
 		}
 };
+
+} //end of namespace bpp.
 
 #endif	//_CONSTRAINTS_H_
 

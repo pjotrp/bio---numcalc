@@ -42,6 +42,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "RandomFactory.h"
 
+namespace bpp
+{
+
 /**
  * @brief A uniform random number generator.
  *
@@ -85,6 +88,8 @@ class Uniform01K : public RandomFactory {
 		mutable unsigned int _it1;
 		mutable unsigned int _it2;
 };
+
+} //end of namespace bpp.
 
 #endif // _UNIFORM01K_H_
 
