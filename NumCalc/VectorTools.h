@@ -68,67 +68,67 @@ typedef vector<VVVint> VVVVint;
  */
 
 template<class T>
-vector<T>	operator+ (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
+vector<T>  operator+ (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
-	unsigned int size;
-	if(v1.size() != v2.size()) {
-		throw DimensionException("VectorOperators::operator+", v1.size(), v2.size());
-	} else {
-		size = v1.size();
-	}
-	vector<T> result(size);
-	for(unsigned int i = 0; i < size; i++) {
-		result[i] = v1[i] + v2[i];
-	}
-	return result;
+  unsigned int size;
+  if(v1.size() != v2.size()) {
+    throw DimensionException("VectorOperators::operator+", v1.size(), v2.size());
+  } else {
+    size = v1.size();
+  }
+  vector<T> result(size);
+  for(unsigned int i = 0; i < size; i++) {
+    result[i] = v1[i] + v2[i];
+  }
+  return result;
 }
 
 template<class T>
 vector<T> operator- (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
-	unsigned int size;
-	if(v1.size() != v2.size()) {
-		throw DimensionException("VectorOperators::operator-", v1.size(), v2.size());
-	} else {
-		size = v1.size();
-	}
-	vector<T> result(size);
-	for(unsigned int i = 0; i < size; i++) {
-		result[i] = v1[i] - v2[i];
-	}
-	return result;
+  unsigned int size;
+  if(v1.size() != v2.size()) {
+    throw DimensionException("VectorOperators::operator-", v1.size(), v2.size());
+  } else {
+    size = v1.size();
+  }
+  vector<T> result(size);
+  for(unsigned int i = 0; i < size; i++) {
+    result[i] = v1[i] - v2[i];
+  }
+  return result;
 }
 
 template<class T>
 vector<T> operator* (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
-	unsigned int size;
-	if(v1.size() != v2.size()) {
-		throw DimensionException("VectorOperators::operator*", v1.size(), v2.size());
-	} else {
-		size = v1.size();
-	}
-	vector<T> result(size);
-	for(unsigned int i = 0; i < size; i++) {
-		result[i] = v1[i] * v2[i];
-	}
-	return result;
+  unsigned int size;
+  if(v1.size() != v2.size()) {
+    throw DimensionException("VectorOperators::operator*", v1.size(), v2.size());
+  } else {
+    size = v1.size();
+  }
+  vector<T> result(size);
+  for(unsigned int i = 0; i < size; i++) {
+    result[i] = v1[i] * v2[i];
+  }
+  return result;
 }
 
 template<class T>
 vector<T> operator/ (const vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
-	unsigned int size;
-	if(v1.size() != v2.size()) {
-		throw DimensionException("VectorOperators::operator/", v1.size(), v2.size());
-	} else {
-		size = v1.size();
-	}
-	vector<T> result(size);
-	for(unsigned int i = 0; i < size; i++) {
-		result[i] = v1[i] / v2[i];
-	}
-	return result;
+  unsigned int size;
+  if(v1.size() != v2.size()) {
+    throw DimensionException("VectorOperators::operator/", v1.size(), v2.size());
+  } else {
+    size = v1.size();
+  }
+  vector<T> result(size);
+  for(unsigned int i = 0; i < size; i++) {
+    result[i] = v1[i] / v2[i];
+  }
+  return result;
 }
 
 
@@ -136,77 +136,77 @@ vector<T> operator/ (const vector<T> & v1, const vector<T> & v2) throw (Dimensio
 template<class T, class C>
 vector<T> operator+ (const vector<T> & v1, const C & c)
 {
-	vector<T> result(v1.size());
-	for(unsigned int i = 0; i < result.size(); i++) {
-		result[i] = v1[i] + c;
-	}
-	return result;
+  vector<T> result(v1.size());
+  for(unsigned int i = 0; i < result.size(); i++) {
+    result[i] = v1[i] + c;
+  }
+  return result;
 }
 template<class T, class C>
 vector<T> operator+ (const C & c, const vector<T> & v1)
 {
-	vector<T> result(v1.size());
-	for(unsigned int i = 0; i < result.size(); i++) {
-		result[i] = c + v1[i];
-	}
-	return result;
+  vector<T> result(v1.size());
+  for(unsigned int i = 0; i < result.size(); i++) {
+    result[i] = c + v1[i];
+  }
+  return result;
 }
 
 template<class T, class C>
 vector<T> operator- (const vector<T> & v1, const C & c)
 {
-	vector<T> result(v1.size());
-	for(unsigned int i = 0; i < result.size(); i++) {
-		result[i] = v1[i] - c;
-	}
-	return result;
+  vector<T> result(v1.size());
+  for(unsigned int i = 0; i < result.size(); i++) {
+    result[i] = v1[i] - c;
+  }
+  return result;
 }
 template<class T, class C>
 vector<T> operator- (const C & c, const vector<T> & v1)
 {
-	vector<T> result(v1.size());
-	for(unsigned int i = 0; i < result.size(); i++) {
-		result[i] = c - v1[i];
-	}
-	return result;
+  vector<T> result(v1.size());
+  for(unsigned int i = 0; i < result.size(); i++) {
+    result[i] = c - v1[i];
+  }
+  return result;
 }
 
 template<class T, class C>
 vector<T> operator* (const vector<T> & v1, const C & c)
 {
-	vector<T> result(v1.size());
-	for(unsigned int i = 0; i < result.size(); i++) {
-		result[i] = v1[i] * c;
-	}
-	return result;
+  vector<T> result(v1.size());
+  for(unsigned int i = 0; i < result.size(); i++) {
+    result[i] = v1[i] * c;
+  }
+  return result;
 }
 template<class T, class C>
 vector<T> operator* (const C & c, const vector<T> & v1)
 {
-	vector<T> result(v1.size());
-	for(unsigned int i = 0; i < result.size(); i++) {
-		result[i] = c * v1[i];
-	}
-	return result;
+  vector<T> result(v1.size());
+  for(unsigned int i = 0; i < result.size(); i++) {
+    result[i] = c * v1[i];
+  }
+  return result;
 }
 
 template<class T, class C>
 vector<T> operator/ (const vector<T> & v1, const C & c)
 {
-	vector<T> result(v1.size());
-	for(unsigned int i = 0; i < result.size(); i++) {
-		result[i] = v1[i] / c;
-	}
-	return result;
+  vector<T> result(v1.size());
+  for(unsigned int i = 0; i < result.size(); i++) {
+    result[i] = v1[i] / c;
+  }
+  return result;
 }
 template<class T, class C>
 vector<T> operator/ (const C & c, const vector<T> & v1)
 {
-	vector<T> result(v1.size());
-	for(unsigned int i = 0; i < result.size(); i++) {
-		result[i] = c / v1[i];
-	}
-	return result;
+  vector<T> result(v1.size());
+  for(unsigned int i = 0; i < result.size(); i++) {
+    result[i] = c / v1[i];
+  }
+  return result;
 }
 
 
@@ -214,33 +214,33 @@ vector<T> operator/ (const C & c, const vector<T> & v1)
 template<class T>
 void operator+= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
-	for(unsigned int i = 0; i < v1.size(); i++) {
-		v1[i] += v2[i];
-	}
+  for(unsigned int i = 0; i < v1.size(); i++) {
+    v1[i] += v2[i];
+  }
 }
 
 template<class T>
 void operator-= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
-	for(unsigned int i = 0; i < v1.size(); i++) {
-		v1[i] -= v2[i];
-	}
+  for(unsigned int i = 0; i < v1.size(); i++) {
+    v1[i] -= v2[i];
+  }
 }
 
 template<class T>
 void operator*= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
-	for(unsigned int i = 0; i < v1.size(); i++) {
-		v1[i] *= v2[i];
-	}
+  for(unsigned int i = 0; i < v1.size(); i++) {
+    v1[i] *= v2[i];
+  }
 }
 
 template<class T>
 void operator/= (vector<T> & v1, const vector<T> & v2) throw (DimensionException)
 {
-	for(unsigned int i = 0; i < v1.size(); i++) {
-		v1[i] /= v2[i];
-	}
+  for(unsigned int i = 0; i < v1.size(); i++) {
+    v1[i] /= v2[i];
+  }
 }
 
 
@@ -248,33 +248,33 @@ void operator/= (vector<T> & v1, const vector<T> & v2) throw (DimensionException
 template<class T, class C>
 void operator+= (vector<T> & v1, const C & c)
 {
-	for(unsigned int i = 0; i < v1.size(); i++) {
-		v1[i] += c;
-	}
+  for(unsigned int i = 0; i < v1.size(); i++) {
+    v1[i] += c;
+  }
 }
 
 template<class T, class C>
 void operator-= (vector<T> & v1, const C & c)
 {
-	for(unsigned int i = 0; i < v1.size(); i++) {
-		v1[i] -= c;
-	}
+  for(unsigned int i = 0; i < v1.size(); i++) {
+    v1[i] -= c;
+  }
 }
 
 template<class T, class C>
 void operator*= (vector<T> & v1, const C & c)
 {
-	for(unsigned int i = 0; i < v1.size(); i++) {
-		v1[i] *= c;
-	}
+  for(unsigned int i = 0; i < v1.size(); i++) {
+    v1[i] *= c;
+  }
 }
 
 template<class T, class C> 
 void operator/= (vector<T> & v1, const C & c)
 {
-	for(unsigned int i = 0; i < v1.size(); i++) {
-		v1[i] /= c;
-	}
+  for(unsigned int i = 0; i < v1.size(); i++) {
+    v1[i] /= c;
+  }
 }
 /** @} */
 
@@ -300,9 +300,9 @@ class VectorTools
     template<class T>
     static unsigned int which(const vector<T> & v, const T & which) throw (ElementNotFoundException<T>)
     {
-	    for(unsigned int i = 0; i < v.size(); i++)
-		    if(v[i] == which) return i;
-	    throw ElementNotFoundException<T>("VectorTools::which.", &v, &which);
+      for(unsigned int i = 0; i < v.size(); i++)
+        if(v[i] == which) return i;
+      throw ElementNotFoundException<T>("VectorTools::which.", &v, &which);
     }
 
     /**
@@ -319,16 +319,16 @@ class VectorTools
     template<class T>
     static vector<T> unique(const vector<T> & v)
     {
-    	if(v.size() == 0) return v;
-    	vector<T> sortedV(v.begin(), v.end());
-    	sort(sortedV.begin(), sortedV.end());
-    	vector<T> uniq;
-    	uniq.push_back(sortedV[0]);
-    	for(unsigned int i = 1; i < sortedV.size(); i++)
+      if(v.size() == 0) return v;
+      vector<T> sortedV(v.begin(), v.end());
+      sort(sortedV.begin(), sortedV.end());
+      vector<T> uniq;
+      uniq.push_back(sortedV[0]);
+      for(unsigned int i = 1; i < sortedV.size(); i++)
       {
-		    if(sortedV[i] != sortedV[i-1]) uniq.push_back(sortedV[i]);
-    	}
-	    return uniq;
+        if(sortedV[i] != sortedV[i-1]) uniq.push_back(sortedV[i]);
+      }
+      return uniq;
     }
 
     /**
@@ -344,14 +344,14 @@ class VectorTools
     template<class T>
     static bool isUnique(const vector<T> & v)
     {
-    	if(v.size() == 0) return true;
-    	vector<T> sortedV(v.begin(), v.end());
-    	sort(sortedV.begin(), sortedV.end());
-    	for(unsigned int i = 1; i < sortedV.size(); i++)
+      if(v.size() == 0) return true;
+      vector<T> sortedV(v.begin(), v.end());
+      sort(sortedV.begin(), sortedV.end());
+      for(unsigned int i = 1; i < sortedV.size(); i++)
       {
-    		if(sortedV[i] == sortedV[i-1]) return false;
-    	}
-    	return true;
+        if(sortedV[i] == sortedV[i-1]) return false;
+      }
+      return true;
     }
 
     /**
@@ -361,9 +361,9 @@ class VectorTools
     template<class T>
     static T prod(const vector<T> & v1)
     {
-    	T p = 1;
-    	for(unsigned int i = 0; i < v1.size(); i++) p *= v1[i];
-    	return p;
+      T p = 1;
+      for(unsigned int i = 0; i < v1.size(); i++) p *= v1[i];
+      return p;
     }
 
     /**
@@ -373,9 +373,9 @@ class VectorTools
     template<class T>
     static T sum(const vector<T> & v1)
     {
-    	T p = 0;
-    	for(unsigned int i = 0; i < v1.size(); i++) p += v1[i];
-    	return p;
+      T p = 0;
+      for(unsigned int i = 0; i < v1.size(); i++) p += v1[i];
+      return p;
     }
 
     /**
@@ -387,56 +387,56 @@ class VectorTools
     template<class T>
     static vector<double> log(const vector<T> & v1)
     {
-    	vector<double> v2(v1.size());
-    	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::log(v1[i]);
-    	return v2;
+      vector<double> v2(v1.size());
+      for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::log(v1[i]);
+      return v2;
     }
     template<class T>
     static vector<double> log(const vector<T> & v1, double base)
     {
-    	vector<double> v2(v1.size());
-    	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::log(v1[i]) / std::log(base);
-    	return v2;
+      vector<double> v2(v1.size());
+      for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::log(v1[i]) / std::log(base);
+      return v2;
     }
 
     template<class T>
     static vector<double> exp(const vector<T> & v1)
     {
-    	vector<double> v2(v1.size());
-    	for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::exp(v1[i]);
-    	return v2;
+      vector<double> v2(v1.size());
+      for(unsigned int i = 0; i < v2.size(); i++) v2[i] = std::exp(v1[i]);
+      return v2;
     }
 
     template<class T>
     static vector<double> log10(const vector<T> & v1)
     {
-    	vector<double> v2(v1.size());
-    	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = std::log10(v1[i]);
-    	return v2;
+      vector<double> v2(v1.size());
+      for(unsigned int i = 0; i < v1.size(); i++) v2[i] = std::log10(v1[i]);
+      return v2;
     }
 
     template<class T>
     static vector<T> fact(const vector<T> & v1)
     {
-    	vector<T> v2(v1.size());
-     	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::fact<T>(v1[i]);
-    	return v2;
+      vector<T> v2(v1.size());
+       for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::fact<T>(v1[i]);
+      return v2;
     }
 
     template<class T>
     static vector<T> sqr(const vector<T> & v1)
     {
-    	vector<T> v2(v1.size());
-     	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::sqr<T>(v1[i]);
-    	return v2;
+      vector<T> v2(v1.size());
+       for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::sqr<T>(v1[i]);
+      return v2;
     }
 
     template<class T>
     static vector<T> pow(const vector<T> & v1, T & b)
     {
-    	vector<T> v2(v1.size());
-     	for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::pow<T>(v1[i], b);
-    	return v2;
+      vector<T> v2(v1.size());
+       for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::pow<T>(v1[i], b);
+      return v2;
     }
     /** @} */
 
@@ -448,11 +448,11 @@ class VectorTools
     template<class T>
     static void print(const vector<T> & v1, ostream & out = cout)
     {
-    	for(unsigned int i = 0; i < v1.size(); i++)
+      for(unsigned int i = 0; i < v1.size(); i++)
       {
-    		out << v1[i] << " ";
-    	}
-    	out << endl;
+        out << v1[i] << " ";
+      }
+      out << endl;
     }
 
     /**
@@ -464,16 +464,16 @@ class VectorTools
     template<class InputType, class OutputType>
     static OutputType scalar(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
     {
-    	if(v1.size() != v2.size())
+      if(v1.size() != v2.size())
       {
-    		throw DimensionException("VectorFunctions::scalar", v1.size(), v2.size());
-    	}
-    	OutputType result = 0;	
-    	for(unsigned int i = 0; i < v1.size(); i++)
+        throw DimensionException("VectorFunctions::scalar", v1.size(), v2.size());
+      }
+      OutputType result = 0;  
+      for(unsigned int i = 0; i < v1.size(); i++)
       {
-    		result += v1[i] * v2[i];
-    	}
-    	return result;
+        result += v1[i] * v2[i];
+      }
+      return result;
     }
     /**
      * This dt product correspond to the dot product <v1,v2> in the space defined by
@@ -494,20 +494,20 @@ class VectorTools
     template<class InputType, class OutputType>
     static OutputType scalar(const vector<InputType> & v1, const vector<InputType> & v2, const vector<InputType> & w) throw (DimensionException)
     {
-    	if(v1.size() != w.size())
+      if(v1.size() != w.size())
       {
-    		throw DimensionException("VectorFunctions::scalar", v1.size(), w.size());
-    	}
-    	if(v2.size() != w.size())
+        throw DimensionException("VectorFunctions::scalar", v1.size(), w.size());
+      }
+      if(v2.size() != w.size())
       {
-    		throw DimensionException("VectorFunctions::scalar", v2.size(), w.size());
-    	}
-    	OutputType result = 0;	
-    	for(unsigned int i = 0; i < v1.size(); i++)
+        throw DimensionException("VectorFunctions::scalar", v2.size(), w.size());
+      }
+      OutputType result = 0;  
+      for(unsigned int i = 0; i < v1.size(); i++)
       {
-    		result += v1[i] * v2[i] * w[i];
-    	}
-    	return result;
+        result += v1[i] * v2[i] * w[i];
+      }
+      return result;
     }
 
     /**
@@ -540,10 +540,10 @@ class VectorTools
     template<class InputType, class OutputType>
     static OutputType norm(const vector<InputType> & v1)
     {
-    	OutputType result = 0;
-    	for(unsigned int i = 0; i < v1.size(); i++)
+      OutputType result = 0;
+      for(unsigned int i = 0; i < v1.size(); i++)
         result += v1[i] * v1[i];
-    	return sqrt(result);
+      return sqrt(result);
     }
     
     /**
@@ -558,12 +558,12 @@ class VectorTools
     { 
       if(v1.size() != w.size())
       {
-    		throw DimensionException("VectorFunctions::norm", v1.size(), w.size());
-    	}
-    	OutputType result = 0;
-    	for(unsigned int i = 0; i < v1.size(); i++)
+        throw DimensionException("VectorFunctions::norm", v1.size(), w.size());
+      }
+      OutputType result = 0;
+      for(unsigned int i = 0; i < v1.size(); i++)
         result += v1[i] * v1[i] * w[i];
-    	return sqrt(result);
+      return sqrt(result);
     }
     
     /**
@@ -575,7 +575,7 @@ class VectorTools
     template<class InputType, class OutputType>
     static OutputType cos(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
     {
-    	return scalar<InputType, OutputType>(v1, v2)
+      return scalar<InputType, OutputType>(v1, v2)
         / (norm<InputType, OutputType>(v1) * norm<InputType, OutputType>(v2));
     }
 
@@ -589,7 +589,7 @@ class VectorTools
     template<class InputType, class OutputType>
     static OutputType cos(const vector<InputType> & v1, const vector<InputType> & v2, const vector<InputType> & w) throw (DimensionException)
     {
-    	return scalar<InputType, OutputType>(v1, v2, w)
+      return scalar<InputType, OutputType>(v1, v2, w)
         / (norm<InputType, OutputType>(v1, w) * norm<InputType, OutputType>(v2, w));
     }
 
@@ -611,11 +611,11 @@ class VectorTools
     template<class T>
     static T min(const vector<T> & v) throw (EmptyVectorException<T>)
     {
-    	if(v.size() == 0) throw EmptyVectorException<T>("VectorFunctions::min()", & v);
-    	T mini = v[0];
-    	for(unsigned int i = 1; i < v.size(); i++)
-    		if(v[i] < mini) mini = v[i];
-    	return mini;
+      if(v.size() == 0) throw EmptyVectorException<T>("VectorFunctions::min()", & v);
+      T mini = v[0];
+      for(unsigned int i = 1; i < v.size(); i++)
+        if(v[i] < mini) mini = v[i];
+      return mini;
     }
 
     /**
@@ -630,11 +630,11 @@ class VectorTools
     template<class T>
     static T max(const vector<T> & v) throw (EmptyVectorException<T>)
     {
-    	if(v.size() == 0) throw EmptyVectorException<T>("VectorFuntions::max()", & v);
-    	T maxi = v[0];
-    	for(unsigned int i = 1; i < v.size(); i++)
-    		if(v[i] > maxi) maxi = v[i];
-    	return maxi;
+      if(v.size() == 0) throw EmptyVectorException<T>("VectorFuntions::max()", & v);
+      T maxi = v[0];
+      for(unsigned int i = 1; i < v.size(); i++)
+        if(v[i] > maxi) maxi = v[i];
+      return maxi;
     }
 
     /**
@@ -650,11 +650,11 @@ class VectorTools
     template<class T>
     static unsigned int posmin(const vector<T> & v) throw (EmptyVectorException<T>)
     {
-    	T mini = min(v);
-    	for(unsigned int i = 0; i < v.size(); i++)
-    		if(v[i] == mini) return i;
-    	// This is never reached but must be here, otherwise a warning is issued:
-    	return 0;
+      T mini = min(v);
+      for(unsigned int i = 0; i < v.size(); i++)
+        if(v[i] == mini) return i;
+      // This is never reached but must be here, otherwise a warning is issued:
+      return 0;
     }
 
     /**
@@ -670,11 +670,11 @@ class VectorTools
     template<class T>
     static unsigned int whichmax(const vector<T> & v) throw (EmptyVectorException<T>)
     {
-    	T maxi = max(v);
-    	for(unsigned int i = 0; i < v.size(); i++)
-    		if(v[i] == maxi) return i;
-    	// This is never reached but must be here, otherwise a warning is issued:
-    	return 0;
+      T maxi = max(v);
+      for(unsigned int i = 0; i < v.size(); i++)
+        if(v[i] == maxi) return i;
+      // This is never reached but must be here, otherwise a warning is issued:
+      return 0;
     }
 
     /** @} */
@@ -780,7 +780,7 @@ class VectorTools
     static OutputType cov(const vector<InputType> & v1, const vector<InputType> & v2, bool unbiased = true) throw (DimensionException)
     {
       OutputType n = (OutputType)v1.size();
-    	OutputType x =  scalar<InputType,OutputType>(
+      OutputType x =  scalar<InputType,OutputType>(
           center<InputType, OutputType>(v1),
           center<InputType, OutputType>(v2)
           ) / n;
@@ -804,7 +804,7 @@ class VectorTools
       if(normalizeWeights) 
       {
         vector<InputType> wn = w / sum(w);
-    	  OutputType x = scalar<InputType, OutputType>(
+        OutputType x = scalar<InputType, OutputType>(
             center<InputType, OutputType>(v1, wn, false),
             center<InputType, OutputType>(v2, wn, false),
             wn
@@ -817,7 +817,7 @@ class VectorTools
       }
       else
       {
-    	   OutputType x = scalar<InputType, OutputType>(
+         OutputType x = scalar<InputType, OutputType>(
             center<InputType, OutputType>(v1, w, false),
             center<InputType, OutputType>(v2, w, false),
             w
@@ -887,7 +887,7 @@ class VectorTools
     template<class InputType, class OutputType>
     static OutputType cor(const vector<InputType> & v1, const vector<InputType> & v2) throw (DimensionException)
     {
-    	return cov<InputType, OutputType>(v1, v2)
+      return cov<InputType, OutputType>(v1, v2)
         / ( sd<InputType, OutputType>(v1) * sd<InputType, OutputType>(v2) );
     }
 
@@ -905,12 +905,12 @@ class VectorTools
       if(normalizeWeights) 
       {
         vector<InputType> wn = w / sum(w);
-    	  return cov<InputType, OutputType>(v1, v2, wn, false, false)
+        return cov<InputType, OutputType>(v1, v2, wn, false, false)
           / ( sd<InputType, OutputType>(v1, wn, false, false) * sd<InputType, OutputType>(v2, wn, false, false) );
       }
       else
       {
-    	  return cov<InputType, OutputType>(v1, v2, w, false, false)
+        return cov<InputType, OutputType>(v1, v2, w, false, false)
           / ( sd<InputType, OutputType>(v1, w, false, false) * sd<InputType, OutputType>(v2, w, false, false) );
       }
     }
@@ -926,7 +926,7 @@ class VectorTools
       OutputType s = 0;
       for(unsigned int i = 0; i < v1.size(); i++)
         s += v1[i] * std::log(v1[i]) / std::log(base);
-    	return -s;
+      return -s;
     }
 
     /**
@@ -946,7 +946,7 @@ class VectorTools
     }
 
     /**
-     * @return 'true' if the two vectors contains the same elements, whatever their order in the container.
+     * @return 'true' if the two vectors contains the same elements, <b>in the same frequency</b>, whatever their order in the container.
      *
      * @warning The two input vectors will be sorted.
      *
@@ -976,6 +976,29 @@ class VectorTools
     }
 
     /**
+     * @return 'true' if a the first vector contains all elements of the second vector.
+     *
+     * @warning The two input vectors will be sorted.
+     *
+     * @param v1 The first vector to check.
+     * @param v2 The second vector to check.
+     */
+    template<class T>
+    static bool containsAll(vector<T> & v1, vector<T> & v2)
+    {
+      std::sort(v1.begin(), v1.end());
+      std::sort(v2.begin(), v2.end());
+      for(unsigned int i = 0; i < v2.size(); i++)
+      {
+        if(i > 0 && v2[i] == v2[i-1]) continue;
+        unsigned int j = 0;
+        while(j < v1.size() && v1[j] <= v2[i]) j++;
+        if(v1[j-1] != v2[i]) return false;
+      }
+      return true;
+    }
+
+    /**
      * @return A vector which is the union of two vectors passed as input.
      * Duplicate element will be removed.
      * @param vec1 Vector 1.
@@ -989,7 +1012,7 @@ class VectorTools
       {
         if(!contains(unionEl, vec2[j]))
         unionEl.push_back(vec2[j]);
-	    }
+      }
       return unionEl;
     }
 
@@ -1008,7 +1031,7 @@ class VectorTools
         {
           if(!contains(unionEl, vecElementL[i][j]))
           unionEl.push_back(vecElementL[i][j]);
-	      }
+        }
       }
       return unionEl;
     }
@@ -1045,7 +1068,7 @@ class VectorTools
         for(unsigned int j = 1; test && j < vecElementL.size(); j++)
         {
           if(!contains(vecElementL[j], vecElementL[0][i])) test = false;
-	      }
+        }
         if(test) interEl.push_back(vecElementL[0][i]);
       }
       return interEl;
@@ -1083,6 +1106,29 @@ class VectorTools
     }
 
     /**
+     * @brief This function returns the difference of two vectors.
+     *
+     * @warning The two input vectors will be sorted. As a consequence, the output vector will be also sorted.
+     *
+     * @param v1 First vector.
+     * @param v2 Second vector.
+     * @param v3 A vector to be populated with all elements in v1 that are not found in v2.
+     */  
+    template<class T>
+    static void diff(vector<T> & v1, vector<T> & v2, vector<T> & v3)
+    {
+      std::sort(v1.begin(), v1.end());
+      std::sort(v2.begin(), v2.end());
+      for(unsigned int i = 0; i < v1.size(); i++)
+      {
+        if(i > 0 && v1[i] == v1[i-1]) continue;
+        unsigned int j = 0;
+        while(j < v2.size() && v2[j] <= v1[i]) j++;
+        if(v2[j] != v1[i]) v3.push_back(v1[i]);
+      }
+    };
+
+    /**
      * @brief Test function.
      * @return true if all tests are passed.
      */
@@ -1092,5 +1138,5 @@ class VectorTools
 
 } //end of namespace bpp.
 
-#endif	//_VECTORTOOLS_H_
+#endif  //_VECTORTOOLS_H_
 

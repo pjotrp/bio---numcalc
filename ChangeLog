@@ -1,3 +1,6 @@
+18/01/08 Celine Scornavacca & Julien Dutheil
+* New functions containsAll and diff in VectorTools.
+
 09/01/08 Julien Dutheil
 * All classes included in the new 'bpp' namespace.
 
