@@ -992,8 +992,8 @@ class VectorTools
       {
         if(i > 0 && v2[i] == v2[i-1]) continue;
         unsigned int j = 0;
-        while(j < v1.size() && v1[j] <= v2[i]) j++;
-        if(v1[j-1] != v2[i]) return false;
+        while(j < v1.size() - 1 && v1[j] <= v2[i]) j++;
+        if(v1[j] != v2[i]) return false;
       }
       return true;
     }
@@ -1117,13 +1117,14 @@ class VectorTools
     template<class T>
     static void diff(vector<T> & v1, vector<T> & v2, vector<T> & v3)
     {
+      if(v2.size() == 0) append(v3, v1);
       std::sort(v1.begin(), v1.end());
       std::sort(v2.begin(), v2.end());
       for(unsigned int i = 0; i < v1.size(); i++)
       {
         if(i > 0 && v1[i] == v1[i-1]) continue;
         unsigned int j = 0;
-        while(j < v2.size() && v2[j] <= v1[i]) j++;
+        while(j < v2.size() - 1 && v2[j] <= v1[i]) j++;
         if(v2[j] != v1[i]) v3.push_back(v1[i]);
       }
     };
