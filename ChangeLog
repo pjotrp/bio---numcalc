@@ -1,4 +1,7 @@
-06/07/07 -*- Version 1.4.0 -*-
+31/01/08 Julien Dutheil
+* Bug fixed in exponential law.
+
+/01/08 -*- Version 1.4.0 -*-
 
 18/01/08 Celine Scornavacca & Julien Dutheil
 * New functions containsAll and diff in VectorTools.

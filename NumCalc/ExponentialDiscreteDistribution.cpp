@@ -80,7 +80,7 @@ Domain ExponentialDiscreteDistribution::getDomain() const
 
 void ExponentialDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
 {
-  discretize(numberOfCategories, _parameters[0]->getValue(), false);
+  discretize(numberOfCategories, _parameters[0]->getValue(), true);
 }
 
 /******************************************************************************/
@@ -105,17 +105,18 @@ void ExponentialDiscreteDistribution::discretize(unsigned int numberOfCategories
 	  _bounds[0] = 0;
     vector<double> values(numberOfCategories);
 
-	  for(unsigned int i = 1; i < numberOfCategories; i++)
+	  for(unsigned int i = 1; i <= numberOfCategories; i++)
     {
       double a = _bounds[i-1];
-      double b = -log(exp(-lambda * a) - 1./(double)numberOfCategories) / lambda;
+      double b = (i == numberOfCategories)
+        ? VERYBIG
+        : (1. / lambda) * log((double)numberOfCategories / ((double)(numberOfCategories - i)));
       _bounds[i] = b;
       if(median)
-        values[i] = -log(exp(-lambda * a) - 1./(2*(double)numberOfCategories)) / lambda; 
+        values[i-1] = (1. / lambda) * log((double)(2*numberOfCategories) / (double)(2*(numberOfCategories - i) + 1)); 
       else
-        values[i] = b*b/2. - a*a/2. + (-(a*lambda + 1)*exp(-a*lambda) + (b*lambda + 1)*exp(-b*lambda)) / (lambda * lambda); 
+        values[i-1] = (a + 1./lambda) * exp(-a * lambda) + (b + 1. / lambda) * exp(-b * lambda); 
     }
-	  _bounds[numberOfCategories] = VERYBIG;
 
 		double p = 1. / (double)numberOfCategories;
 		for(unsigned int i = 0; i < numberOfCategories; i++)
