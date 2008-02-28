@@ -177,6 +177,8 @@ class Parameter:
   public:
     static IncludingPositiveReal R_PLUS;
     static ExcludingPositiveReal R_PLUS_STAR;
+    static IncludingNegativeReal R_MINUS;
+    static ExcludingNegativeReal R_MINUS_STAR;
     static IncludingInterval PROP_CONSTRAINT_IN;
     static ExcludingInterval PROP_CONSTRAINT_EX;
 };

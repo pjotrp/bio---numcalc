@@ -80,7 +80,7 @@ Domain ExponentialDiscreteDistribution::getDomain() const
 
 void ExponentialDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
 {
-  discretize(numberOfCategories, _parameters[0]->getValue(), true);
+  discretize(numberOfCategories, _parameters[0]->getValue(), false);
 }
 
 /******************************************************************************/
@@ -115,7 +115,7 @@ void ExponentialDiscreteDistribution::discretize(unsigned int numberOfCategories
       if(median)
         values[i-1] = (1. / lambda) * log((double)(2*numberOfCategories) / (double)(2*(numberOfCategories - i) + 1)); 
       else
-        values[i-1] = (a + 1./lambda) * exp(-a * lambda) + (b + 1. / lambda) * exp(-b * lambda); 
+        values[i-1] = (double)numberOfCategories * ((a + 1./lambda) * exp(-a * lambda) - (b + 1. / lambda) * exp(-b * lambda)); 
     }
 
 		double p = 1. / (double)numberOfCategories;

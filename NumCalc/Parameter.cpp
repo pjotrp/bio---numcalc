@@ -106,6 +106,10 @@ IncludingPositiveReal Parameter::R_PLUS(0);
 
 ExcludingPositiveReal Parameter::R_PLUS_STAR(0);
 
+IncludingNegativeReal Parameter::R_MINUS(0);
+
+ExcludingNegativeReal Parameter::R_MINUS_STAR(0);
+
 IncludingInterval Parameter::PROP_CONSTRAINT_IN(0, 1);
 
 ExcludingInterval Parameter::PROP_CONSTRAINT_EX(0, 1);

@@ -171,13 +171,13 @@ unsigned int OneDimensionOptimizationTools::lineMinimization(DirectionFunction &
   bod.init(singleParameter);
   bod.optimize();
   //Update parameters:
-  parameters.matchParametersValues(f1dim.getFunction()->getParameters());
+  //parameters.matchParametersValues(f1dim.getFunction()->getParameters());
   
   double xmin = f1dim.getParameters()[0]->getValue();
   for(unsigned int j = 0; j < parameters.size(); j++)
   {
     xi[j] *= xmin;
-    //parameters[j]->setValue(parameters[j]->getValue() + xi[j]);
+    parameters[j]->setValue(parameters[j]->getValue() + xi[j]);
   }
   return bod.getNumberOfEvaluations();
 }

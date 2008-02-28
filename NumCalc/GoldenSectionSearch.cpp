@@ -118,7 +118,14 @@ void GoldenSectionSearch::doInit(const ParameterList & params) throw (Exception)
 
 void GoldenSectionSearch::setInitialInterval(double inf, double sup)
 {
-  _xinf = inf; _xsup = sup;
+  if(sup > inf)
+  {
+    _xinf = inf; _xsup = sup;
+  }
+  else
+  {
+    _xinf = sup; _xsup = inf;
+  }
   _isInitialIntervalSet = true;
 }
 

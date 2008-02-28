@@ -44,15 +44,17 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
-Domain::Domain(double a, double b, unsigned int n)
+Domain::Domain(double a, double b, unsigned int n) throw (Exception)
 {
+  if(n == 0) throw Exception("Domain::constructor1. Number of classes should be > 0.");
 	double mini = min(a, b);
 	double maxi = max(a, b);
 	double w = (maxi - mini) / n;
 	_bounds.resize(n + 1);
 	_bounds[0] = mini;
 	_midPoints.resize(n);
-	for(unsigned int i = 1; i < n + 1; i++) {
+	for(unsigned int i = 1; i < n + 1; i++)
+  {
 		_bounds[i] = mini + i * w;
 		_midPoints[i - 1] = mini + (i - .5) * w;
 	}

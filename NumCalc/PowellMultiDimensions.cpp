@@ -75,7 +75,7 @@ void PowellMultiDimensions::doInit(const ParameterList & params) throw (Exceptio
   for(unsigned int i = 0; i < n; i++)
   {
     // Copy the parameter list:
-    _xi[i] = Vdouble(n);
+    _xi[i].resize(n);
     for(unsigned int j = 0; j < n; j++)
     {
       // Set the directions to unit vectors:
@@ -111,7 +111,8 @@ double PowellMultiDimensions::doStep() throw (Exception)
     fptt = _fret;
     _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, xit, _stopCondition->getTolerance(), NULL, _messageHandler, _verbose > 0 ? _verbose - 1 : 0);
     _fret = _function->f(_parameters);
-    //printPoint(_parameters, _fret);
+    if(_verbose > 2) printPoint(_parameters, _fret);
+    if(_fret > _fp) throw Exception("DEBUG: PowellMultiDimensions::doStep(). Line minimization failed!");
     if (fptt - _fret > del)
     {
       del = fptt - _fret;
@@ -139,6 +140,7 @@ double PowellMultiDimensions::doStep() throw (Exception)
       // Move to the minimum of the new direction, and save the new direction.
       _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, xit, _stopCondition->getTolerance(), NULL, _messageHandler, _verbose > 0 ? _verbose - 1 : 0);
       _fret = _function->f(_parameters);
+      if(_fret > _fp) throw Exception("DEBUG: PowellMultiDimensions::doStep(). Line minimization failed!");
       for(unsigned int j = 0; j < n; j++)
       {
         _xi[j][ibig]  = _xi[j][n - 1];

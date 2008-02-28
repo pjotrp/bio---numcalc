@@ -93,8 +93,9 @@ class Domain
 		 * @param a One bound.
 		 * @param b Another bound.
 		 * @param n The number of classes.
+     * @throw Exception If the number of classes is 0.
 		 */
-		Domain(double a, double b, unsigned int n);
+		Domain(double a = 0, double b = 0, unsigned int n = 1) throw (Exception);
 		
 		/**
 		 * @brief Build a new Domain object given the classes bounds.
