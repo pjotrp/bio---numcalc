@@ -713,7 +713,7 @@ class VectorTools
      * @param v1 A vector.
      */
     template<class InputType>
-    static InputType median(const vector<InputType> & v1)
+    static InputType median(vector<InputType> & v1)
     {
       InputType med = 0;
       sort(v1.begin(), v1.end());

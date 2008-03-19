@@ -83,7 +83,8 @@ NewtonOneDimension.h\
 SimpleNewtonMultiDimensions.h\
 ConjugateGradientMultiDimensions.h\
 MetaOptimizer.h\
-InvariantMixedDiscreteDistribution.h
+InvariantMixedDiscreteDistribution.h\
+StatTest.h
 
 
 CPP_FILES = \

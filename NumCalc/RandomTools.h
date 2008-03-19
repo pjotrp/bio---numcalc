@@ -217,9 +217,9 @@ class RandomTools
 		 * @param alpha the shape parameter.
 		 * @param ln_gamma_alpha ln(Gamma(alpha)).
      */
-		static double incompleteGamma (double x, double alpha, double ln_gamma_alpha);
+		static double incompleteGamma(double x, double alpha, double ln_gamma_alpha);
 
-		/**
+    /**
 		 * @brief \f$\chi^2\f$ quantile function.
 		 * 
      * returns z so that Prob{x<z}=prob where x is Chi2 distributed with df=v
@@ -235,6 +235,18 @@ class RandomTools
      */
 		static double qChisq(double prob, double v);
 
+    /**
+     * @brief \f$\chi^2\f$ cumulative probability function.
+     *
+     * @param x The quantile for which the probability should be computed.
+		 * @param v number of degree of freedom.
+     * @return The corresponding probability of the quantile.
+     */
+    static double pChisq(double x, double v)
+    {
+      return pGamma(x, v / 2, 0.5);
+    }
+
 		/**
 		 * @brief The Gamma quantile function.
 		 *
@@ -243,7 +255,23 @@ class RandomTools
 		 * @param beta  Beta parameter.
 		 * @return The quantile corresponding to prob.
 		 */
-		static double qGamma(double prob, double alpha, double beta) { return qChisq(prob,2.0*(alpha))/(2.0*(beta)); }
+		static double qGamma(double prob, double alpha, double beta)
+    {
+      return qChisq(prob,2.0*(alpha))/(2.0*(beta));
+    }
+
+    /**
+     * @brief \f$\Gamma\f$ cumulative probability function.
+     *
+     * @param x The quantile for which the probability should be computed.
+		 * @param alpha Alpha parameter.
+		 * @param beta  Beta parameter.
+     * @return The corresponding probability of the quantile.
+     */
+    static double pGamma(double x, double alpha, double beta)
+    {
+      return incompleteGamma(beta*x, alpha, lnGamma(alpha));
+    }
 
 		/** @} */
 		
