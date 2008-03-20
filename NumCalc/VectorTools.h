@@ -716,10 +716,11 @@ class VectorTools
     static InputType median(vector<InputType> & v1)
     {
       InputType med = 0;
+      if(v1.size() == 0) return med;
+      if(v1.size() == 1) return v1[0];
       sort(v1.begin(), v1.end());
-      double size = (double)v1.size() / 2.;
       unsigned int i = v1.size() / 2;
-      if (i == size)
+      if(v1.size() % 2 == 0)
       {
         //Vector size is pair
         med = double((v1[i-1] + v1[i]) / 2);
@@ -727,7 +728,7 @@ class VectorTools
       else
       {
         //Vector size is impair
-        med = v1[i-1];
+        med = v1[i];
       }
       return med;
     }
