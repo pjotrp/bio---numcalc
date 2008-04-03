@@ -215,6 +215,11 @@ class AbstractNumericalDerivative:
     {
 			_function->matchParametersValues(parameters);
 		}
+
+    unsigned int getNumberOfParameters() const
+    {
+      return _function->getNumberOfParameters();
+    }
     /** @} */
     
 };

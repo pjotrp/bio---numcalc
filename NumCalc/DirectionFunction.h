@@ -83,6 +83,7 @@ class DirectionFunction:
      * @return The set of parameters associated to the function, as specified by the init() method.
      */
     ParameterList getFunctionParameters() const { return _p; }
+    unsigned int getNumberOfParameters() const { return _p.size(); }
 
 };
 

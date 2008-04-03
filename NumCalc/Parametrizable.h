@@ -142,6 +142,12 @@ class Parametrizable:
 		virtual void matchParametersValues(const ParameterList & parameters)
 			throw (ConstraintException) = 0;
 
+    /**
+     * @brief Get the number of parameters.
+     *
+     * @return The number of parameters.
+     */
+    virtual unsigned int getNumberOfParameters() const = 0;
 };
 
 /**
@@ -244,6 +250,8 @@ class AbstractParametrizable:
 			_parameters.matchParametersValues(parameters);
 			fireParameterChanged(parameters);
 		}
+
+    unsigned int getNumberOfParameters() const { return _parameters.size(); }
 
 		/**
 		 * @brief Notify the class when one or several parameters have changed.

@@ -373,6 +373,11 @@ class InfinityFunctionWrapper:
       }
     }
 
+    unsigned int getNumberOfParameters() const
+    {
+      return _function->getNumberOfParameters();
+    }
+
 };
 
 /**
