@@ -509,10 +509,10 @@ DataTable * DataTable::read(istream & in, const string & sep, bool header, int r
   throw (DimensionException, IndexOutOfBoundsException, DuplicatedTableRowNameException)
 {
   string firstLine  = FileTools::getNextLine(in);
-  StringTokenizer st1(firstLine, sep);
+  StringTokenizer st1(firstLine, sep, false, true);
   vector<string> row1(st1.getTokens().begin(), st1.getTokens().end());
   string secondLine = FileTools::getNextLine(in);
-  StringTokenizer st2(secondLine, sep);
+  StringTokenizer st2(secondLine, sep, false, true);
   vector<string> row2(st2.getTokens().begin(), st2.getTokens().end());
   unsigned int nCol = row1.size();
   bool hasRowNames;
@@ -545,7 +545,7 @@ DataTable * DataTable::read(istream & in, const string & sep, bool header, int r
   string line = FileTools::getNextLine(in);
   while(!TextTools::isEmpty(line))
   {
-    StringTokenizer st(line, sep);
+    StringTokenizer st(line, sep, false, true);
     if(hasRowNames)
     {
       string rowName = *st.getTokens().begin();
