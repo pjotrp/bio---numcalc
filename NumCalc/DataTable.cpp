@@ -315,7 +315,7 @@ vector<string> & DataTable::getColumn(const string & colName)
   }
   catch(ElementNotFoundException<string> & ex)
   {
-    throw TableColumnNameNotFoundException("DataTable::getColumn(const string &, const string &).", colName);
+    throw TableColumnNameNotFoundException("DataTable::getColumn(const string &).", colName);
   }
 }
 
@@ -401,6 +401,35 @@ void DataTable::addColumn(const string & colName, const vector<string> & newColu
 /******************************************************************************/
 /*                               Work on rows                                 */
 /******************************************************************************/
+
+vector<string> DataTable::getRow(unsigned int index) const
+  throw (IndexOutOfBoundsException)
+{
+  if(index >= _nRow) throw IndexOutOfBoundsException("DataTable::getRow(unsigned int).", index, 0, _nRow - 1);
+  vector<string> row;
+  for (unsigned int i = 0 ; i < _nCol ; i++) {
+    row.push_back(_data[i][index]);
+  }
+  return row;
+}
+
+vector<string> DataTable::getRow(const string & rowName) const
+  throw (NoTableRowNamesException, TableRowNameNotFoundException)
+{
+  if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::getRow(const string &).");
+  try
+  {
+    unsigned int rowIndex = VectorTools::which(*_rowNames, rowName);
+    vector<string> row;
+    for (unsigned int i = 0 ; i < _nCol ; i++)
+      row.push_back(_data[i][rowIndex]);
+    return row;
+  }
+  catch(ElementNotFoundException<string> & ex)
+  {
+    throw TableRowNameNotFoundException("DataTable::getRow(const string &).", rowName);
+  }
+}
 
 bool DataTable::hasRow(const string & rowName) const
 { 

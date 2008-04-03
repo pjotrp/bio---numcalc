@@ -356,6 +356,21 @@ class DataTable:
 		 */
 		bool hasRowNames() const { return _rowNames!= NULL; }
 
+    /**
+     * @return A vector which contains a copy  in the given row.
+     * @param index The index of the row.
+     * @throw IndexOutOfBoundsException If index is >= number of rows.
+     */
+    vector<string> getRow(unsigned int index) const throw (IndexOutOfBoundsException);
+
+    /**
+     * @return A vector which contains a copy  in the given row.
+     * @param rowName The name of the row.
+     * @throw NoTableRowNamesException If no row names are associated to this table.
+     * @throw TableRowNameNotFoundException If rowName do not match existing row names.
+     */
+    vector<string> getRow(const string & rowName) const throw (NoTableRowNamesException, TableRowNameNotFoundException);
+
 		/**
 		 * @brief Delete the given row.
 		 * 
