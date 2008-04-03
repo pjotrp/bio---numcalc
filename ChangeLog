@@ -1,5 +1,5 @@
 03/04/08 Sylvain Gaillard & Julien Dutheil
-* New function countValues in VectorTools.
+* New functions whichAll and countValues in VectorTools.
 * Parametrizable now have a getNumberOfParameters method.
 * New function getRow in DataTable.
 

@@ -307,6 +307,27 @@ class VectorTools
     }
 
     /**
+     * @brief Send the positions of all occurences of 'which'.
+     *
+     * Comparisons are performed using the == operator.
+     * Complexity: O(v.size()).
+     *
+     * @param v The vector to search.
+     * @param which The element to search.
+     * @return A vector containing the positions of which in v.
+     */
+    template<class T>
+    static vector<unsigned int> whichAll(const vector<T> & v, const T & which) throw (ElementNotFoundException<T>)
+    {
+      vector<unsigned int> w;
+      for(unsigned int i = 0; i < v.size(); i++)
+        if(v[i] == which) w.push_back(i);
+      if (w.size())
+        return w;
+      throw ElementNotFoundException<T>("VectorTools::whichAll.", &v, &which);
+    }
+
+    /**
      * @brief Send a new vector with unique elements.
      *
      * The input vector is copied, and the copy is sorted using QuickSort algorithm.
