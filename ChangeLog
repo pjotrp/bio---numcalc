@@ -1,3 +1,6 @@
+03/04/08 Sylvain Gaillard
+* New function countValues in VectorTools.
+
 18/03/08 Julien Dutheil
 * Added StatTest interface.
 * Added function RandomTools::pChisq and pGamma.

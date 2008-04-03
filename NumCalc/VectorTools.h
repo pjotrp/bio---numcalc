@@ -44,6 +44,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "NumTools.h"
 
 #include <vector>
+#include <map>
 #include <cmath>
 #include <iostream>
 #include <algorithm>
@@ -352,6 +353,23 @@ class VectorTools
         if(sortedV[i] == sortedV[i-1]) return false;
       }
       return true;
+    }
+
+    /**
+     * @brief Count each element of a vector.
+     *
+     * @return A map with keys = unique vector values and values = count for each vector value.
+     * @param v the vector to parse.
+     */
+    template<class T>
+    static map<T, unsigned int> countValues(const vector<T> & v)
+    {
+      map<T, unsigned int> c;
+      for (unsigned int i = 0 ; i < v.size() ; i++)
+      {
+        c[v[i]]++;
+      }
+      return c;
     }
 
     /**
