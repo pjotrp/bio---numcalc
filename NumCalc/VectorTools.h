@@ -480,16 +480,38 @@ class VectorTools
     /** @} */
 
     /**
+     * @brief Concatenate a vector after converting to string.
+     *
+     * @param v The vector to concatenate.
+     * @param delim A string which is used to separate the values (default is " ").
+     */
+    template<class T>
+    static string paste(const vector<T> & v, const string & delim = " ")
+    {
+      ostringstream out;
+      for(unsigned int i = 0; i < v.size(); i++)
+      {
+        out << v[i];
+        if (i < v.size() - 1)
+          out << delim;
+      }
+      return out.str();
+    }
+
+    /**
      * @brief Print a vector to a stream.
      * @param v1 A vector.
      * @param out A stream.
+     * @param delim A string which is used to separate the values (default is " ").
      */
     template<class T>
-    static void print(const vector<T> & v1, ostream & out = cout)
+    static void print(const vector<T> & v1, ostream & out = cout, const string & delim = " ")
     {
       for(unsigned int i = 0; i < v1.size(); i++)
       {
-        out << v1[i] << " ";
+        out << v1[i];
+        if (i < v1.size() - 1)
+          out << delim;
       }
       out << endl;
     }

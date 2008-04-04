@@ -1,3 +1,6 @@
+04/04/08 Sylvain Gaillard
+* New function paste in VectorTools.
+
 03/04/08 Sylvain Gaillard & Julien Dutheil
 * New functions whichAll and countValues in VectorTools.
 * Parametrizable now have a getNumberOfParameters method.
