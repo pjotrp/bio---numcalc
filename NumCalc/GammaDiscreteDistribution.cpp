@@ -61,8 +61,7 @@ GammaDiscreteDistribution::GammaDiscreteDistribution(unsigned int n, double alph
   // may have the same category value, leading to a classe number lower than expected.
   // NB: if this is the case, then a warning is shown. This may happen in optimization
   // algorithms.
-  _alphaConstraint = new IncludingPositiveReal(0.05);
-  _parameters.addParameter(Parameter("alpha", alpha, _alphaConstraint, true));
+  _parameters.addParameter(Parameter("alpha", alpha, new IncludingPositiveReal(0.05), true));
   applyParameters(n);
 }
 

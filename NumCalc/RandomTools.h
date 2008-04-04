@@ -244,6 +244,7 @@ class RandomTools
      */
     static double pChisq(double x, double v)
     {
+      if(x < 0) return 0;
       return pGamma(x, v / 2, 0.5);
     }
 

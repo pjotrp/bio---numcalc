@@ -55,26 +55,11 @@ class GammaDiscreteDistribution:
 {
 	protected:
 		vector<double> _bounds;
-		IncludingPositiveReal * _alphaConstraint;
 	
 		static const double VERYBIG;
 		
 	public:
 		GammaDiscreteDistribution(unsigned int n, double alpha = 1.);
-
-    GammaDiscreteDistribution(const GammaDiscreteDistribution & dist):
-      //AbstractParametrizable(dist),
-      AbstractDiscreteDistribution(dist),
-      _bounds(dist._bounds),
-      _alphaConstraint(dist._alphaConstraint->clone()) {}
-    
-    GammaDiscreteDistribution & operator=(const GammaDiscreteDistribution & dist)
-    {
-      AbstractDiscreteDistribution::operator=(dist);
-      _bounds = dist._bounds;
-      _alphaConstraint = dist._alphaConstraint->clone();
-      return *this;
-    }
 
 		virtual ~GammaDiscreteDistribution();
 
