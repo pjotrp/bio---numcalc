@@ -75,14 +75,14 @@ AbstractOptimizer::AbstractOptimizer(const AbstractOptimizer & opt)
   _tolIsReached           = opt._tolIsReached;
   if(opt._stopCondition)
   {
-    _stopCondition        = opt._stopCondition->clone();
+    _stopCondition        = dynamic_cast<OptimizationStopCondition *>(opt._stopCondition->clone());
     _stopCondition->setOptimizer(this);
   }
   else
     _stopCondition        = NULL;
   if(opt._defaultStopCondition)
   {
-    _defaultStopCondition = opt._defaultStopCondition->clone();
+    _defaultStopCondition = dynamic_cast<OptimizationStopCondition *>(opt._defaultStopCondition->clone());
     _defaultStopCondition->setOptimizer(this);
   }
   else
