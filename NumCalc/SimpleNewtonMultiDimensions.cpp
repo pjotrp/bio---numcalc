@@ -61,7 +61,7 @@ SimpleNewtonMultiDimensions::SimpleNewtonMultiDimensions(const SimpleNewtonMulti
   AbstractOptimizer(opt)
 {
   _nbParams = opt._nbParams;
-  if(opt._optimizer) _optimizer = opt._optimizer->clone();
+  if(opt._optimizer) _optimizer = dynamic_cast<NewtonOneDimension *>(opt._optimizer->clone());
   else               _optimizer = NULL;
 }
 
@@ -71,7 +71,7 @@ SimpleNewtonMultiDimensions & SimpleNewtonMultiDimensions::operator=(const Simpl
 {
   AbstractOptimizer::operator=(opt);
   _nbParams = opt._nbParams;
-  if(opt._optimizer) _optimizer = opt._optimizer->clone();
+  if(opt._optimizer) _optimizer = dynamic_cast<NewtonOneDimension *>(opt._optimizer->clone());
   else               _optimizer = NULL;
   return *this;
 }

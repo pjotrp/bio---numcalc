@@ -71,7 +71,12 @@ class SimpleNewtonMultiDimensions:
 
 		virtual ~SimpleNewtonMultiDimensions();
 
-    SimpleNewtonMultiDimensions * clone() const { return new SimpleNewtonMultiDimensions(*this); }
+#ifndef NO_VIRTUAL_COV
+    SimpleNewtonMultiDimensions*
+#else
+    Clonable*
+#endif
+    clone() const { return new SimpleNewtonMultiDimensions(*this); }
 
 	public:
 		/**
