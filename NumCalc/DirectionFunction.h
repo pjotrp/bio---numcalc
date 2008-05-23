@@ -63,7 +63,12 @@ class DirectionFunction:
     DirectionFunction(Function * function = NULL): _function(function), _constraintPolicy(AutoParameter::CONSTRAINTS_KEEP), _messenger(&cout) {}
     virtual ~DirectionFunction() {}
 
-   DirectionFunction * clone() const { return new DirectionFunction(*this); }
+#ifndef NO_VIRTUAL_COV
+     DirectionFunction*
+#else
+     Clonable*
+#endif
+     clone() const { return new DirectionFunction(*this); }
 
   public: // Function interface implementation:
     void setParameters(const ParameterList & parameters)
