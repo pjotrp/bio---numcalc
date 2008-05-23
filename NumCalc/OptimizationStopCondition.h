@@ -197,7 +197,12 @@ class ParametersStopCondition:
 		
 		virtual ~ParametersStopCondition() {}
 
-    ParametersStopCondition * clone() const { return new ParametersStopCondition(*this); }
+#ifndef NO_VIRTUAL_COV
+    ParametersStopCondition *
+#else
+    Clonable*
+#endif
+    clone() const { return new ParametersStopCondition(*this); }
 	
 	public:
 		void init();
@@ -240,7 +245,12 @@ class FunctionStopCondition:
 		
 		virtual ~FunctionStopCondition();
 
-    FunctionStopCondition * clone() const { return new FunctionStopCondition(*this); }
+#ifndef NO_VIRTUAL_COV
+    FunctionStopCondition *
+#else
+    Clonable*
+#endif
+    clone() const { return new FunctionStopCondition(*this); }
 	
 	public:
 		void init();
