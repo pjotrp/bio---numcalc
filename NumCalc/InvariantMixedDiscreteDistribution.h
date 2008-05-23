@@ -99,7 +99,12 @@ class InvariantMixedDiscreteDistribution:
       return *this;
     }
 
-    InvariantMixedDiscreteDistribution* clone() const { return new InvariantMixedDiscreteDistribution(*this); }
+#ifndef NO_VIRTUAL_COV
+    InvariantMixedDiscreteDistribution* 
+#else
+    Clonable*
+#endif
+    clone() const { return new InvariantMixedDiscreteDistribution(*this); }
 
   public:
     Domain getDomain() const;

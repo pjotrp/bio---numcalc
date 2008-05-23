@@ -78,7 +78,12 @@ class ExponentialDiscreteDistribution:
 
 		virtual ~ExponentialDiscreteDistribution();
 
-    ExponentialDiscreteDistribution * clone() const { return new ExponentialDiscreteDistribution(*this); }
+#ifndef NO_VIRTUAL_COV
+    ExponentialDiscreteDistribution*
+#else
+    Clonable*
+#endif
+    clone() const { return new ExponentialDiscreteDistribution(*this); }
 	
 	public:
     Domain getDomain() const;
