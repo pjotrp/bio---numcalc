@@ -61,7 +61,7 @@ SimpleMultiDimensions::SimpleMultiDimensions(const SimpleMultiDimensions & opt):
   AbstractOptimizer(opt)
 {
   _nbParams = opt._nbParams;
-  if(opt._optimizer) _optimizer = opt._optimizer->clone();
+  if(opt._optimizer) _optimizer = dynamic_cast<BrentOneDimension *>(opt._optimizer->clone());
   else               _optimizer = NULL;
 }
 
@@ -71,7 +71,7 @@ SimpleMultiDimensions & SimpleMultiDimensions::operator=(const SimpleMultiDimens
 {
   AbstractOptimizer::operator=(opt);
   _nbParams = opt._nbParams;
-  if(opt._optimizer) _optimizer = opt._optimizer->clone();
+  if(opt._optimizer) _optimizer = dynamic_cast<BrentOneDimension *>(opt._optimizer->clone());
   else               _optimizer = NULL;
   return *this;
 }
