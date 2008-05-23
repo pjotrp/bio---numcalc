@@ -71,7 +71,7 @@ AbstractOptimizer(function)
 {
   _nbEvalMax = 10000;
   _defaultStopCondition = new GSSStopCondition(this);
-  _stopCondition = _defaultStopCondition->clone();
+  _stopCondition = dynamic_cast<OptimizationStopCondition *>(_defaultStopCondition->clone());
   _isInitialIntervalSet = false;
 }
 

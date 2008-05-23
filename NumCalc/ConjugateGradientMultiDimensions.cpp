@@ -47,7 +47,7 @@ ConjugateGradientMultiDimensions::ConjugateGradientMultiDimensions(DerivableFirs
   AbstractOptimizer(function), _f1dim(function)
 {
   _defaultStopCondition = new FunctionStopCondition(this);
-  _stopCondition = _defaultStopCondition->clone();
+  _stopCondition = dynamic_cast<OptimizationStopCondition *>(_defaultStopCondition->clone());
   _optimizer = new BrentOneDimension(function);
 }
 

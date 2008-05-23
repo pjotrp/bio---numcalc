@@ -63,7 +63,12 @@ class GammaDiscreteDistribution:
 
 		virtual ~GammaDiscreteDistribution();
 
-    GammaDiscreteDistribution * clone() const { return new GammaDiscreteDistribution(*this); }
+#ifndef NO_VIRTUAL_COV
+    GammaDiscreteDistribution *
+#else
+    Clonable *
+#endif
+    clone() const { return new GammaDiscreteDistribution(*this); }
 	
 	public:
     Domain getDomain() const;

@@ -62,7 +62,7 @@ PowellMultiDimensions::PowellMultiDimensions(Function * function) :
 AbstractOptimizer(function), _f1dim(function)
 {
   _defaultStopCondition = new PMDStopCondition(this);
-  _stopCondition = _defaultStopCondition->clone();
+  _stopCondition = dynamic_cast<OptimizationStopCondition *>(_defaultStopCondition->clone());
 }
 
 /******************************************************************************/

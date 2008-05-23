@@ -49,7 +49,7 @@ SimpleNewtonMultiDimensions::SimpleNewtonMultiDimensions(DerivableSecondOrder * 
   AbstractOptimizer(function)
 {
   _defaultStopCondition = new FunctionStopCondition(this);
-  _stopCondition = _defaultStopCondition->clone();
+  _stopCondition = dynamic_cast<OptimizationStopCondition *>(_defaultStopCondition->clone());
   _nbParams = 0;
   _optimizer = new NewtonOneDimension(function);
   _stepChar = "";

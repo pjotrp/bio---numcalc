@@ -51,7 +51,7 @@ NewtonOneDimension::NewtonOneDimension(DerivableSecondOrder * function) :
 AbstractOptimizer(function)
 {
   _defaultStopCondition = new FunctionStopCondition(this);
-  _stopCondition = _defaultStopCondition->clone();
+  _stopCondition = dynamic_cast<OptimizationStopCondition *>(_defaultStopCondition->clone());
   _nbEvalMax = 10000;
   _maxCorrection = 10;
 }

@@ -64,7 +64,7 @@ MetaOptimizer::MetaOptimizer(
   _optDesc(desc), _n(n)
 {
   _defaultStopCondition = new FunctionStopCondition(this);
-  _stopCondition = _defaultStopCondition->clone();
+  _stopCondition = dynamic_cast<OptimizationStopCondition *>(_defaultStopCondition->clone());
   _precisionStep = log10(_stopCondition->getTolerance()) / _n;
   _stepCount = 0;
   _stepChar = "";
@@ -78,7 +78,7 @@ MetaOptimizer::MetaOptimizer(
     const MetaOptimizer & opt):
   AbstractOptimizer(opt)
 {
-  _optDesc       = opt._optDesc->clone();
+  _optDesc       = dynamic_cast<MetaOptimizerInfos *>(opt._optDesc->clone());
   _optParameters = opt._optParameters;
   _nbParameters  = opt._nbParameters;
   _n             = opt._n;
@@ -92,7 +92,7 @@ MetaOptimizer & MetaOptimizer::operator=(
     const MetaOptimizer & opt)
 {
   AbstractOptimizer::operator=(opt);
-  _optDesc       = opt._optDesc->clone();
+  _optDesc       = dynamic_cast<MetaOptimizerInfos *>(opt._optDesc->clone());
   _optParameters = opt._optParameters;
   _nbParameters  = opt._nbParameters;
   _n             = opt._n;

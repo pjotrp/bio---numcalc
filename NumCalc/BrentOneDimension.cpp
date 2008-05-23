@@ -66,7 +66,7 @@ BrentOneDimension::BrentOneDimension(Function * function) :
 AbstractOptimizer(function)
 {
   _defaultStopCondition = new BODStopCondition(this);
-  _stopCondition = _defaultStopCondition->clone();
+  _stopCondition = dynamic_cast<OptimizationStopCondition *>(_defaultStopCondition->clone());
   _nbEvalMax = 10000;
   _isInitialIntervalSet = false;
 }

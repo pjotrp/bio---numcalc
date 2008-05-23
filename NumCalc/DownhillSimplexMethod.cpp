@@ -68,7 +68,7 @@ DownhillSimplexMethod::DownhillSimplexMethod(Function * function):
 	// Default values:
 	_nbEvalMax = 5000;
 	_defaultStopCondition = new DSMStopCondition(this);
-	_stopCondition = _defaultStopCondition->clone();
+	_stopCondition = dynamic_cast<OptimizationStopCondition *>(_defaultStopCondition->clone());
 }
 
 /******************************************************************************/
