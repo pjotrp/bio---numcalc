@@ -66,7 +66,12 @@ class BrentOneDimension:
           AbstractOptimizationStopCondition(bod) { _burnin = 3; }
 				virtual ~BODStopCondition() {}
 
-        BODStopCondition * clone() const { return new BODStopCondition(*this); } 
+#ifndef NO_VIRTUAL_COV
+        BODStopCondition*
+#else
+        Clonable*
+#endif
+        clone() const { return new BODStopCondition(*this); } 
 			
 			public:
 				void init() {}

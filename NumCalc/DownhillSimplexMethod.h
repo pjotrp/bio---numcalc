@@ -70,7 +70,12 @@ class DownhillSimplexMethod:
           AbstractOptimizationStopCondition(dsm) {}
         virtual ~DSMStopCondition() {}
 
-        DSMStopCondition * clone() const { return new DSMStopCondition(*this); }
+#ifndef NO_VIRTUAL_COV
+        DSMStopCondition*
+#else
+        Clonable*
+#endif
+        clone() const { return new DSMStopCondition(*this); }
       
       public:
         void init() {}

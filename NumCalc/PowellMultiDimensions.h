@@ -68,7 +68,12 @@ class PowellMultiDimensions:
           AbstractOptimizationStopCondition(pmd) {}
 				virtual ~PMDStopCondition() {}
 
-        PMDStopCondition * clone() const { return new PMDStopCondition(*this); }
+#ifndef NO_VIRTUAL_COV
+        PMDStopCondition*
+#else
+        Clonable*
+#endif
+        clone() const { return new PMDStopCondition(*this); }
 			
 			public:
 				void init() {}

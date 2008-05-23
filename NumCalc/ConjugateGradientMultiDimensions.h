@@ -61,7 +61,12 @@ class ConjugateGradientMultiDimensions:
 
     virtual ~ConjugateGradientMultiDimensions() {}
 
-    ConjugateGradientMultiDimensions * clone() const { return new ConjugateGradientMultiDimensions(*this); }
+#ifndef NO_VIRTUAL_COV
+    ConjugateGradientMultiDimensions*
+#else
+    Clonable*
+#endif
+    clone() const { return new ConjugateGradientMultiDimensions(*this); }
 
   public:
 

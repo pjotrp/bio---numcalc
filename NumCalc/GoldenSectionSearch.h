@@ -66,7 +66,12 @@ class GoldenSectionSearch:
           AbstractOptimizationStopCondition(gss) {}
 				virtual ~GSSStopCondition() {}
 
-        GSSStopCondition * clone() const { return new GSSStopCondition(*this); }
+#ifndef NO_VIRTUAL_COV
+        GSSStopCondition*
+#else
+        Clonable*
+#endif
+        clone() const { return new GSSStopCondition(*this); }
 			
 			public:
 				void init() {}
