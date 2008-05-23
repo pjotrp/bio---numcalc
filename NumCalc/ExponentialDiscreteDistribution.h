@@ -66,13 +66,13 @@ class ExponentialDiscreteDistribution:
       //AbstractParametrizable(dist),
       AbstractDiscreteDistribution(dist),
       _bounds(dist._bounds),
-      _lambdaConstraint(dist._lambdaConstraint->clone()) {}
+      _lambdaConstraint(dynamic_cast<IncludingPositiveReal *>(dist._lambdaConstraint->clone())) {}
     
     ExponentialDiscreteDistribution & operator=(const ExponentialDiscreteDistribution & dist)
     {
       AbstractDiscreteDistribution::operator=(dist);
       _bounds = dist._bounds;
-      _lambdaConstraint = dist._lambdaConstraint->clone();
+      _lambdaConstraint = dynamic_cast<IncludingPositiveReal *>(dist._lambdaConstraint->clone());
       return *this;
     }
 
