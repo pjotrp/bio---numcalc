@@ -72,7 +72,12 @@ class SimpleMultiDimensions:
 
 		virtual ~SimpleMultiDimensions();
 
-    SimpleMultiDimensions * clone() const { return new SimpleMultiDimensions(*this); }
+#ifndef NO_VIRTUAL_COV
+    SimpleMultiDimensions*
+#else
+    Clonable*
+#endif
+    clone() const { return new SimpleMultiDimensions(*this); }
 
 	public:
 		/**
