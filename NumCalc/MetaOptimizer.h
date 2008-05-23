@@ -216,7 +216,12 @@ class MetaOptimizer:
 
     MetaOptimizer & operator=(const MetaOptimizer & opt);
 
-    MetaOptimizer * clone() const { return new MetaOptimizer(*this); }
+#ifndef NO_VIRTUAL_COV
+    MetaOptimizer*
+#else
+    Clonable*
+#endif
+    clone() const { return new MetaOptimizer(*this); }
 
 	public:
 		

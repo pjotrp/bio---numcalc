@@ -113,7 +113,12 @@ class DownhillSimplexMethod:
   
     virtual ~DownhillSimplexMethod() {}
 
-    DownhillSimplexMethod * clone() const { return new DownhillSimplexMethod(*this); }
+#ifndef NO_VIRTUAL_COV
+    DownhillSimplexMethod*
+#else 
+    Clonable*
+#endif
+    clone() const { return new DownhillSimplexMethod(*this); }
   
   public:    
     /**

@@ -16,7 +16,7 @@ modify and/ or redistribute the software under the terms of the CeCILL
 license as circulated by CEA, CNRS and INRIA at the following URL
 "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
+zs a counterpart to the access to the source code and  rights to copy,
 modify and redistribute granted by the license, users are provided only
 with a limited warranty  and the software's author,  the holder of the
 economic rights,  and the successive licensors  have only  limited
@@ -96,7 +96,12 @@ class PowellMultiDimensions:
 		PowellMultiDimensions(Function * function);
 		virtual ~PowellMultiDimensions() {}
 
-    PowellMultiDimensions * clone() const { return new PowellMultiDimensions(*this); }
+#ifndef NO_VIRTUAL_COV
+    PowellMultiDimensions*
+#else 
+    Clonable*
+#endif
+    clone() const { return new PowellMultiDimensions(*this); }
 	
 	public:		
 		

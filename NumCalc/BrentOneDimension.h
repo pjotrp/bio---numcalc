@@ -89,7 +89,12 @@ class BrentOneDimension:
 		BrentOneDimension(Function * function = NULL);
 		virtual ~BrentOneDimension() {}
 
-    BrentOneDimension * clone() const { return new BrentOneDimension(*this); }
+#ifndef NO_VIRTUAL_COV
+    BrentOneDimension*
+#else
+    Clonable*
+#endif
+    clone() const { return new BrentOneDimension(*this); }
 	
 	public:		
 		

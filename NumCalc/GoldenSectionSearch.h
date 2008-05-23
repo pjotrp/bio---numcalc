@@ -90,7 +90,12 @@ class GoldenSectionSearch:
 		GoldenSectionSearch(Function * function);
 		virtual ~GoldenSectionSearch() {}
 
-    GoldenSectionSearch * clone() const { return new GoldenSectionSearch(*this); }
+#ifndef NO_VIRTUAL_COV
+    GoldenSectionSearch*
+#else
+    Clonable*
+#endif
+    clone() const { return new GoldenSectionSearch(*this); }
 	
 	public:
 		
