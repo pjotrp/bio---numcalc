@@ -198,7 +198,7 @@ class AbstractOptimizer:
     int getNumberOfEvaluations() const { return _nbEval; }
     void setStopCondition(const OptimizationStopCondition & stopCondition)
     {
-      _stopCondition = stopCondition.clone();
+      _stopCondition = dynamic_cast<OptimizationStopCondition *>(stopCondition.clone());
     }
     OptimizationStopCondition * getStopCondition() { return _stopCondition; }
     const OptimizationStopCondition * getStopCondition() const { return _stopCondition; }
