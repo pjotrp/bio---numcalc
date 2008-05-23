@@ -59,7 +59,12 @@ class NewtonOneDimension:
 		NewtonOneDimension(DerivableSecondOrder * function = NULL);
 		virtual ~NewtonOneDimension() {}
 
-    NewtonOneDimension * clone() const { return new NewtonOneDimension(*this); }
+#ifndef NO_VIRTUAL_COV
+    NewtonOneDimension*
+#else
+    Clonable*
+#endif
+    clone() const { return new NewtonOneDimension(*this); }
 	
 	public:		
 		

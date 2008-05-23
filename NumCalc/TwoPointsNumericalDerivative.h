@@ -83,7 +83,12 @@ class TwoPointsNumericalDerivative:
     TwoPointsNumericalDerivative(DerivableFirstOrder * function): AbstractNumericalDerivative(function) {}
     virtual ~TwoPointsNumericalDerivative() {}
 
-    TwoPointsNumericalDerivative * clone() const { return new TwoPointsNumericalDerivative(*this); }
+#ifndef NO_VIRTUAL_COV
+    TwoPointsNumericalDerivative*
+#else
+    Clonable*
+#endif
+    clone() const { return new TwoPointsNumericalDerivative(*this); }
 
   public:
     

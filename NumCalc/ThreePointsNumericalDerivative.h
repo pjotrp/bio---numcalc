@@ -94,7 +94,12 @@ class ThreePointsNumericalDerivative:
 		ThreePointsNumericalDerivative (DerivableSecondOrder * function): AbstractNumericalDerivative(function) {}
 		virtual ~ThreePointsNumericalDerivative() {}
 
-    ThreePointsNumericalDerivative * clone() const { return new ThreePointsNumericalDerivative(*this); }
+#ifndef NO_VIRTUAL_COV
+    ThreePointsNumericalDerivative*
+#else
+    Clonable*
+#endif
+    clone() const { return new ThreePointsNumericalDerivative(*this); }
 
   public:
     

@@ -88,13 +88,18 @@ class FivePointsNumericalDerivative:
   protected:
     double _f1, _f2, _f3, _f4, _f5;
     
-	public:
-		FivePointsNumericalDerivative (Function * function): AbstractNumericalDerivative(function) {}
-		FivePointsNumericalDerivative (DerivableFirstOrder * function): AbstractNumericalDerivative(function) {}
-		FivePointsNumericalDerivative (DerivableSecondOrder * function): AbstractNumericalDerivative(function) {}
-		virtual ~FivePointsNumericalDerivative() {}
+  public:
+    FivePointsNumericalDerivative (Function * function): AbstractNumericalDerivative(function) {}
+    FivePointsNumericalDerivative (DerivableFirstOrder * function): AbstractNumericalDerivative(function) {}
+    FivePointsNumericalDerivative (DerivableSecondOrder * function): AbstractNumericalDerivative(function) {}
+    virtual ~FivePointsNumericalDerivative() {}
 
-    FivePointsNumericalDerivative * clone() const { return new FivePointsNumericalDerivative(*this); }
+#ifndef NO_VIRTUAL_COV
+    FivePointsNumericalDerivative*
+#else
+    Clonable*
+#endif
+    clone() const { return new FivePointsNumericalDerivative(*this); }
 
   public:
     

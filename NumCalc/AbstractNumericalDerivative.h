@@ -87,7 +87,12 @@ class AbstractNumericalDerivative:
       _function(function), _function1(function), _function2(function), _h(0.0001), _computeD1(true), _computeD2(true) {}
 		virtual ~AbstractNumericalDerivative() {}
 
-    AbstractNumericalDerivative * clone() const = 0;
+#ifndef NO_VIRTUAL_COV
+    AbstractNumericalDerivative*
+#else
+    Clonable*
+#endif
+    clone() const = 0;
 
   public:
     /**
