@@ -63,13 +63,18 @@ class Optimizer;
  * or be specific to a given optimization method.
  */
 class OptimizationStopCondition:
-  public Clonable
+  public virtual Clonable
 {
 	public:
 		OptimizationStopCondition() {}
 		virtual ~OptimizationStopCondition() {}
 
-    OptimizationStopCondition * clone() const = 0;
+#ifndef NO_VIRTUAL_COV
+    OptimizationStopCondition *
+#else
+    Clonable*
+#endif
+    clone() const = 0;
 	
 	public:
 
@@ -198,7 +203,7 @@ class ParametersStopCondition:
 		virtual ~ParametersStopCondition() {}
 
 #ifndef NO_VIRTUAL_COV
-    ParametersStopCondition *
+    ParametersStopCondition*
 #else
     Clonable*
 #endif
@@ -246,7 +251,7 @@ class FunctionStopCondition:
 		virtual ~FunctionStopCondition();
 
 #ifndef NO_VIRTUAL_COV
-    FunctionStopCondition *
+    FunctionStopCondition*
 #else
     Clonable*
 #endif
