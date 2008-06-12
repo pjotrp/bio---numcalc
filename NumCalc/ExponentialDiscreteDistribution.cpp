@@ -93,7 +93,8 @@ void ExponentialDiscreteDistribution::discretize(unsigned int numberOfCategories
 	_bounds.resize(numberOfCategories + 1);
 	if(numberOfCategories == 1)
   {
-		_distribution[0] = 1.0;
+    double value = median ? value = log(2.) / lambda : 1. / lambda;
+		_distribution[value] = 1.0;
 		_bounds[0] = 0; _bounds[1] = VERYBIG;
 		return;
 	}
