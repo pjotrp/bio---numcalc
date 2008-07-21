@@ -53,11 +53,13 @@ namespace bpp
 /**
  * @brief This implements the Downhill Simplex method in multidimensions.
  *
- * The code is an adaptation of the one discribed in:
+ * A description of the algorithm can be found in:
  * <pre>
  * NUMERICAL RECIPES IN C: THE ART OF SCIENTIFIC COMPUTING
  * (ISBN 0-521-43108-5)
  * </pre>
+ * or there:
+ * <a href="http://en.wikipedia.org/wiki/Nelder-Mead_method">http://en.wikipedia.org/wiki/Nelder-Mead_method</a>.
  */
 class DownhillSimplexMethod:
   public AbstractOptimizer
@@ -130,15 +132,6 @@ class DownhillSimplexMethod:
     /**
      * @brief Multidimensional minimization of the function _function by the
      * downhill simplex method of Nelder and Mead.
-     *
-     * The simplex \f$p_{1..nDim+1,1..nDim}\f$.
-     * is input. Its \f$nDim+1\f$ rows are nDim-dimensional vectors which are the vertices
-     * of the starting simplex.
-     * Also input is the vector \f$y_{1..nDim+1}\f$, whose components
-     * must be preinitialized to the values of _function evaluated at the \f$nDim + 1\f$
-     * vertices (rows).
-     * On output, \f$p\f$ and \f$y\f$ will have been reset to \f$nDim + 1\f$
-     * new points all within @c fTol of a minimum function value.
      */
     double optimize() throw (Exception);
     /** @} */
@@ -161,13 +154,13 @@ class DownhillSimplexMethod:
     ParameterList getPSum();
   
     /**
-     * @brief Extrapolates by a factor fac throough the face of the simplex
-     * from the high point, try it, an dreplaces the high point if the new point is better.
+     * @brief Extrapolates by a factor fac through the face of the simplex from the high point.
+     * Try the new point and replaces the high point if it is better.
      *
      * @param fac Extrapolation factor.
      * @return The value of the function for the new point.
      */
-    double amotry(double fac);
+    double tryExtrapolation(double fac);
 
     /** @} */
 };

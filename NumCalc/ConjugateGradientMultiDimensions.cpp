@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "OneDimensionOptimizationTools.h"
 
 using namespace bpp;
+
 /******************************************************************************/
 
 ConjugateGradientMultiDimensions::ConjugateGradientMultiDimensions(DerivableFirstOrder * function):
@@ -80,12 +81,8 @@ double ConjugateGradientMultiDimensions::doStep() throw (Exception)
   _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, _xi, _stopCondition->getTolerance(), NULL, NULL, _verbose > 0 ? _verbose - 1 : 0);
   dynamic_cast<DerivableFirstOrder *>(_function)->enableFirstOrderDerivatives(true);
   f = _function->f(_parameters);
-  //Next statement is the normal return:
-  //if(2.0*fabs(_fret - fp) <= ftol*(fabs(*fret)+fabs(fp)+EPS))
-  //_tolIsReached = _stopCondition->isToleranceReached();
   if(_tolIsReached)
   {
-    //FREEALL
     return f;
   }
   getGradient(_xi);
@@ -99,7 +96,6 @@ double ConjugateGradientMultiDimensions::doStep() throw (Exception)
   if (gg == 0.0)
   { 
     //Unlikely. If gradient is exactly zero then
-    //FREEALL we are already done.
     return f;
   }
   gam = dgg / gg;

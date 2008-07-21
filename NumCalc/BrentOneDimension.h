@@ -48,11 +48,12 @@ namespace bpp
 /**
  * @brief Brent's optimization for one parameter.
  *
- * The code is an adaptation of the one discribed in:
+ * A description of the algorithm can be found in:
  * <pre>
  * NUMERICAL RECIPES IN C: THE ART OF SCIENTIFIC COMPUTING
  * (ISBN 0-521-43108-5)
  * </pre>
+ * or there: <a href="http://en.wikipedia.org/wiki/Brent's_method">http://en.wikipedia.org/wiki/Brent's_method</a>.
  */
 class BrentOneDimension:
   public AbstractOptimizer

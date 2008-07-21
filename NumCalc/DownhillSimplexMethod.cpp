@@ -47,7 +47,6 @@ using namespace bpp;
 bool DownhillSimplexMethod::DSMStopCondition::isToleranceReached() const
 {
 	const DownhillSimplexMethod * dsm = dynamic_cast<const DownhillSimplexMethod *>(_optimizer);
-	// Compute the fractional range from highest to lowest and return if satisfactory.
 	double rTol = 2.0 * NumTools::abs(dsm->_y[dsm->_iHighest] - dsm->_y[dsm->_iLowest]) /
 		(NumTools::abs(dsm->_y[dsm->_iHighest]) + NumTools::abs(dsm->_y[dsm->_iLowest]));
 	return rTol < _tolerance;
@@ -144,29 +143,19 @@ double DownhillSimplexMethod::doStep() throw (Exception)
 	// First extrapolate by a factor -1 through the face of the simplex
 	// across from high point, i.e., reflect the simplex from the high point.</p>
 
-	double yTry = amotry(-1.0);
+	double yTry = tryExtrapolation(-1.0);
 	if(yTry <= _y[_iLowest])
   {
-    //cout << "Expansion" << endl;
-		// Gives a result better then the best point,
-		// so try an additional extrapolation by a factor 2.
-		yTry = amotry(2.0);
-
-		//// Test for stop:
-		//_tolIsReached = _nbEval > 2 && _stopCondition->isToleranceReached();
+		// Expansion.
+		yTry = tryExtrapolation(2.0);
 	}
   else if(yTry >= _y[_iNextHighest])
   {
-    //cout << "Contraction" << endl;
-		// The reflect point is worse than the second-highest,
-		// so look for an intermediate lower point, i.e., do a one-dimensional
-		// contraction.
+		// Contraction.
 		double ySave = _y[_iHighest];
-		yTry = amotry(0.5);
+		yTry = tryExtrapolation(0.5);
 		if(yTry >= ySave)
     {
-			// Can't seem to get rid of that high point.
-			// Better contract around the lowest (best) point.
 			for(unsigned int i = 0; i < mpts; i++)
       {
 				if(i != _iLowest)
@@ -184,7 +173,6 @@ double DownhillSimplexMethod::doStep() throw (Exception)
 			_pSum = getPSum();
 		}
 	}
-  //else --(_nbEval); // Correct the evaluation count.
 
 	return _y[_iLowest];
 }
@@ -223,7 +211,7 @@ ParameterList DownhillSimplexMethod::getPSum()
 
 /******************************************************************************/
 
-double DownhillSimplexMethod::amotry(double fac)
+double DownhillSimplexMethod::tryExtrapolation(double fac)
 {
 	int ndim = _simplex.getDimension();
 	double fac1, fac2, yTry;

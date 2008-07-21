@@ -53,7 +53,8 @@ namespace bpp
  * This generator is based on an algorithm described by D.E. Knuth, 1981,
  * "Seminumerical Algorithms" 2nd ed., vol.2 of "The Art of Computer
  * Programming" (Reading, MA: Addison-Wesley), §§3.2-3.3.
- * It is addapted from "Numerical Recipes in C".
+ * 
+ * The algorithm used here is the one described in "Numerical Recipes in C".
  */
 class Uniform01K : public RandomFactory {
 	public: // Constructors and destructor

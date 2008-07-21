@@ -106,7 +106,6 @@ double PowellMultiDimensions::doStep() throw (Exception)
     for(unsigned int j = 0; j < n; j++)
     {
       xit[j] = _xi[j][i];
-      //xit[j] = _xi[i][j];
     }
     fptt = _fret;
     _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, xit, _stopCondition->getTolerance(), NULL, _messageHandler, _verbose > 0 ? _verbose - 1 : 0);
@@ -120,8 +119,6 @@ double PowellMultiDimensions::doStep() throw (Exception)
     }
   }
 
-  // Construct the extrapolated point and the average direction moved.
-  // Save the old starting point.
   ParameterList ptt = _parameters;
   for(unsigned int j = 0; j < n; j++)
   {
@@ -129,7 +126,6 @@ double PowellMultiDimensions::doStep() throw (Exception)
     xit[j] = _parameters[j]->getValue() - _pt[j]->getValue();
     _pt[j]->setValue(_parameters[j]->getValue());
   }
-  // Function value at extrapolated point.
   fptt = _function->f(ptt);
   if (fptt < _fp)
   {
@@ -137,7 +133,6 @@ double PowellMultiDimensions::doStep() throw (Exception)
     if (t < 0.0)
     {
       //cout << endl << "New direction: drection " << ibig << " removed." << endl;
-      // Move to the minimum of the new direction, and save the new direction.
       _nbEval += OneDimensionOptimizationTools::lineMinimization(_f1dim, _parameters, xit, _stopCondition->getTolerance(), NULL, _messageHandler, _verbose > 0 ? _verbose - 1 : 0);
       _fret = _function->f(_parameters);
       if(_fret > _fp) throw Exception("DEBUG: PowellMultiDimensions::doStep(). Line minimization failed!");

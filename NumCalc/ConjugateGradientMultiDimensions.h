@@ -47,6 +47,17 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
+/**
+ * @brief Conjugate gradient optimization method.
+ *
+ * A description of the algorithm can be found in:
+ * <pre>
+ * NUMERICAL RECIPES IN C: THE ART OF SCIENTIFIC COMPUTING
+ * (ISBN 0-521-43108-5)
+ * </pre>
+ * or there:
+ * <a href="http://en.wikipedia.org/wiki/Conjugate_gradient">http://en.wikipedia.org/wiki/Conjugate_gradient</a>.
+ */
 class ConjugateGradientMultiDimensions:
   public AbstractOptimizer
 {

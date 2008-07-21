@@ -135,7 +135,6 @@ double BrentOneDimension::doStep() throw (Exception)
   xm   = 0.5 * (a + b);
   tol2 = 2.0 * (tol1 = _stopCondition->getTolerance() * NumTools::abs(x) + ZEPS);
   
-  // Construct a trial parabolic fit:
   if(NumTools::abs(e) > tol1)
   {
     r = (x - w) * (fx - fv);
@@ -148,11 +147,9 @@ double BrentOneDimension::doStep() throw (Exception)
     e = d;
     if (NumTools::abs(p) >= NumTools::abs(0.5 * q * etemp) || p <= q * (a - x) || p >= q * (b - x))
       d = CGOLD * (e = (x >= xm ? a - x : b - x));
-    // The above conditions determine the acceptability of the parabolic fit.
-    // Here we take the golden section step into the larger of the two segments.
     else
     {
-      d = p / q; // Take the parabolic step.
+      d = p / q;
       u = x + d;
       if (u - a < tol2 || b - u < tol2)
         d = NumTools::sign(tol1, xm - x);
@@ -164,15 +161,13 @@ double BrentOneDimension::doStep() throw (Exception)
   }
   u = (NumTools::abs(d) >= tol1 ? x + d : x + NumTools::sign(tol1, d));
 
-  // This is the one function evaluate per iteration.
+  // Function evaluaton:
   ParameterList pl = _parameters;
   pl[0]->setValue(u);
   fu = _function->f(pl);
-  // Now decide what to do with our function evaluation.
   if (fu <= fx)
   {
     if (u >= x) a = x; else b = x;
-    // Here is the house keeping:
     NumTools::shift(v, w, x, u);
     NumTools::shift(fv, fw, fx, fu);
   }
@@ -191,7 +186,7 @@ double BrentOneDimension::doStep() throw (Exception)
       v  = u;
       fv = fu;
     }
-  } // Done with housekeeping.
+  }
 
   // Store results for this step:
   _parameters[0]->setValue(x);

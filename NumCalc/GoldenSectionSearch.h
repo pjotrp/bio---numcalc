@@ -48,11 +48,13 @@ namespace bpp
 /**
  * @brief Golden Section Search optimization algorithm for one parameter.
  *
- * The code is an adaptation of the one discribed in:
+ * A description of the algorithm can be found in:
  * <pre>
  * NUMERICAL RECIPES IN C: THE ART OF SCIENTIFIC COMPUTING
  * (ISBN 0-521-43108-5)
  * </pre>
+ * or there:
+ * <a href="http://en.wikipedia.org/wiki/Golden_section_search">http://en.wikipedia.org/wiki/Golden_section_search</a>.
  */
 class GoldenSectionSearch:
   public AbstractOptimizer
