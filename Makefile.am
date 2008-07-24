@@ -30,4 +30,4 @@
 #knowledge of the CeCILL license and that you accept its terms.
 
 SUBDIRS = NumCalc
-EXTRA_DIST = NumCalc.spec
+EXTRA_DIST = NumCalc.spec debian

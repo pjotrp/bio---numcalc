@@ -29,7 +29,7 @@
 #The fact that you are presently reading this means that you have had
 #knowledge of the CeCILL license and that you accept its terms.
 
-AC_INIT(Bio++ NumCalc, 1.4.0, Julien.Dutheil@univ-montp2.fr, bpp-numcalc)
+AC_INIT(Bio++ NumCalc, 1.5.0, Julien.Dutheil@univ-montp2.fr, bpp-numcalc)
 AC_CONFIG_SRCDIR(NumCalc/NumTools.h)
 AM_INIT_AUTOMAKE()
 AC_LANG_CPLUSPLUS

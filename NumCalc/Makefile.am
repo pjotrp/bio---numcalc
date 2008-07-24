@@ -128,7 +128,7 @@ InvariantMixedDiscreteDistribution.cpp
 lib_LTLIBRARIES = libbpp-numcalc.la
 libbpp_numcalc_la_SOURCES = $(H_FILES) $(CPP_FILES)
 # CURRENT:REVISION:AGE => file.so.(C-A).A.R
-libbpp_numcalc_la_LDFLAGS = -version-info 5:0:0
+libbpp_numcalc_la_LDFLAGS = -version-info 6:0:1
 
 library_includedir=$(includedir)/NumCalc
 library_include_HEADERS = $(H_FILES)

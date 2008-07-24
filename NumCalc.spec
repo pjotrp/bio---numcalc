@@ -1,5 +1,5 @@
-%define name Bpp-NumCalc
-%define version 1.4.0
+%define name bpp-numcalc
+%define version 1.5.0
 %define release 1
 %define _prefix /usr/local
 
@@ -15,17 +15,17 @@ BuildRoot: %{_builddir}/%{name}-root
 Packager: Julien Dutheil
 AutoReqProv: no
 Requires: libstdc++6
-Requires: Bpp-Utils >= 1.2.0
+Requires: bpp-utils = 1.3.0
 
 %description
-This library contains utilitary and classes for numerical calculs.
+This library contains utilitary and classes for numerical calculus.
 It is part of the Bio++ project.
 
 %package devel
 Summary: Libraries, includes to develop applications with %{name}.
 Group: Development/Libraries
 Requires: %{name} = %{version}
-Requires: Bpp-Utils-devel >= 1.2.0
+Requires: bpp-utils-devel = 1.3.0
 
 %description devel
 The %{name}-devel package contains the header files and static libraries for
@@ -63,6 +63,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
+* Mon Jul 21 2008 Julien Dutheil <jdutheil@daimi.au.dk>
+- Version 1.5.0
 * Fri Jan 18 2008 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
 - Version 1.4.0
 * Fri Jul 06 2007 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
