@@ -31,3 +31,7 @@
 
 SUBDIRS = NumCalc
 EXTRA_DIST = NumCalc.spec debian
+
+dist-hook:
+	rm -rf `find $(distdir)/debian -name CVS`
+
