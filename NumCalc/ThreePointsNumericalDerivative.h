@@ -86,7 +86,7 @@ class ThreePointsNumericalDerivative:
   public AbstractNumericalDerivative
 {
   protected:
-    double _f1, _f2, _f3;
+    double _f1, _f2, _f3, _f11, _f22, _f12, _f21;
     
 	public:
 		ThreePointsNumericalDerivative (Function * function): AbstractNumericalDerivative(function) {}

@@ -75,3 +75,19 @@ double NumTools::uniRoot(Function & f, const string & param, double a, double b,
  
 /******************************************************************************/
 
+RowMatrix<double> * NumTools::computeHessianMatrix(DerivableSecondOrder & function, const ParameterList & parameters)
+{
+  unsigned int n = parameters.size();
+  vector<string> variables = parameters.getParameterNames();
+  RowMatrix<double> * hessian = new RowMatrix<double>(n, n);
+  for(unsigned int i = 0; i < n; i++)
+    for(unsigned int j = 0; j < n; j++)
+      if(j == i)
+        (*hessian)(i,j) = function.d2f(variables[i], parameters);
+      else
+        (*hessian)(i,j) = function.d2f(variables[i], variables[j], parameters);
+  return hessian;
+}
+
+/******************************************************************************/
+ 

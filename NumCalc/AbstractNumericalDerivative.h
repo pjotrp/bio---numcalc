@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _ABSTRACTNUMERICALDERIVATIVE_H_
 
 #include "Functions.h"
+#include "Matrix.h"
 
 //From the STL:
 #include <map>
@@ -76,15 +77,16 @@ class AbstractNumericalDerivative:
     mutable map<string, unsigned int> _index; //Store positions in array corresponding to variable names.
     vector<double> _der1;
     vector<double> _der2;
-    bool _computeD1, _computeD2;
+    RowMatrix<double> _crossDer2;
+    bool _computeD1, _computeD2, _computeCrossD2;
     
 	public:
 		AbstractNumericalDerivative (Function * function):
-      _function(function), _function1(NULL), _function2(NULL), _h(0.0001), _computeD1(true), _computeD2(true) {}
+      _function(function), _function1(NULL), _function2(NULL), _h(0.0001), _computeD1(true), _computeD2(true), _computeCrossD2(false) {}
 		AbstractNumericalDerivative (DerivableFirstOrder * function):
-      _function(function), _function1(function), _function2(NULL), _h(0.0001), _computeD1(true), _computeD2(true) {}
+      _function(function), _function1(function), _function2(NULL), _h(0.0001), _computeD1(true), _computeD2(true), _computeCrossD2(false) {}
 	  AbstractNumericalDerivative (DerivableSecondOrder * function):
-      _function(function), _function1(function), _function2(function), _h(0.0001), _computeD1(true), _computeD2(true) {}
+      _function(function), _function1(function), _function2(function), _h(0.0001), _computeD1(true), _computeD2(true), _computeCrossD2(false) {}
 		virtual ~AbstractNumericalDerivative() {}
 
 #ifndef NO_VIRTUAL_COV
@@ -117,6 +119,7 @@ class AbstractNumericalDerivative:
         _index[_variables[i]] = i;
       _der1.resize(_variables.size());
       _der2.resize(_variables.size());
+      _crossDer2.resize(_variables.size(), _variables.size());
     }
     
     /**
@@ -139,7 +142,7 @@ class AbstractNumericalDerivative:
         catch(Exception & e) {}
       }    
       map<string, unsigned int>::iterator it = _index.find(variable);
-      if(it != _index.end()) return _der1[it->second];
+      if(_computeD1 && it != _index.end()) return _der1[it->second];
       else throw Exception("First order derivative not computed for variable " + variable + "."); 
     }
     /** @} */
@@ -165,17 +168,32 @@ class AbstractNumericalDerivative:
         catch(Exception & e) {}
       }    
       map<string, unsigned int>::iterator it = _index.find(variable);
-      if(it != _index.end()) return _der2[it->second];
+      if(_computeD2 && it != _index.end()) return _der2[it->second];
       else throw Exception("Second order derivative not computed for variable " + variable + "."); 
     }
 
 		double getSecondOrderDerivative(const string & variable1, const string & variable2) const
       throw (Exception)
     {
-      throw Exception("Unimplemented cross derivative.");
+      //throw Exception("Unimplemented cross derivative.");
+      if(_function2 != NULL)
+      {
+        try
+        {
+          return _function2->getSecondOrderDerivative(variable1, variable2);
+        }
+        catch(Exception & e) {}
+      }    
+      map<string, unsigned int>::iterator it1 = _index.find(variable1);
+      map<string, unsigned int>::iterator it2 = _index.find(variable2);
+      if(_computeCrossD2 && it1 != _index.end() && it2 != _index.end()) return _crossDer2(it1->second, it2->second);
+      else throw Exception("Cross second order derivative not computed for variables " + variable1 + " and " + variable2 + "."); 
     }
     /** @} */
 	   
+    void enableSecondOrderCrossDerivatives(bool yn) { _computeCrossD2 = yn; }
+    bool enableSecondOrderCrossDerivatives() const { return _computeCrossD2; }
+
     /**
      * @name The Function interface
      *

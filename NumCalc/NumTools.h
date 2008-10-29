@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _NUMTOOLS_H_
 
 #include "Functions.h"
+#include "Matrix.h"
 
 /**
  * @mainpage
@@ -185,6 +186,26 @@ public:
    */
   static double uniRoot(Function & f, const string & param, double a, double b, double tolerance) throw (Exception);
   
+  /**************************************************************************/
+  
+  /**
+   * @brief Compute the Hessian matrix for a function at a given point.
+   *
+   * @f[
+   * H(f(\theta)) = \begin{pmatrix}
+   * \frac{\partial^2 f(\theta)}{\partial \theta_1^2} & \frac{\partial^2 f(\theta)}{\partial \theta_1 \partial \theta_2} & \cdots & \frac{\partial^2 f(\theta)}{\partial \theta_1 \partial \theta_n}\\
+   * \frac{\partial^2 f(\theta)}{\partial \theta_2 \partial \theta_1} & \frac{\partial^2 f(\theta)}{\partial \theta_2^2} & \cdots & \frac{\partial^2 f(\theta)}{\partial \theta_2 \partial \theta_n}\\
+   * \vdots & \vdots & \ddots & \vdots \\
+   * \frac{\partial^2 f(\theta)}{\partial \theta_n \partial \theta_1} & \frac{\partial^2 f(\theta)}{\partial \theta_n \partial \theta_2} & \cdots & \frac{\partial^2 f(\theta)}{\partial \theta_n^2} 
+   * \end{pmatrix}
+   * @f]
+   *
+   * @param function A function with second order derivatives.
+   * @param parameters The set of parameters for which to compute the hessian matrix.
+   * @return A matrix with size equal to the number of parameters.
+   */
+  static RowMatrix<double> * computeHessianMatrix(DerivableSecondOrder & function, const ParameterList & parameters);
+ 
   /**************************************************************************/
 
 };

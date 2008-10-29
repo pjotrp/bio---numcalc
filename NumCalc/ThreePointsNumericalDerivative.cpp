@@ -51,24 +51,23 @@ throw (ParameterNotFoundException, ConstraintException)
     _function->setParameters(parameters);
     _f2 = _function->getValue();
     string lastVar;
+    ParameterList p;
     for(unsigned int i = 0; i < _variables.size(); i++)
     {
       string var = _variables[i];
       if(parameters.getParameter(var) == NULL) continue;
-      ParameterList p;
       if(i > 0)
       {
         vector<string> vars(2);
         vars[0] = var;
         vars[1] = lastVar;
-        lastVar = var;
         p = parameters.subList(vars);
       }
       else
       {
         p = parameters.subList(var);
-        lastVar = var;
       }
+      lastVar = var;
       double value = _function->getParameterValue(var);
       double h = (1. + std::abs(value)) * _h; 
       //Compute one other point:
@@ -113,6 +112,76 @@ throw (ParameterNotFoundException, ConstraintException)
         _der2[i] = (_f1 - 2.*_f3 + _f2) / (h*h);
       }
     }
+
+    if(_computeCrossD2)
+    {
+      string lastVar1, lastVar2;
+      for(unsigned int i = 0; i < _variables.size(); i++)
+      {
+        string var1 = _variables[i];
+        if(parameters.getParameter(var1) == NULL) continue;
+        for(unsigned int j = 0; j < _variables.size(); j++)
+        {
+          if(j==i)
+          {
+            _crossDer2(i,j) = _der2[i];
+            continue;
+          }
+          string var2 = _variables[j];
+          if(parameters.getParameter(var2) == NULL) continue;
+        
+          vector<string> vars(2);
+          vars[0] = var1;
+          vars[1] = var2;
+          if(i > 0 && j > 0)
+          {
+            if(lastVar1 != var1 && lastVar1 != var2) vars.push_back(lastVar1);
+            if(lastVar2 != var1 && lastVar2 != var2) vars.push_back(lastVar2);
+          }
+          p = parameters.subList(vars);
+        
+          double value1 = _function->getParameterValue(var1);
+          double value2 = _function->getParameterValue(var2);
+          double h1 = (1. + std::abs(value1)) * _h; 
+          double h2 = (1. + std::abs(value2)) * _h; 
+        
+          //Compute 4 additional points:
+          try
+          {
+            p[0]->setValue(value1 - h1);
+            p[1]->setValue(value2 - h2);
+            _function->setParameters(p); //also reset previous parameter...
+            vector<unsigned int> tmp(2);
+            tmp[0] = 0;
+            tmp[1] = 1;
+            p = p.subList(tmp); //removed the previous parameters.
+            _f11 = _function->getValue();
+
+            p[1]->setValue(value2 + h2);
+            _function->setParameters(p.subList(1));
+            _f12 = _function->getValue();
+
+            p[0]->setValue(value1 + h1);
+            _function->setParameters(p.subList(0));
+            _f22 = _function->getValue();
+
+            p[1]->setValue(value2 - h2);
+            _function->setParameters(p.subList(1));
+            _f21 = _function->getValue();
+
+            _crossDer2(i,j) = ((_f22 - _f21) - (_f12 - _f11)) / (4*h1*h2);
+          }
+          catch(ConstraintException & ce)
+          {
+            throw Exception("ThreePointsNumericalDerivative::setParameters. Could not compute cross derivatives at limit.");
+          }
+
+          lastVar1 = var1;
+          lastVar2 = var2;
+        }
+      }
+    }
+   
     //Reset last parameter and compute analytical derivatives if any.
     if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
     if(_function2) _function2->enableSecondOrderDerivatives(_computeD2);

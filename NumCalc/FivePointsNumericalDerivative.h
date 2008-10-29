@@ -80,6 +80,7 @@ namespace bpp
  * Default value is provided for @f$e@f$ and corresponds to the _h field.
  * The default value works fine in most cases, but you may want to change it using the setInterval method.
  *
+ * @warning cross second order derivatives are not implemented with the five points method.
  * @see AbstractNumericalDerivative
  */
 class FivePointsNumericalDerivative:
@@ -110,7 +111,13 @@ class FivePointsNumericalDerivative:
     {
       return _f3;
     }
- 
+
+		double getSecondOrderDerivative(const string & variable1, const string & variable2) const
+      throw (Exception)
+    {
+      throw Exception("Unimplemented cross derivative.");
+    }
+  
 };
 
 } //end of namespace bpp.
