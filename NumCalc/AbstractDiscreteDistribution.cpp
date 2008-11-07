@@ -57,7 +57,7 @@ double AbstractDiscreteDistribution::getCategory(unsigned int categoryIndex) con
 { 
 	map<double, double>::const_iterator it = _distribution.begin();
 	for(unsigned int i = 0; i < categoryIndex; i++) it++;
-	return it -> first;
+	return it->first;
 }
 
 /******************************************************************************/
@@ -66,14 +66,14 @@ double AbstractDiscreteDistribution::getProbability(unsigned int categoryIndex) 
 {
 	map<double, double>::const_iterator it = _distribution.begin();
 	for(unsigned int i = 0; i < categoryIndex; i++) it++;
-	return it -> second;
+	return it->second;
 }
 
 /******************************************************************************/
 
 double AbstractDiscreteDistribution::getProbability(double category) const 
 {
-	return _distribution.find(category) -> second;
+	return _distribution.find(category)->second;
 }
 
 /******************************************************************************/
@@ -86,7 +86,7 @@ Vdouble AbstractDiscreteDistribution::getCategories() const
 		it != _distribution.end();
 		it++)
 	{
-		result[i] = it -> first;
+		result[i] = it->first;
 		i++;
 	}
 	return result;
@@ -102,7 +102,7 @@ Vdouble AbstractDiscreteDistribution::getProbabilities() const
 		it != _distribution.end();
 		it++) 
 	{
-		result[i] = it -> second;
+		result[i] = it->second;
 		i++;
 	}
 	return result;
@@ -119,10 +119,13 @@ void AbstractDiscreteDistribution::set(double category, double probability)
 
 void AbstractDiscreteDistribution::add(double category, double probability)
 {
-	if(_distribution.find(category) == _distribution.end()) {
+	if(_distribution.find(category) == _distribution.end())
+  {
 		//new category
 		_distribution[category] = probability;
-	} else {
+	}
+  else
+  {
 		//existing category
 		_distribution[category] += probability;
 	}
@@ -138,8 +141,8 @@ double AbstractDiscreteDistribution::rand() const
 		i != _distribution.end();
 		i++)
 	{
-		cumprob += i -> second;
-		if(r <= cumprob) return i -> first;
+		cumprob += i->second;
+		if(r <= cumprob) return i->first;
 	}
 	// This line can't be reached:
 	return -1.;

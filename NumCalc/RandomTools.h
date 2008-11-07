@@ -171,6 +171,18 @@ class RandomTools
 			return sample;
 		}
 
+    /**
+     * @brief Get a random state from a set of probabilities/scores.
+     *
+     * The input probabilities are scaled so that they sum to one.
+     * If 'x' probabilities are provided as input, the output vector will contain values between 0 and 'x-1'.
+     *
+     * @param n The sample size.
+     * @param probs The set of intput probabilities.
+     * @return A vector of int values corresponding to the output states. States are supposed to be in the same order as the input probabilities, the first state being '0'.
+     */ 
+    static vector<unsigned int> randMultinomial(unsigned int n, const vector<double>& probs);
+
 		/**
 		 * @name Probability functions.
 		 *

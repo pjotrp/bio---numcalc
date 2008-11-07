@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "RandomTools.h"
+#include "VectorTools.h"
 #include "Uniform01K.h"
 
 using namespace bpp;
@@ -103,6 +104,31 @@ double RandomTools::randGamma(double alpha, double beta, const RandomFactory * g
 
 double RandomTools::randExponential(double mean, const RandomFactory * generator) {
 	return - mean * log(RandomTools::giveRandomNumberBetweenZeroAndEntry(1, generator));
+}
+
+vector<unsigned int> RandomTools::randMultinomial(unsigned int n, const vector<double>& probs)
+{
+  double s = VectorTools::sum(probs);
+  double r;
+  double cumprob;
+  vector<unsigned int> sample(n);
+	for(unsigned int i = 0; i < n; i++)
+  {
+	  r = RandomTools::giveRandomNumberBetweenZeroAndEntry(1);
+    cumprob = 0;
+	  for(unsigned int j = 0; j < probs.size(); j++)
+  	{
+	  	cumprob += probs[j] / s;
+		  if(r <= cumprob)
+      {
+        sample[i] = j;
+        continue;
+      }
+	  }
+	  // This line should never be reached if probs sum to one:
+    sample[i] = probs.size();
+  }
+  return sample;
 }
 
 //------------------------------------------------------------------------------

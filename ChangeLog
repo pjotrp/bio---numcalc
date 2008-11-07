@@ -1,3 +1,6 @@
+07/11/08 Julien Dutheil
+* New function randMultinomial in RandomTools.
+
 07/11/08 Sylvain Gaillard
 * Fixed a bug in RandomTools::getSample.
 
