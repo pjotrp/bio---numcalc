@@ -155,7 +155,7 @@ class RandomTools
 		template<class T> 
 		static vector<T> getSample(const vector<T> & v, unsigned int size, bool replace = false) throw (IndexOutOfBoundsException) {
       if (size > v.size() && !replace)
-        throw IndexOutOfBoundException("RandomTools::getSample: size exceeded v.size.", size, 0, v.size());
+        throw IndexOutOfBoundsException("RandomTools::getSample: size exceeded v.size.", size, 0, v.size());
 			vector<unsigned int> hat;
 			for (unsigned int i = 0 ; i < v.size() ; i++)
 				hat.push_back(i);
