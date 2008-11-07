@@ -1,3 +1,8 @@
+06/11/08 Sylvain Gaillard
+* Added boolean flag in RandomTools::getSample for sampling with replacement.
+This function now throw IndexOutOfBoundsException if size of the sample is
+higher than the original vector size and replacement is off.
+
 28/10/08 Julien Dutheil
 * New Numerical cross derivatives (3 points method only).
 * New functions in NumTools to compute Hessian matrices.

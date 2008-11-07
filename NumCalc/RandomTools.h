@@ -2,7 +2,7 @@
 // File RandomTools.h
 // Author : Julien Dutheil
 //          Sylvain Gaillard
-// Last modification : Friday September 24 2004
+// Last modification : Thu November 6 2008
 //
 
 /*
@@ -49,6 +49,9 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace std;
 
 #include "RandomFactory.h"
+
+// From Utils:
+#include <Utils/Exceptions.h>
 
 namespace bpp
 {
@@ -140,15 +143,19 @@ class RandomTools
 		 *
 		 * The sample is a new vector of the specified size.
 		 * If the size of the sample is identical to the original vector,
-		 * the result is a shuffl of the original vector.
+		 * the result is a shuffle of the original vector.
 		 *
 		 * @param v The vector to sample.
 		 * @param size The size of the sample.
+     * @param replace Should sampling be with replacement?
 		 * @return A vector which is a sample of v.
+     * @throw IndexOutOfBoundException if the sample size exceeds the original size
+     * when sampling without replacement.
 		 */
 		template<class T> 
-		static vector<T> getSample(const vector<T> & v, unsigned int size)
-		{
+		static vector<T> getSample(const vector<T> & v, unsigned int size, bool replace = false) throw (IndexOutOfBoundsException) {
+      if (size > v.size() && !replace)
+        throw IndexOutOfBoundException("RandomTools::getSample: size exceeded v.size.", size, 0, v.size());
 			vector<unsigned int> hat;
 			for (unsigned int i = 0 ; i < v.size() ; i++)
 				hat.push_back(i);
@@ -156,8 +163,10 @@ class RandomTools
 			for (unsigned int i = 0 ; i < size ; i++) {
 				unsigned int pos = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(hat.size());
 				sample.push_back(v[hat[pos]]);
-				hat[pos] = hat[hat.size() - 1];
-				hat.pop_back();
+        if (!replace) {
+          hat[pos] = hat[hat.size() - 1];
+          hat.pop_back();
+        }
 			}
 			return sample;
 		}
