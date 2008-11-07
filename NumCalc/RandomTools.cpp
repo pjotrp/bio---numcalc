@@ -116,17 +116,18 @@ vector<unsigned int> RandomTools::randMultinomial(unsigned int n, const vector<d
   {
 	  r = RandomTools::giveRandomNumberBetweenZeroAndEntry(1);
     cumprob = 0;
-	  for(unsigned int j = 0; j < probs.size(); j++)
+    bool test = true;
+	  for(unsigned int j = 0; test & j < probs.size(); j++)
   	{
 	  	cumprob += probs[j] / s;
 		  if(r <= cumprob)
       {
         sample[i] = j;
-        continue;
+        test = false;
       }
 	  }
-	  // This line should never be reached if probs sum to one:
-    sample[i] = probs.size();
+	  // This test should never be true if probs sum to one:
+    if(test) sample[i] = probs.size();
   }
   return sample;
 }
