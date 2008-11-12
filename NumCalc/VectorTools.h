@@ -289,6 +289,35 @@ class VectorTools
 
   public:
     /**
+     * @brief Build a sequence vector.
+     *
+     * Build a vector from a value to another with a specified step.
+     * This works for numerical values for which additions, subtractions and division
+     * makes sens.
+     *
+     * @param from The begining.
+     * @param to The end.
+     * @param by The step.
+     * @return A vector containing the sequence.
+     */
+    template <class T>
+    static vector<T> seq(T from, T to, T by)
+    {
+      vector<T> v;
+      if (from < to) {
+        // for (T i = from ; i <= to ; i += by) {           // Not good for double, 'to'
+        for (T i = from ; i <= to + (by / 100) ; i += by) { // must be a little bit larger
+          v.push_back(i);
+        }
+      } else {
+        for (T i = from ; i >= to - (by / 100) ; i -= by) {
+          v.push_back(i);
+        }
+      }
+      return v;
+    }
+
+    /**
      * @brief Send the position of the first occurence of 'which'.
      *
      * Comparisons are performed using the == operator.
@@ -391,6 +420,37 @@ class VectorTools
         c[v[i]]++;
       }
       return c;
+    }
+
+    /**
+     * @brief Get the break points for a given number of classes.
+     *
+     * Given a vector of values, return the values that cut the range of values
+     * in a given number of classes.
+     *
+     * @param v The vector to parse.
+     * @param n The expected number of clasees.
+     * @return a vector of size = n + 1 containing the breaking points.
+     */
+    static vector<double> breaks(const vector<double> & v, unsigned int n);
+
+    /**
+     * @brief Get the optimal class number following Scott's method.
+     *
+     * Use Scott's (1979) method to compute the optimal class number for histogram.
+     *
+     * Scott, D.W. (1979) On optimal and data-based histograms. Biometrika, 66, 605¿610.
+     *
+     * @param v The vector to parse.
+     * @return The number of class.
+     */
+    template<class T>
+    static unsigned int nclassScott(const vector<T> & v) {
+      vector<T> r1 = VectorTools::range(v);
+      T r = r1[1] - r1[0];
+      double n = v.size();
+      double h = 3.5 * VectorTools::sd<T, double>(v) * NumTools::pow(n, -1. / 3);
+      return (unsigned int) ceil(r / h);
     }
 
     /**
@@ -736,6 +796,28 @@ class VectorTools
         if(v[i] == maxi) return i;
       // This is never reached but must be here, otherwise a warning is issued:
       return 0;
+    }
+
+    /**
+     * @brief Template function to get both extrema of a vector.
+     *
+     * Both < and > operators must be defined for the specified class.
+     *
+     * @param v The input vector.
+     * @return A vector of size 2 which values are min(v) and max(v).
+     * throw EmptyVectorException If the input vector is empty.
+     */
+    template<class T>
+    static vector<T> range(const vector<T> & v) throw (EmptyVectorException<T>)
+    {
+      if (v.size() == 0) throw EmptyVectorException<T>("VectorFuntions::range()", & v);
+      vector<T> r(2);
+      r[0] = r[1] = v[0];
+      for (unsigned int i = 1; i < v.size(); i++) {
+        if(v[i] < r[0]) r[0] = v[i];
+        if(v[i] > r[1]) r[1] = v[i];
+      }
+      return r;
     }
 
     /** @} */

@@ -50,6 +50,18 @@ using namespace std;
 
 /******************************************************************************/
 
+vector<double> VectorTools::breaks(const vector<double> & v, unsigned int n) {
+  vector<double> out;
+  vector<double> r = VectorTools::range(v);
+  double part = (r[1] - r[0]) / n;
+  for (unsigned int i = 0 ; i < n ; ++i)
+    out.push_back(r[0] + (part * i));
+  out.push_back(r[1]);
+  return out;
+}
+
+/******************************************************************************/
+
 bool VectorTools::test()
 {
   vector<float> x1(5);
