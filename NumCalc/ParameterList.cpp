@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 /** Constructors: *************************************************************/
@@ -350,15 +351,15 @@ void ParameterList::deleteParameter(unsigned int index) throw (IndexOutOfBoundsE
 void ParameterList::deleteParameters(const vector<unsigned int> & indices) throw (IndexOutOfBoundsException)
 {
   vector<unsigned int> tmp(indices);
-  std::sort(tmp.begin(), tmp.end());
-	for(vector<unsigned int>::reverse_iterator i = tmp.rbegin(); i != tmp.rend(); i++)
+  sort(tmp.begin(), tmp.end());
+  for(vector<unsigned int>::reverse_iterator i = tmp.rbegin(); i != tmp.rend(); i++)
   {
     unsigned int index = *i;
     if(index >= size()) throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
-	  Parameter * p = operator[](index);
+    Parameter * p = operator[](index);
     delete p;
     erase(begin() + index);
-	}
+  }
 }
 
 /******************************************************************************/

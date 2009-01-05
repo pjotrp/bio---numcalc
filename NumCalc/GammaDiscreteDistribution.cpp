@@ -91,18 +91,18 @@ void GammaDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
   _distribution.clear();
   _bounds.clear();
   _bounds.resize(numberOfCategories + 1);
+  double alpha = getParameterValue("alpha");
+  vector<double> means = computeValues(numberOfCategories, alpha, alpha, false);
   //cout<<"number of categories is: "<<categories()<<endl;
   //cout<<"alpha is: "<<alpha<<endl;
   if(numberOfCategories == 1)
   {
-    _distribution[0] = 1.0;
+    _distribution[means[0]] = 1.0;
     _bounds[0] = 0; _bounds[1] = VERYBIG;
     return;
   }
   else if(numberOfCategories > 1)
   {
-    double alpha = getParameterValue("alpha");
-    vector<double> means = computeValues(numberOfCategories, alpha, alpha, false);
     double p = 1. / (double)numberOfCategories;
     for(unsigned int i = 0; i < numberOfCategories; i++)
     {
@@ -140,20 +140,24 @@ vector<double> GammaDiscreteDistribution::computeValues(unsigned int nbClasses, 
   {
     for (i=0; i<K; i++) rK[i]=RandomTools::qGamma((i*2.0+1)*gap05, alpha, beta);
     for (i=0,t=0; i<K; i++) t+=rK[i];
-    for (i=0; i<K; i++)     rK[i]*=factor/t;
+    for (i=0; i<K; i++) rK[i]*=factor/t;
   }
   else
   {
-    lnga1=RandomTools::lnGamma(alpha+1);
-    for (i=0; i<K-1; i++)
-      freqK[i]=RandomTools::qGamma((i+1.0)/K, alpha, beta);
-    for (i=0; i<K-1; i++)
-      freqK[i]=RandomTools::incompleteGamma(freqK[i]*beta, alpha+1, lnga1);
-    rK[0] = freqK[0]*factor;
-    rK[K-1] = (1-freqK[K-2])*factor;
-    for (i=1; i<K-1; i++)  rK[i] = (freqK[i]-freqK[i-1])*factor;
+    if(K==1) rK[0] = alpha/beta;
+    else
+    {
+      lnga1=RandomTools::lnGamma(alpha+1);
+      for (i=0; i<K-1; i++)
+        freqK[i]=RandomTools::qGamma((i+1.0)/K, alpha, beta);
+      for (i=0; i<K-1; i++)
+        freqK[i]=RandomTools::incompleteGamma(freqK[i]*beta, alpha+1, lnga1);
+      rK[0] = freqK[0]*factor;
+      rK[K-1] = (1-freqK[K-2])*factor;
+      for (i=1; i<K-1; i++) rK[i] = (freqK[i]-freqK[i-1])*factor;
+    }
   }
-  for (i=0; i<K; i++) freqK[i]=1.0/K;
+  //for (i=0; i<K; i++) freqK[i]=1.0/K; is that needed???
 
   return rK;
 }

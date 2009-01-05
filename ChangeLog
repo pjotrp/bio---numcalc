@@ -1,3 +1,6 @@
+21/12/08 Julien Dutheil
+* Bug fixed when there is only one class in GammaDiscreteDistribution.
+
 21/07/08 -*- Version 1.6.0 -*-
 
 12/11/08 Sylvain Gaillard
