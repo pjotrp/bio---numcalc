@@ -1,3 +1,7 @@
+16/01/09 Sylvain Gaillard
+* Added new class NumCalcApplicationTools which provides application
+  facilities depending on NumCalc class.
+
 21/12/08 Julien Dutheil
 * Bug fixed when there is only one class in GammaDiscreteDistribution.
 
