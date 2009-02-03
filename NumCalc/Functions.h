@@ -432,20 +432,24 @@ class InfinityDerivableSecondOrderWrapper:
 
   public:
 
-    double getSecondOrderDerivative(const string & variable) const throw (Exception) {
+    double getSecondOrderDerivative(const string & variable) const throw (Exception)
+    {
       return _constraintMatch ? -log(0.) :  (dynamic_cast<DerivableSecondOrder *>(_function)->getSecondOrderDerivative(variable));          
     }
   
-    double d2f(const string & variable, const ParameterList & parameters) throw (Exception) {
+    double d2f(const string & variable, const ParameterList & parameters) throw (Exception)
+    {
       setParameters(parameters);
       return getSecondOrderDerivative(variable);
     }    
 
-    double getSecondOrderDerivative(const string & variable1, const string & variable2) const throw (Exception) {
+    double getSecondOrderDerivative(const string & variable1, const string & variable2) const throw (Exception)
+    {
       return _constraintMatch ? -log(0.) :  (dynamic_cast<DerivableSecondOrder *>(_function) -> getSecondOrderDerivative(variable1, variable2));      
     }
     
-    double d2f(const string & variable1, const string & variable2, const ParameterList & parameters) throw (Exception) {
+    double d2f(const string & variable1, const string & variable2, const ParameterList & parameters) throw (Exception)
+    {
       setParameters(parameters);
       return getSecondOrderDerivative(variable1, variable2);
     }

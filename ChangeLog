@@ -1,3 +1,8 @@
+03/02/09 Julien Dutheil
+* New classes TransformedParameter and ReparametrizationFunctionWrapper, to
+  perform optimization without constraint.
+* Creation of class NumConstants, and code updated accordingly.
+
 16/01/09 Sylvain Gaillard
 * Added new class NumCalcApplicationTools which provides application
   facilities depending on NumCalc class.

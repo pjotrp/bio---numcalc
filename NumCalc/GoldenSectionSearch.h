@@ -147,8 +147,6 @@ class GoldenSectionSearch:
 
   protected:
 		
-		static double R;
-		static double C;
 };
 
 } //end of namespace bpp.

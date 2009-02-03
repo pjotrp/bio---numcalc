@@ -111,6 +111,7 @@ class IncludingPositiveReal: public Constraint
 			return "[ " + TextTools::toString(_lower) + ", +inf [";
 		}
     void setLowerBound(double lowerBound) { _lower = lowerBound; }
+    double getLowerBound() const { return _lower; }
 };
 		
 /**
@@ -135,6 +136,7 @@ class ExcludingPositiveReal: public Constraint
 			return "] " + TextTools::toString(_lower) + ", +inf [";
 		}
     void setLowerBound(double lowerBound) { _lower = lowerBound; }
+    double getLowerBound() const  { return _lower; }
 };
 
 /**
@@ -159,6 +161,7 @@ class IncludingNegativeReal: public Constraint
 			return "] -inf, " + TextTools::toString(_upper) + " ]";
 		}
     void setUpperBound(double upperBound) { _upper = upperBound; }
+    double getUpperBound() const { return _upper; }
 };
 		
 /**
@@ -183,6 +186,7 @@ class ExcludingNegativeReal: public Constraint
 			return "] -inf, " + TextTools::toString(_upper) + " [";
 		}
     void setUpperBound(double upperBound) { _upper = upperBound; }
+    double getUpperBound() const { return _upper; }
 };
 
 /**

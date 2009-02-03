@@ -113,8 +113,6 @@ class OneDimensionOptimizationTools
 		 * @brief Maximum magnification allowed for a parabolic-fit step.
 		 */
 		static double GLIMIT;
-		static double GOLD;
-		static double TINY;
 	
 };
 

@@ -39,6 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "GoldenSectionSearch.h"
 #include "NumTools.h"
+#include "NumConstants.h"
 #include "OneDimensionOptimizationTools.h"
 
 // From Utils:
@@ -59,11 +60,6 @@ bool GoldenSectionSearch::GSSStopCondition::isToleranceReached() const
   return NumTools::abs(x3 - x0) <= _tolerance * (NumTools::abs(x1) + NumTools::abs(x2));
 }
     
-/******************************************************************************/
-
-double GoldenSectionSearch::R = 0.61803399;
-double GoldenSectionSearch::C = 1. - R;
-
 /******************************************************************************/
 
 GoldenSectionSearch::GoldenSectionSearch(Function * function) :
@@ -101,12 +97,12 @@ void GoldenSectionSearch::doInit(const ParameterList & params) throw (Exception)
     // Make x0 to x1 the smaller segment,
     x1 = bracket.b.x;
     // and fill in the new point to be tried.
-    x2 = bracket.b.x + C * (bracket.c.x - bracket.b.x);
+    x2 = bracket.b.x + NumConstants::GOLDEN_RATIO_C * (bracket.c.x - bracket.b.x);
   }
   else
   {
     x2 = bracket.b.x;
-    x1 = bracket.b.x - C * (bracket.b.x - bracket.a.x);
+    x1 = bracket.b.x - NumConstants::GOLDEN_RATIO_C * (bracket.b.x - bracket.a.x);
   }
   // The initial function evaluations.
   // Note that we never need to evaluate the function at the original endpoints.
@@ -141,7 +137,7 @@ double GoldenSectionSearch::doStep() throw (Exception)
   {
     // One possible outcome, its housekeeping,
     NumTools::shift<double>(x0, x1, x2);
-    x2 = R * x1 + C * x3;
+    x2 = NumConstants::GOLDEN_RATIO_R * x1 + NumConstants::GOLDEN_RATIO_C * x3;
     // and a new function evaluation.
     _parameters[0]->setValue(x2);
     _tolIsReached = _nbEval > 2 && _stopCondition->isToleranceReached();
@@ -152,7 +148,7 @@ double GoldenSectionSearch::doStep() throw (Exception)
   {
     // The other outcome,
     NumTools::shift<double>(x3, x2, x1);
-    x1 = R * x2 + C * x0;
+    x1 = NumConstants::GOLDEN_RATIO_R * x2 + NumConstants::GOLDEN_RATIO_C * x0;
     // and its new function evaluation.
     _parameters[0]->setValue(x1);
     _tolIsReached = _nbEval > 2 && _stopCondition->isToleranceReached();

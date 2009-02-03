@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "AutoParameter.h"
+#include "NumConstants.h"
 
 #include <iostream>
 
@@ -50,7 +51,6 @@ using namespace bpp;
 
 /******************************************************************************/
 
-double AutoParameter::TINY = .000000000001;
 string AutoParameter::CONSTRAINTS_AUTO   = "auto";
 string AutoParameter::CONSTRAINTS_IGNORE = "ignore";
 string AutoParameter::CONSTRAINTS_KEEP   = "keep";
@@ -113,12 +113,12 @@ void AutoParameter::setValue(double value) throw (ConstraintException)
 			try
       {
 				// Try on the right:
-				Parameter::setValue(limit + TINY);
+				Parameter::setValue(limit + NumConstants::TINY);
 			}
       catch(ConstraintException & ce3)
       {
 				// Try on the left:
-				Parameter::setValue(limit - TINY);
+				Parameter::setValue(limit - NumConstants::TINY);
 			}
 		}
 	}

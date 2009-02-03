@@ -132,7 +132,6 @@ class AutoParameter:
 		
 	public:
 	
-		static double TINY;
 		static string CONSTRAINTS_AUTO;
 		static string CONSTRAINTS_IGNORE;
 		static string CONSTRAINTS_KEEP;

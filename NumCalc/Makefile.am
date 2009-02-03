@@ -34,7 +34,6 @@ AbstractOptimizer.h\
 DownhillSimplexMethod.h\
 NumTools.h\
 Parametrizable.h\
-AutoParameter.h\
 Functions.h\
 OneDimensionOptimizationTools.h\
 PowellMultiDimensions.h\
@@ -60,6 +59,8 @@ MatrixTools.h\
 EigenValue.h\
 LUDecomposition.h\
 Parameter.h\
+AutoParameter.h\
+TransformedParameter.h\
 Domain.h\
 ParameterList.h\
 RandomFactory.h\
@@ -85,7 +86,10 @@ ConjugateGradientMultiDimensions.h\
 MetaOptimizer.h\
 InvariantMixedDiscreteDistribution.h\
 StatTest.h\
-NumCalcApplicationTools.h
+NumCalcApplicationTools.h\
+functions\
+ReparametrizationFunctionWrapper.h\
+NumConstants.h
 
 
 CPP_FILES = \
@@ -123,7 +127,9 @@ SimpleNewtonMultiDimensions.cpp\
 ConjugateGradientMultiDimensions.cpp\
 MetaOptimizer.cpp\
 NumTools.cpp\
-InvariantMixedDiscreteDistribution.cpp
+InvariantMixedDiscreteDistribution.cpp\
+ReparametrizationFunctionWrapper.cpp\
+NumConstants.cpp
 
 
 lib_LTLIBRARIES = libbpp-numcalc.la
