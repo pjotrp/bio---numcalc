@@ -1102,7 +1102,7 @@ class EigenValue
      *
      * @param A    Square real (non-complex) matrix
      */
-    EigenValue(Matrix<Real> &A)
+    EigenValue(const Matrix<Real> &A)
     {
       _n = A.nCols();
       _V = RowMatrix<Real>(_n,_n);
