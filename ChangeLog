@@ -1,3 +1,7 @@
+05/02/09 Julien Dutheil
+* Bug fixed in EigenValue + code formating and improvement.
+* New class TestUnit.
+
 03/02/09 Julien Dutheil
 * New classes TransformedParameter and ReparametrizationFunctionWrapper, to
   perform optimization without constraint.

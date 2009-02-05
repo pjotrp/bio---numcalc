@@ -89,7 +89,8 @@ StatTest.h\
 NumCalcApplicationTools.h\
 functions\
 ReparametrizationFunctionWrapper.h\
-NumConstants.h
+NumConstants.h\
+TestUnit.h
 
 
 CPP_FILES = \
@@ -129,7 +130,8 @@ MetaOptimizer.cpp\
 NumTools.cpp\
 InvariantMixedDiscreteDistribution.cpp\
 ReparametrizationFunctionWrapper.cpp\
-NumConstants.cpp
+NumConstants.cpp\
+TestUnit.cpp
 
 
 lib_LTLIBRARIES = libbpp-numcalc.la
