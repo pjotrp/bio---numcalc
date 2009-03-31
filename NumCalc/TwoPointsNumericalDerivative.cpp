@@ -41,7 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
-void TwoPointsNumericalDerivative::setParameters(const ParameterList & parameters)
+void TwoPointsNumericalDerivative::updateDerivatives(const ParameterList & parameters)
 throw (ParameterNotFoundException, ConstraintException)
 {
   if(_computeD1 && _variables.size() > 0)

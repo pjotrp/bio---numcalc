@@ -47,6 +47,10 @@ using namespace bpp;
 #include <iostream>
 using namespace std;
 
+/******************************************************************************/
+
+ParameterEvent::ParameterEvent(Parameter * parameter): _parameter(parameter) {}
+
 /** Constructors: *************************************************************/
 
 Parameter::Parameter(const string & name, double value, Constraint * constraint, bool attachConstraint) 
@@ -61,26 +65,46 @@ throw (ConstraintException)
 
 Parameter::Parameter(const Parameter & p)
 {
-	_name       = p._name;
-	_value      = p._value;
-  _attach     = p._attach;
+	_name           = p._name;
+	_value          = p._value;
+  _attach         = p._attach;
 	if(p._attach && p._constraint)
-    _constraint = p._constraint->clone();
+    _constraint   = p._constraint->clone();
   else
-    _constraint = p._constraint;
+    _constraint   = p._constraint;
+  _listeners      = p._listeners;
+  _listenerAttach = p._listenerAttach;
+  for(unsigned int i = 0; i < _listeners.size(); i++)
+    if(_listenerAttach[i])
+      _listeners[i] = dynamic_cast<ParameterListener *>(p._listeners[i]->clone());
 }
 
 Parameter & Parameter::operator=(const Parameter & p)
 {
-	_name       = p._name;
-	_value      = p._value;
-  _attach     = p._attach;
+	_name           = p._name;
+	_value          = p._value;
+  _attach         = p._attach;
 	if(p._attach && p._constraint)
-    _constraint = p._constraint->clone();
+    _constraint   = p._constraint->clone();
   else
-    _constraint = p._constraint;
+    _constraint   = p._constraint;
+  _listeners      = p._listeners;
+  _listenerAttach = p._listenerAttach;
+  for(unsigned int i = 0; i < _listeners.size(); i++)
+    if(_listenerAttach[i])
+      _listeners[i] = dynamic_cast<ParameterListener *>(p._listeners[i]->clone());
 	return *this;	
 }
+
+/** Destructor: ***************************************************************/
+
+Parameter::~Parameter()
+{
+  if(_attach && _constraint) delete _constraint;
+  for(unsigned int i = 0; i < _listeners.size(); i++)
+    if(_listenerAttach[i])
+      delete _listeners[i];
+} 
 
 /** Value: ********************************************************************/
 
@@ -89,6 +113,8 @@ void Parameter::setValue(double value) throw (ConstraintException)
 	if(_constraint != NULL && !_constraint->isCorrect(value)) 
 		throw ConstraintException("Parameter::setValue", this, value);
 	_value = value;
+  ParameterEvent event(this);
+  fireParameterValueChanged(event);
 }
 
 /** Constraint: ***************************************************************/
@@ -98,6 +124,21 @@ const Constraint * Parameter::removeConstraint()
 	const Constraint * c = _constraint;
 	_constraint = NULL;
 	return c;
+}
+
+/******************************************************************************/
+
+void Parameter::removeParameterListener(const string & listenerId)
+{
+  for(unsigned int i = 0; i < _listeners.size(); i++)
+  {
+    if(_listeners[i]->getId() == listenerId)
+    {
+      if(_listenerAttach[i]) delete _listeners[i];
+      _listeners.erase(_listeners.begin() + i);
+      _listenerAttach.erase(_listenerAttach.begin() + i);
+    }
+  }
 }
 
 /******************************************************************************/

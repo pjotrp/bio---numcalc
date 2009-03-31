@@ -103,13 +103,14 @@ class ThreePointsNumericalDerivative:
 
   public:
     
-    void setParameters(const ParameterList & parameters)
-      throw (ParameterNotFoundException, ConstraintException);
-    
     double getValue() const throw (Exception)
     {
       return _f2;
     }
+    
+  protected:
+    void updateDerivatives(const ParameterList & parameters)
+      throw (ParameterNotFoundException, ConstraintException);
     
 };
 

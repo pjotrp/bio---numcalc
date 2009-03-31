@@ -58,6 +58,7 @@ namespace bpp
 /**
  * @brief The parameter list object.
  * 
+ * @author Julien Dutheil, Laurent Gueguen
  * This is a vector of Parameter with a few additional methods, mainly for giving
  * name access.
  */
@@ -197,6 +198,13 @@ class ParameterList:
       throw (ParameterNotFoundException, ConstraintException);
 
     /**
+     * @brief Returns true if the Parameter of the given name exists.
+     *
+     * @name A string name
+     */
+    virtual bool hasParameter(const string& name) const;
+
+    /**
      * @brief Update the parameters from <i>params</i>.
      *
      * Only common parameters with <i>params</i> will be updated.
@@ -268,6 +276,16 @@ class ParameterList:
      * Duplicated positions will be considered only one time.
      */
     virtual void deleteParameters(const vector<unsigned int> & indices) throw (IndexOutOfBoundsException);
+
+    /**
+     * @brief Get the position of a given parameter according to its name.
+     *
+     * @param name The name of the parameter to look for.
+     * @return The position of the parameter if found. If several parameters exist with the given name,
+     * the position of the first one is returned.
+     * @throw ParameterNotFoundException If no parameter with the given name is found.
+     */
+    virtual unsigned int whichParameterHasName(const string & name) throw (ParameterNotFoundException);
 
     /**
      * @brief Print all parameters.

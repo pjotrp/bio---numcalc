@@ -66,7 +66,7 @@ double DirectionFunction::getValue() const throw (Exception)
 
 /******************************************************************************/
 
-ParameterList DirectionFunction::getParameters() const throw (Exception)
+const ParameterList & DirectionFunction::getParameters() const throw (Exception)
 {
   return _params;
 }

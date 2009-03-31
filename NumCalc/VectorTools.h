@@ -405,6 +405,21 @@ class VectorTools
       return true;
     }
 
+  /**
+   * @author Laurent Gueguen
+   * @return the vector of the selected elements, in the order of the
+   *  required positions
+   * @param v1 the vector of elements, v2 the vector of the selected positions
+   */
+  template<class T>
+  static vector<T> extract(const vector<T> & v1, const vector<int> & v2)
+  {
+    vector<T> v(v2.size());
+    for (unsigned int i = 0; i < v2.size(); i++)
+      v[i] = v1[v2[i]];
+    return(v);
+  }
+
     /**
      * @brief Count each element of a vector.
      *
@@ -442,7 +457,7 @@ class VectorTools
      * Scott, D.W. (1979) On optimal and data-based histograms. Biometrika, 66, 605¿610.
      *
      * @param v The vector to parse.
-     * @return The number of class.
+     * @return The number of classes.
      */
     template<class T>
     static unsigned int nclassScott(const vector<T> & v) {
@@ -477,6 +492,44 @@ class VectorTools
       return p;
     }
 
+    /**
+     * @author Laurent Gueguen
+     * @Log-normalize vector v1, ie add a constant to the elements of v
+     *  such that @f$\sum_i(\exp(v_i)) = 1@f$.
+     * @param v vector.
+     */
+    template<class T>
+    static void lognorm(vector<T> & v)
+    {
+      T M = std::max(v);
+      T x = std::exp(v[0] - M);
+      for (unsigned int i = 1; i < v.size(); i++)
+        x += std::exp(v[i] - M);
+      v -= M + log(x);
+    }
+  
+    /**
+     * @author Laurent Gueguen
+     * @return From vectors v1 and v2, return @f$\log(\sum_i(v2_i*\exp(v1_i)))@f$.
+     * @param v1 and v2 two vectors.
+     */
+    template<class T>
+    static T logsumexp(const vector<T> & v1, const vector<T> & v2)
+    {
+      unsigned int size;
+      if(v1.size() != v2.size())
+        throw DimensionException("VectorOperators::logsumexp", v1.size(), v2.size());
+      else
+        size = v1.size();
+    
+      T M = std::max(v1);
+      T x = v2[0] * std::exp(v1[0] - M);
+      for (unsigned int i = 1; i < size; i++)
+        x += v2[i] * std::exp(v1[i] - M);
+      return(std::log(x) + M);
+    }
+
+    
     /**
      * @name These methods apply the corresponding function to each element
      * and return the result in a new vector.

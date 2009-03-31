@@ -300,6 +300,20 @@ throw (ParameterNotFoundException)
 
 /******************************************************************************/
 
+bool ParameterList::hasParameter(const string& name) const
+{
+  for(unsigned int i = 0; i < size(); i++)
+  {
+    Parameter * p = operator[](i);
+    if(p->getName() == name)
+      return true;
+  }
+  return false;
+}
+
+/******************************************************************************/
+
+
 void ParameterList::matchParameters(const ParameterList & params) 
 {
 	for(ParameterList::const_iterator it = params.begin(); it < params.end(); it++)
@@ -360,6 +374,15 @@ void ParameterList::deleteParameters(const vector<unsigned int> & indices) throw
     delete p;
     erase(begin() + index);
   }
+}
+
+/******************************************************************************/
+
+unsigned int ParameterList::whichParameterHasName(const string & name) throw (ParameterNotFoundException)
+{
+  for(unsigned int i = 0; i < size(); i++)
+    if((*this)[i]->getName() == name) return i;
+  throw ParameterNotFoundException("ParameterList::whichParameterHasName.", name);
 }
 
 /******************************************************************************/

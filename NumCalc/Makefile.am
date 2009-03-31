@@ -34,6 +34,7 @@ AbstractOptimizer.h\
 DownhillSimplexMethod.h\
 NumTools.h\
 Parametrizable.h\
+AbstractParametrizable.h\
 Functions.h\
 OneDimensionOptimizationTools.h\
 PowellMultiDimensions.h\
@@ -131,6 +132,8 @@ NumTools.cpp\
 InvariantMixedDiscreteDistribution.cpp\
 ReparametrizationFunctionWrapper.cpp\
 NumConstants.cpp\
+AbstractParametrizable.cpp\
+NumCalcApplicationTools.cpp\
 TestUnit.cpp
 
 

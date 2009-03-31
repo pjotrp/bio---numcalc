@@ -54,6 +54,69 @@ using namespace std;
 namespace bpp
 {
 
+class Parameter;
+
+class ParameterEvent:
+  public Clonable
+{
+  protected:
+    Parameter * _parameter;
+
+  public:
+    ParameterEvent(Parameter * parameter);
+
+#ifndef NO_VIRTUALCOV
+    Clonable *
+#else
+    ParameterEvent *
+#endif
+    clone() const { return new ParameterEvent(*this); }
+
+  public:
+    const Parameter * getParameter() const { return _parameter; }
+    Parameter * getParameter() { return _parameter; }
+};
+
+/**
+ * @The parameter listener interface.
+ *
+ * Imlementing this interface allows to catch events associated to parameters modifications.
+ * Listeners must have an identifier that will be used to pinpoint it when attached to a list.
+ * This identifier needs not be unique though, but listeners with identical id will be undistinguishable.
+ */
+class ParameterListener:
+  public virtual Clonable
+{
+  public:
+#ifndef NO_VIRTUALCOV
+    Clonable *
+#else
+    ParameterListener *
+#endif
+    clone() const = 0;
+
+  public:
+
+    /**
+     * @retun The identifier of this listener.
+     */
+    virtual const string & getId() const = 0;
+
+    /**
+     * @brief Notify a renaming action.
+     *
+     * @param event Event associated to the acion.
+     */
+    virtual void parameterNameChanged(ParameterEvent & event) = 0;
+    
+    /**
+     * @brief Notify a value change.
+     *
+     * @param event Event associated to the acion.
+     */
+    virtual void parameterValueChanged(ParameterEvent & event) = 0;
+};
+
 /**
  * @brief This class is designed to facilitate the manipulation of parameters.
  *
@@ -65,13 +128,15 @@ namespace bpp
  * @see ParameterList, Parametrizable, Constraint.
  */
 class Parameter:
-  public Clonable
+  public virtual Clonable
 {
   protected:
     string _name;             //Parameter name
     double _value;            //Parameter value
     Constraint * _constraint; //A constraint on the value
     bool _attach;
+    vector<ParameterListener *> _listeners;
+    vector<bool> _listenerAttach;
   
   public: // Class constructors and destructors:
     
@@ -100,12 +165,14 @@ class Parameter:
      */
     Parameter & operator=(const Parameter & param);
   
-    virtual ~Parameter()
-    {
-      if(_attach && _constraint) delete _constraint;
-    }
+    virtual ~Parameter();
     
-    Parameter * clone() const { return new Parameter(*this); }
+#ifndef NO_VIRTUALCOV
+    Clonable *
+#else
+    Parameter *
+#endif
+    clone() const { return new Parameter(*this); }
     
   public:
 
@@ -114,7 +181,12 @@ class Parameter:
      *
      * @param name the new parameter name.
      */
-    virtual void setName(const string & name) { _name = name; }
+    virtual void setName(const string & name)
+    {
+      _name = name;
+      ParameterEvent event(this);
+      fireParameterNameChanged(event);
+    }
   
     /**
      * @brief Set the value of this parameter.
@@ -172,6 +244,40 @@ class Parameter:
       if(_constraint && _constraint->isCorrect(_value))
         _constraint = constraint;
       else throw ConstraintException("Parameter::setConstraint", this, _value);
+    }
+
+    /**
+     * @brief Add a new listener to this parameter.
+     *
+     * @param listener The listener to add.
+     * @param attachListener Tell if the parameter will own this listener.
+     * If so, deep copies will be made when cloning the parameter, and the listener will be destroyed upon
+     * destruction of the parameter or upon removal. Alternatively, only superficial copies will be made,
+     * and the listener will persist if the parameter is destroyed.
+     */
+    virtual void addParameterListener(ParameterListener * listener, bool attachListener = true)
+    {
+      _listeners.push_back(listener);
+      _listenerAttach.push_back(attachListener);
+    }
+
+    /**
+     * @brief Remove all listeners with a given id from this parameter.
+     *
+     * @param listenerId The id of listener to remove.
+     */
+    virtual void removeParameterListener(const string & listenerId);
+
+  protected:
+    void fireParameterNameChanged(ParameterEvent & event)
+    {
+      for(vector<ParameterListener *>::iterator it = _listeners.begin(); it != _listeners.end(); it++)
+        (*it)->parameterNameChanged(event);
+    }
+    void fireParameterValueChanged(ParameterEvent & event)
+    {
+      for(vector<ParameterListener *>::iterator it = _listeners.begin(); it != _listeners.end(); it++)
+        (*it)->parameterValueChanged(event);
     }
   
   public:

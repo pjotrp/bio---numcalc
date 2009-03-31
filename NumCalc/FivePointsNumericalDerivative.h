@@ -104,9 +104,6 @@ class FivePointsNumericalDerivative:
 
   public:
     
-    void setParameters(const ParameterList & parameters)
-      throw (ParameterNotFoundException, ConstraintException);
-    
     double getValue() const throw (Exception)
     {
       return _f3;
@@ -118,6 +115,10 @@ class FivePointsNumericalDerivative:
       throw Exception("Unimplemented cross derivative.");
     }
   
+  protected:
+    void updateDerivatives(const ParameterList & parameters)
+      throw (ParameterNotFoundException, ConstraintException);
+    
 };
 
 } //end of namespace bpp.

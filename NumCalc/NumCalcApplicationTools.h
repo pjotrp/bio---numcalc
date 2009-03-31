@@ -1,5 +1,5 @@
 //
-// File: BasicVectorTools.h
+// File: NumCalcApplicationTools.h
 // Created by: Sylvain Gaillard
 // Created on: Tue Jan 14:58:50 CET 2009
 //
@@ -42,41 +42,44 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include <Utils/StringTokenizer.h>
 #include "VectorTools.h"
-using namespace bpp;
 
-namespace bpp {
-  class NumCalcApplicationTools {
-    public:
-      NumCalcApplicationTools();
-      virtual ~NumCalcApplicationTools();
+namespace bpp
+{
 
-    public:
-      /**
-       * @brief Build a vector of integers as describe by a string
-       *
-       * Build a vector of integers following a description like:
-       * "2, 5, 7-10, 4" &rarr; [2, 5, 7, 8, 9, 10, 4]
-       *
-       * @param s The string to parse.
-       * @param delim Delimiter between elements.
-       * @param seqdelim Delimiter between min and max for a sequence.
-       * @return A vector containing the integers
-       */
-      static vector<int> seqFromString(const string & s, const string & delim = ",", const string & seqdelim = "-") {
-        vector<int> seq;
-        StringTokenizer * st = new StringTokenizer(s, delim, true);
-        while (st->hasMoreToken()) {
-          StringTokenizer * st2 = new StringTokenizer(st->nextToken(), seqdelim, true);
-          if (st2->numberOfRemainingTokens() > 1) {
-            vector<int> tmp = VectorTools::seq(TextTools::toInt(st2->getToken(0)), TextTools::toInt(st2->getToken(1)), 1);
-            VectorTools::append(seq, tmp);
-          } else {
-            seq.push_back(TextTools::toInt(st2->getToken(0))); }  
-        }  
-        return seq;
-      }
+class NumCalcApplicationTools
+{
+  public:
+    NumCalcApplicationTools();
+    virtual ~NumCalcApplicationTools();
 
-  };
-}
+  public:
+    /**
+     * @brief Build a vector of integers as describe by a string
+     *
+     * Build a vector of integers following a description like:
+     * "2, 5, 7-10, 4" &rarr; [2, 5, 7, 8, 9, 10, 4]
+     *
+     * @author Sylvain Gaillard
+     * @param s The string to parse.
+     * @param delim Delimiter between elements.
+     * @param seqdelim Delimiter between min and max for a sequence.
+     * @return A vector containing the integers
+     */
+    static vector<int> seqFromString(const string & s, const string & delim = ",", const string & seqdelim = "-");
+
+    /**
+     * @brief Returns the value of the Parameter of the given name
+     *  if it exists; otherwise returns the default value.
+     *
+     * @author Laurent Gueguen
+     * @param pl A parameter list to look in.
+     * @param name A string name
+     * @param x A double value
+     */
+    static double getDefaultValue(const ParameterList & pl, const string& name, double x);
+
+};
+
+} //End of namespace bpp.
 
 #endif  //_NUMCALCAPPLICATIONTOOLS_H_

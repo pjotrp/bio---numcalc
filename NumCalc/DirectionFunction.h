@@ -74,7 +74,7 @@ class DirectionFunction:
     void setParameters(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException);
     double getValue() const throw (Exception);
-    ParameterList getParameters() const throw (Exception);
+    const ParameterList & getParameters() const throw (Exception);
 
   public: // Specific methods:
     void init(const ParameterList & p, const vector<double> & xi);

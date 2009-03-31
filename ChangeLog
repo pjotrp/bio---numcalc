@@ -1,3 +1,11 @@
+29/03/09 Julien Dutheil
+* New class ParameterListener
+* Interface Parametrizable now supports "aliasing", with a defautl
+  implementation in AbstractParametrizable, which is now in a separate file.
+* Bug fixed in numerical derivatives, derivatives correctly updated when other
+  methods than setParameters are called.
+* Several other implementation improvements...
+
 05/02/09 Julien Dutheil
 * Bug fixed in EigenValue + code formating and improvement.
 * New class TestUnit.

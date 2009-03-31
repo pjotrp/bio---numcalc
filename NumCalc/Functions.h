@@ -264,7 +264,101 @@ class DerivableSecondOrder:
     }
 };
 
+/**
+ * @brief General class that wraps a function into another one.
+ * This class is meant to be derivated and just provided a general framework.
+ */
+class FunctionWrapper:
+  public virtual Function
+{
+  protected:
+    Function * _function;
 
+  public:
+    FunctionWrapper(Function * function): _function(function) {}
+
+  public:
+    void setParameters(const ParameterList & parameters)
+      throw (ParameterNotFoundException, ConstraintException)
+    {
+      _function->setParameters(parameters);
+    }
+
+    const ParameterList & getParameters() const throw (Exception)
+    {
+      return _function->getParameters();  
+    }
+
+    const ParameterList & getIndependentParameters() const throw (Exception)
+    {
+      return _function->getIndependentParameters();  
+    }
+
+    const Parameter & getParameter(const string & name) const throw (ParameterNotFoundException)
+    {
+      return _function->getParameter(name);
+    }
+
+    double getValue() const throw (Exception)
+    {
+      return _function->getValue();
+    }
+    
+    double f(const ParameterList & parameters) throw (Exception)
+    {
+      return _function->f(parameters);
+    }
+    
+    double getParameterValue(const string & name) const throw (ParameterNotFoundException)
+    {
+      return _function->getParameterValue(name);
+    }
+      
+    void setAllParametersValues(const ParameterList & parameters)
+      throw (ParameterNotFoundException, ConstraintException)
+    {
+      _function->setAllParametersValues(parameters);
+    }
+    
+    void setParameterValue(const string & name, double value)
+      throw (ParameterNotFoundException, ConstraintException)
+    {
+      _function->setParameterValue(name, value);
+    }
+    
+    void setParametersValues(const ParameterList & parameters)
+      throw (ParameterNotFoundException, ConstraintException)
+    {
+      _function->setParametersValues(parameters);
+    }
+    
+    void matchParametersValues(const ParameterList & parameters)
+      throw (ConstraintException)
+    {
+      _function->matchParametersValues(parameters);
+    }
+
+    unsigned int getNumberOfParameters() const
+    {
+      return _function->getNumberOfParameters();
+    }
+
+    unsigned int getNumberOfIndependentParameters() const
+    {
+      return _function->getNumberOfIndependentParameters();
+    }
+
+    void aliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception)
+    {
+      _function->aliasParameters(p1, p2);
+    }
+
+    void unaliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception)
+    {
+      _function->aliasParameters(p1, p2);
+    } 
+
+};
 
 /**
  * @brief Wrapper class for optimization under constraints.
@@ -272,15 +366,14 @@ class DerivableSecondOrder:
  * Catch any ConstraintException thrown and send +inf.
  */
 class InfinityFunctionWrapper:
-  public virtual Function
+  public FunctionWrapper
 {
   protected:
-    Function * _function;
     mutable bool _constraintMatch;
     
   public:
     InfinityFunctionWrapper(Function * function):
-      _function(function),
+      FunctionWrapper(function),
       _constraintMatch(false) {}
     virtual ~InfinityFunctionWrapper() {}
 
@@ -303,16 +396,6 @@ class InfinityFunctionWrapper:
       }
     }
 
-    ParameterList getParameters() const throw (Exception)
-    {
-      return _function->getParameters();  
-    }
-
-    Parameter getParameter(const string & name) const throw (ParameterNotFoundException)
-    {
-      return _function->getParameter(name);
-    }
-
     double getValue() const throw (Exception)
     {
       return _constraintMatch ? -log(0.) :  _function->getValue();
@@ -323,12 +406,7 @@ class InfinityFunctionWrapper:
       setParameters(parameters);
       return getValue();
     }
-    
-    double getParameterValue(const string & name) const throw (ParameterNotFoundException)
-    {
-      return _function->getParameterValue(name);
-    }
-      
+          
     void setAllParametersValues(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException)
     {
@@ -371,11 +449,6 @@ class InfinityFunctionWrapper:
       } catch(ConstraintException ce) {
         _constraintMatch = true;
       }
-    }
-
-    unsigned int getNumberOfParameters() const
-    {
-      return _function->getNumberOfParameters();
     }
 
 };

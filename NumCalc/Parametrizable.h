@@ -55,6 +55,31 @@ namespace bpp
 /**
  * @brief This is the interface for all objects that imply parameters.
  *
+ * Parameters can be aliased, so that their values are set identical.
+ * The alias relationship is not symmetric:
+ * @code
+ * aliasParameters("a","b");
+ * @endcode
+ * results in the value of "b" being updated when a is modified, but a will not be updated upon modification of "a".
+ * "b" will also be removed of the list of "independent" parameters.
+ * Furthermore, a parameter can only be aliased with another one:
+ * @code
+ * aliasParameters("a","b");
+ * aliasParameters("c","b"); //ERROR, throws an exception.
+ * @endcode
+ * However, several parameters can be aliased to the same one:
+ * @code
+ * aliasParameters("a","b");
+ * aliasParameters("a","c");
+ * @endcode
+ * In this case, modifying "a" will automatically update the values of "b" and "c", and "b" and "c" are removed from the list of indepedent parameters.
+ * Finally, parameters can be chained:
+ * @code
+ * aliasParameters("a","b");
+ * aliasParameters("b","c");
+ * @endcode
+ * is equivallent to the previous example.
+ *
  * @see Parameter, ParameterList
  */
 class Parametrizable:
@@ -68,10 +93,11 @@ class Parametrizable:
 
 		/**
 		 * @brief Get all parameters available.
-		 *
+     *
+     * @see getIndependentParameters if some parameters are aliased.
 		 * @return A list with all parameters available.
 		 */
-		virtual ParameterList getParameters() const = 0;
+		virtual const ParameterList & getParameters() const = 0;
 
     /**
      * @brief Get the parameter with specified name.
@@ -80,7 +106,7 @@ class Parametrizable:
      * @return The parameter with given name.
      * @throw ParameterNotFoundException if no parameter with this name is found.
      */
-    virtual Parameter getParameter(const string & name) const throw (ParameterNotFoundException) = 0;
+    virtual const Parameter & getParameter(const string & name) const throw (ParameterNotFoundException) = 0;
 	
 		/**
 		 * @brief Get the value for parameter of name 'name'.
@@ -145,9 +171,50 @@ class Parametrizable:
     /**
      * @brief Get the number of parameters.
      *
+     * @see getNumberOfIndependentParameters If some parameters are aliased.
      * @return The number of parameters.
      */
     virtual unsigned int getNumberOfParameters() const = 0;
+
+    /**
+     * @brief Get the number of independent parameters.
+     *
+     * @return The number of independent parameters.
+     * If no parameters are aliased, this is equivalent to the getNumberOfParameters() method.
+     */
+    virtual unsigned int getNumberOfIndependentParameters() const = 0;
+
+    /**
+     * @brief Set two parameters as 'aliased'.
+     *
+     * The values of the two parameters will be synchronized, so that setting the value of one parameter will automatically set the value of the other one accordingly.
+     * @param p1 Original parameter.
+     * @param p2 Aliased parameter.
+     * @throw ParameterNotFoundException if p1 or p2 do not correspond to existing parameters.
+     * @throw Exception when trying to perform non-valid association.
+     */
+    virtual void aliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception) = 0; 
+
+    /**
+     * @brief Detach two parameters previously set as 'aliased'.
+     *
+     * The values of the two parameters will now be independent.
+     * @param p1 Original parameter.
+     * @param p2 Aliased parameter.
+     * @throw ParameterNotFoundException if p1 or p2 do not correspond to existing parameters.
+     * @throw Exception when trying to perform non-valid dissociation.
+      */
+    virtual void unaliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception)  = 0;
+
+    /**
+     * @brief Get the minimal list of parameters to set the model.
+     *
+     * If no parameters are aliased, this is the same a getParameters().
+     *
+     * @return A minimal set of parameters.
+     */
+    virtual const ParameterList & getIndependentParameters() const = 0;
+
 };
 
 /**
@@ -158,6 +225,10 @@ class Parametrizable:
 class ParametrizableAdapter:
   public virtual Parametrizable
 {
+  protected:
+    ParameterList _parameters;
+    Parameter _parameter;
+
 	public:
 		ParametrizableAdapter() {}
 		virtual ~ParametrizableAdapter() {}
@@ -169,8 +240,9 @@ class ParametrizableAdapter:
 		 *
 		 * @{
 		 */
-		ParameterList getParameters() const { return ParameterList(); }
-    Parameter getParameter(const string & name) const throw (ParameterNotFoundException) { return Parameter(); }
+		const ParameterList & getParameters() const { return _parameters; }
+		const ParameterList & getIndependentParameters() const { return _parameters; }
+    const Parameter & getParameter(const string & name) const throw (ParameterNotFoundException) { return _parameter; }
 		double getParameterValue(const string & name) const
 			throw (ParameterNotFoundException) { return 0; };
 		void setAllParametersValues(const ParameterList & parameters) 
@@ -181,84 +253,11 @@ class ParametrizableAdapter:
 			throw (ParameterNotFoundException, ConstraintException) {}
 		void matchParametersValues(const ParameterList & parameters)
 			throw (ConstraintException) {};
+    void aliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception) {}
+    void unaliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception) {}
+    unsigned int getNumberOfParameters() const{ return 0; }
+    unsigned int getNumberOfIndependentParameters() const{ return 0; }
 		/** @} */
-
-};
-
-/**
- * @brief A partial implementation of the Parametrizable interface.
- *
- * Parameters are stored in a protected ParameterList object.
- *
- * The abstract fireParameterChanged() method is provided so that the derived class
- * know when a parameter has changed, and can be updated.
- * All methods call the corresponding method in ParameterList and then call the
- * fireParameterChanged() method.
- */
-class AbstractParametrizable:
-  public virtual Parametrizable
-{
-	protected:
-		mutable ParameterList _parameters;
-	
-	public:
-		AbstractParametrizable() {}
-
-		virtual ~AbstractParametrizable() {}
-
-	public:
-
-		ParameterList getParameters() const { return _parameters; }
-    
-    Parameter getParameter(const string & name) const throw (ParameterNotFoundException)
-    {
-      const Parameter * p = _parameters.getParameter(name);
-      if(p) return *p;
-      else throw ParameterNotFoundException("AbstractParametrizable::getParameter.", name);
-    }
-	
-		double getParameterValue(const string & name) const
-			throw (ParameterNotFoundException)
-		{ 
-			return _parameters.getParameter(name)->getValue();
-		}
-
-		void setAllParametersValues(const ParameterList & parameters) 
-			throw (ParameterNotFoundException, ConstraintException)
-		{
-			_parameters.setAllParametersValues(parameters);
-			fireParameterChanged(parameters);
-		}
-
-		void setParameterValue(const string & name, double value) 
-			throw (ParameterNotFoundException, ConstraintException)
-		{ 
-			_parameters.setParameterValue(name, value);
-			fireParameterChanged(_parameters.subList(name));
-		}
-
-		void setParametersValues(const ParameterList & parameters)
-			throw (ParameterNotFoundException, ConstraintException)
-		{ 
-			_parameters.setParametersValues(parameters);
-			fireParameterChanged(parameters);
-		}
-
-		void matchParametersValues(const ParameterList & parameters)
-			throw (ConstraintException)
-		{ 
-			_parameters.matchParametersValues(parameters);
-			fireParameterChanged(parameters);
-		}
-
-    unsigned int getNumberOfParameters() const { return _parameters.size(); }
-
-		/**
-		 * @brief Notify the class when one or several parameters have changed.
-		 *
-		 * @param parameters A ParameterList object with parameters that changed.
-		 */
-		virtual void fireParameterChanged(const ParameterList & parameters) = 0;
 
 };
 

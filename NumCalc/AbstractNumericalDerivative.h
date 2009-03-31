@@ -66,10 +66,10 @@ namespace bpp
  * In the last case, first and second order derivative will be computed analytically only if no appropriate analytical derivative is available.
  */
 class AbstractNumericalDerivative:
-  public DerivableSecondOrder
+  public DerivableSecondOrder,
+  public FunctionWrapper
 {
   protected:
-    Function * _function;
     DerivableFirstOrder *_function1;
     DerivableSecondOrder *_function2;
     double _h;
@@ -82,11 +82,11 @@ class AbstractNumericalDerivative:
     
 	public:
 		AbstractNumericalDerivative (Function * function):
-      _function(function), _function1(NULL), _function2(NULL), _h(0.0001), _computeD1(true), _computeD2(true), _computeCrossD2(false) {}
+      FunctionWrapper(function), _function1(NULL), _function2(NULL), _h(0.0001), _computeD1(true), _computeD2(true), _computeCrossD2(false) {}
 		AbstractNumericalDerivative (DerivableFirstOrder * function):
-      _function(function), _function1(function), _function2(NULL), _h(0.0001), _computeD1(true), _computeD2(true), _computeCrossD2(false) {}
+      FunctionWrapper(function), _function1(function), _function2(NULL), _h(0.0001), _computeD1(true), _computeD2(true), _computeCrossD2(false) {}
 	  AbstractNumericalDerivative (DerivableSecondOrder * function):
-      _function(function), _function1(function), _function2(function), _h(0.0001), _computeD1(true), _computeD2(true), _computeCrossD2(false) {}
+      FunctionWrapper(function), _function1(function), _function2(function), _h(0.0001), _computeD1(true), _computeD2(true), _computeCrossD2(false) {}
 		virtual ~AbstractNumericalDerivative() {}
 
 #ifndef NO_VIRTUAL_COV
@@ -191,59 +191,56 @@ class AbstractNumericalDerivative:
     }
     /** @} */
 	   
-    void enableSecondOrderCrossDerivatives(bool yn) { _computeCrossD2 = yn; }
-    bool enableSecondOrderCrossDerivatives() const { return _computeCrossD2; }
-
     /**
-     * @name The Function interface
+     * @name The Parametrizable interface.
      *
      * @{
      */
-		ParameterList getParameters() const throw (Exception)
+    double f(const ParameterList & parameters) throw (Exception)
     {
-			return _function->getParameters();	
-		}
-
-    Parameter getParameter(const string & name) const throw (ParameterNotFoundException)
-    {
-      return _function->getParameter(name);
+      setParameters(parameters);
+      return getValue();
     }
-		
-		double getParameterValue(const string & name) const
-      throw (ParameterNotFoundException)
-    {
-			return _function->getParameterValue(name);
-		}
-			
-		void setAllParametersValues(const ParameterList & parameters)
+    void setParameters(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException)
     {
-			_function->setAllParametersValues(parameters);
-		}
-		
-		void setParameterValue(const string & name, double value)
+      _function->setParameters(parameters);
+      updateDerivatives(parameters);
+    }
+    void setAllParametersValues(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException)
     {
-			_function->setParameterValue(name, value);
-		}
-		
-		void setParametersValues(const ParameterList & parameters)
+      _function->setAllParametersValues(parameters);
+      updateDerivatives(parameters);
+    }
+    
+    void setParameterValue(const string & name, double value)
       throw (ParameterNotFoundException, ConstraintException)
     {
-			_function->setParametersValues(parameters);
-		}
-		
-		void matchParametersValues(const ParameterList & parameters)
+      _function->setParameterValue(name, value);
+      updateDerivatives(_function->getParameters().subList(name));
+    }
+    
+    void setParametersValues(const ParameterList & parameters)
+      throw (ParameterNotFoundException, ConstraintException)
+    {
+      _function->setParametersValues(parameters);
+      updateDerivatives(parameters);
+    }
+    
+    void matchParametersValues(const ParameterList & parameters)
       throw (ConstraintException)
     {
-			_function->matchParametersValues(parameters);
-		}
-
-    unsigned int getNumberOfParameters() const
-    {
-      return _function->getNumberOfParameters();
+      _function->matchParametersValues(parameters);
+      updateDerivatives(parameters);
     }
     /** @} */
+
+    void enableSecondOrderCrossDerivatives(bool yn) { _computeCrossD2 = yn; }
+    bool enableSecondOrderCrossDerivatives() const { return _computeCrossD2; }
+
+  protected:
+    virtual void updateDerivatives(const ParameterList & parameters) = 0;
     
 };
 

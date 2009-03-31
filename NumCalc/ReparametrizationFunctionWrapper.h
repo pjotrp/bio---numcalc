@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _REPARAMETRIZATIONFUNCTIONWRAPPER_H_
 
 #include "Functions.h"
+#include "AbstractParametrizable.h"
 #include "TransformedParameter.h"
 
 namespace bpp {

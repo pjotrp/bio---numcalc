@@ -92,9 +92,6 @@ class TwoPointsNumericalDerivative:
 
   public:
     
-    void setParameters(const ParameterList & parameters)
-      throw (ParameterNotFoundException, ConstraintException);
-    
     double getValue() const throw (Exception)
     {
       return _f1;
@@ -116,6 +113,10 @@ class TwoPointsNumericalDerivative:
       throw Exception("Unimplemented cross derivative.");
     }
     /** @} */
+    
+  protected:
+    void updateDerivatives(const ParameterList & parameters)
+      throw (ParameterNotFoundException, ConstraintException);
     
 };
 

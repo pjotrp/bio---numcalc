@@ -137,19 +137,21 @@ class RTransformedParameter:
     void setOriginalValue(double value) throw (ConstraintException) 
     {
       if(_positive ? value <= _bound : value >= _bound) throw ConstraintException("RTransformedParameter::setValue", this, value);
-      if(_positive  & value < 1 + _bound) setValue(log(_scale * (value - _bound)));
-      if(_positive  & value >= 1 + _bound) setValue(_scale * (value - 1. - _bound));
-      if(!_positive & value > -1 + _bound) setValue(log(-_scale * (value - _bound)));
-      if(!_positive  & value <= -1 + _bound) setValue(-_scale * (value - 1. - _bound));
+      if(_positive  & (value < 1 + _bound)) setValue(log(_scale * (value - _bound)));
+      if(_positive  & (value >= 1 + _bound)) setValue(_scale * (value - 1. - _bound));
+      if(!_positive & (value > -1 + _bound)) setValue(log(-_scale * (value - _bound)));
+      if(!_positive & (value <= -1 + _bound)) setValue(-_scale * (value - 1. - _bound));
     }
 
     double getOriginalValue() const
     {
       double x = getValue();
-      if(_positive & x < 0) return exp(x)/_scale + _bound;
-      if(_positive & x >= 0) return x/_scale + 1. + _bound;
-      if(!_positive & x < 0) return - exp(-x)/_scale + _bound;
-      if(!_positive & x >= 0) return -x/_scale - 1. + _bound;
+      if(_positive)
+        if(x < 0) return exp(x)/_scale + _bound;
+        else      return x/_scale + 1. + _bound;
+      else 
+        if(x < 0) return - exp(-x)/_scale + _bound;
+        else      return -x/_scale - 1. + _bound;
     }
 };
 
