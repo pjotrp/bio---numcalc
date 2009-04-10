@@ -43,6 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "VectorTools.h"
 #include "Matrix.h"
 #include "LUDecomposition.h"
+#include "EigenValue.h"
 
 #include <cstdio>
 #include <iostream>
@@ -63,60 +64,64 @@ class MatrixTools
 	public:
 
 		/**
-		 * @return A copy of the given matrix.
-		 * @param A original matrix.
+     * @brief Copy operation. This function supplies the lack of inheritence of the assigment operator :D .
+     *
+		 * @param A [in] Original matrix.
+		 * @param O [out] A copy of the given matrix.
 		 */
-		template<class Matrix>
-		static Matrix copy(const Matrix & A)
-		{
-			return Matrix(A);
-		}
+		template<class MatrixA, class MatrixO>
+		static void copy(const MatrixA & A, MatrixO & O)
+    { 
+      O.resize(A.nRows(), A.nCols());
+      for(unsigned int i = 0; i < A.nRows(); i++)
+        for(unsigned int j = 0; j < A.nCols(); j++)
+          O(i, j) = A(i, j);
+    }
 	
 		/**
-		 * @return A identity matrix of size n.
+     * @brief Get a identity matrix of a given size.
+     *
 		 * @param n the size of the matrix.
+		 * @return O [out] A identity matrix of size n.
 		 */
 		template<class Matrix>
-		static Matrix getId(unsigned int n)
+		static void getId(unsigned int n, Matrix & O)
 		{
-			Matrix id(n, n);
+			O.resize(n, n);
 			for(unsigned int i = 0; i < n; i++)
       {
-				for(unsigned int j = 0; j < n; j++) id(i, j) = (i == j) ? 1 : 0;
+				for(unsigned int j = 0; j < n; j++) O(i, j) = (i == j) ? 1 : 0;
 			}
-			return id;
 		}
 
 		/**
-		 * @return A diagonal matrix with diagonal elements taken from a vector.
-		 * @param d A vector of diagonal elements.
+		 * @param D [in] A vector of diagonal elements.
+		 * @param O [out] A diagonal matrix with diagonal elements taken from a vector.
 		 */
-		template<class Matrix, class T>
-		static Matrix diag(const vector<T> & d)
+		template<class Scalar>
+		static void diag(const vector<Scalar> & D, Matrix<Scalar> & O)
 		{
-			unsigned int n = d.size();
-			Matrix diago(n, n);
+			unsigned int n = D.size();
+			O.resize(n, n);
 			for(unsigned int i = 0; i < n; i++)
       {
-				for(unsigned int j = 0; j < n; j++) diago(i, j) = (i == j) ? d[i] : 0;
+				for(unsigned int j = 0; j < n; j++) O(i, j) = (i == j) ? D[i] : 0;
 			}
-			return diago;
 		}
 
 		/**
-		 * @return The diagonal elements of a square matrix as a vector.
-		 * @param M The matrix.
+		 * @param M [in] The matrix.
+		 * @param O [out] The diagonal elements of a square matrix as a vector.
 		 * @throw DimensionException If M is not a square matrix.
 		 */
-		template<class Matrix, class T>
-		static vector<T> diag(const Matrix & M) throw (DimensionException)
+		template<class Scalar>
+		static void diag(const Matrix<Scalar> & M, vector<Scalar> & O) throw (DimensionException)
 		{
 			unsigned int nc = M.nCols();
 			unsigned int nr = M.nRows();
 			if(nc != nr) throw DimensionException("MatrixTools::diag(). M must be a square matrix.", nr, nc); 
-			vector<T> diago(nc);
-			for(unsigned int i = 0; i < nc; i++) diago[i] = M(i, i);
-			return diago;
+			O.resize(nc);
+			for(unsigned int i = 0; i < nc; i++) O[i] = M(i, i);
 		}
 
 		/**
@@ -141,48 +146,47 @@ class MatrixTools
 		 *
 		 * Performs \f$\forall i \forall j m_{i,j} = a.m_{i,j}+b\f$.
 		 * 
-		 * @param X A matrix.
+		 * @param A A matrix.
 		 * @param a Multiplicator.
 		 * @param b Constant.
 		 */
 		template<class Matrix, class Scalar>
-		static void scale(Matrix & X, Scalar a, Scalar b = 0)
+		static void scale(Matrix & A, Scalar a, Scalar b = 0)
     {
-			for(unsigned int i = 0; i < X.nRows(); i++)
+			for(unsigned int i = 0; i < A.nRows(); i++)
       {
-				for(unsigned int j = 0; j < X.nCols(); j++)
+				for(unsigned int j = 0; j < A.nCols(); j++)
         {
-					X(i,j) = a * X(i, j) + b;
+					A(i,j) = a * A(i, j) + b;
 				}
 			}
 		}
 
 		/**
-		 * @return The dot product of two matrices.
-		 * @param A First matrix.
-		 * @param B Second matrix.
+		 * @param A [in] First matrix.
+		 * @param B [in] Second matrix.
+		 * @param O [out] The dot product of two matrices.
 		 */
-		template<class MatrixA, class MatrixB>
-		static MatrixB mult(const MatrixA & A, const MatrixB & B) throw (DimensionException)
+		template<class Scalar>
+		static void mult(const Matrix<Scalar> & A, const Matrix<Scalar> & B, Matrix<Scalar> & O) throw (DimensionException)
 		{
 			unsigned int ncA = A.nCols();
 			unsigned int nrA = A.nRows();
 			unsigned int nrB = B.nRows();
 			unsigned int ncB = B.nCols();
 			if(ncA != nrB) throw DimensionException("MatrixTools::mult(). nrows B != ncols A.", nrB, ncA); 
-			MatrixB C(nrA, ncB);
+			O.resize(nrA, ncB);
 			for(unsigned int i = 0; i < nrA; i++)
       {
 				for(unsigned int j = 0; j < ncB; j++)
         {
-					C(i, j) = 0;
+					O(i, j) = 0;
 					for(unsigned int k = 0; k < ncA; k++)
           {
-						C(i, j) += A(i, k) * B(k, j);
+						O(i, j) += A(i, k) * B(k, j);
 					}
 				}
 			}
-			return C;
 		}
 
 		/**
@@ -191,14 +195,14 @@ class MatrixTools
 		 * Since D is a diagonal matrix, this function is more efficient than doing
 		 * mult(mult(A, diag(D)), B), which involves two 0(n^3) operations.
 		 *
-		 * @param A The first matrix.
-		 * @param D The diagonal matrix (only diagonal elements in a vector)
-		 * @param B The second matrix.
-		 * @return The result matrix.
+		 * @param A [in] The first matrix.
+		 * @param D [in] The diagonal matrix (only diagonal elements in a vector)
+		 * @param B [in] The second matrix.
+		 * @param O [out] The result matrix.
 		 * @throw DimensionException If matrices have not the appropriate size.
 		 */
-		template<class MatrixA, class Scalar, class MatrixB>
-		static MatrixB mult(const MatrixA & A, const vector<Scalar> & D, const MatrixB & B) throw (DimensionException)
+		template<class Scalar>
+		static void mult(const Matrix<Scalar> & A, const vector<Scalar> & D, const Matrix<Scalar> & B, Matrix<Scalar> & O) throw (DimensionException)
 		{
 			unsigned int ncA = A.nCols();
 			unsigned int nrA = A.nRows();
@@ -206,26 +210,25 @@ class MatrixTools
 			unsigned int ncB = B.nCols();
 			if(ncA != nrB) throw DimensionException("MatrixTools::mult(). nrows B != ncols A.", nrB, ncA); 
 			if(ncA != D.size()) throw DimensionException("MatrixTools::mult(). Vector size is not eual to matrix size.", D.size(), ncA); 
-			MatrixB C(nrA, ncB);
+			O.resize(nrA, ncB);
 			for(unsigned int i = 0; i < nrA; i++)
       {
 				for(unsigned int j = 0; j < ncB; j++)
         {
-					C(i, j) = 0;
+					O(i, j) = 0;
 					for(unsigned int k = 0; k < ncA; k++)
           {
-						C(i, j) += A(i, k) * B(k, j) * D[k];
+						O(i, j) += A(i, k) * B(k, j) * D[k];
 					}
 				}
 			}
-			return C;
 		}
 
 		/**
 		 * @brief Add matrix B to matrix A.
 		 *
-		 * @param A Matrix A
-		 * @param B Matrix B
+		 * @param A [in] Matrix A
+		 * @param B [in] Matrix B
 		 * @throw DimensionException If A and B have note the same size.
 		 */
 		template<class MatrixA, class MatrixB>
@@ -247,24 +250,48 @@ class MatrixTools
 		}		
 	
 		/**
-		 * @return \f$\prod_{i=1}^p m\f$.
-		 * @param m The matrix.
+     * @brief Compute the power of a given matrix.
+     *
+		 * @param A [in] The matrix.
 		 * @param p The number of multiplications.
+		 * @param O [out]\f$\prod_{i=1}^p m\f$.
 		 * If p = 0, sends the identity matrix.
 		 * @throw DimensionException If m is not a square matrix.
 		 */
 		template<class Matrix>
-		static Matrix pow(const Matrix & m, unsigned int p) throw (DimensionException)
+		static void pow(const Matrix & A, unsigned int p, Matrix & O) throw (DimensionException)
 		{
-			unsigned int n = m.nRows();
-			if(n != m.nCols()) throw DimensionException("MatrixTools::pow(). nrows != ncols.", m.nCols(), m.nRows()); 
-			if(p == 0) return getId<Matrix>(n);
-			else
+			unsigned int n = A.nRows();
+			if(n != A.nCols()) throw DimensionException("MatrixTools::pow(). nrows != ncols.", A.nCols(), A.nRows()); 
+			getId<Matrix>(n, O);
+      RowMatrix<double> tmp;
+      for(unsigned int i = 0; i < p; i++)
       {
-				Matrix result(n, n);
-				result = mult(m, pow<Matrix>(m, p - 1));
-				return result;
+        tmp = O;
+				mult(tmp, A, O);
 			}
+		}
+	
+		/**
+     * @brief Perform matrix exponentiation.
+     *
+     * @warning This method currently relies only on diagonalization, so it won't work if your matrix is not diagonalizable.
+     * The function may be extended later to deal with other cases.
+     *
+		 * @param A [in] The matrix.
+		 * @param O [out]\f$\prod_{i=1}^p m\f$.
+		 * @throw DimensionException If m is not a square matrix.
+		 */
+		template<class Scalar>
+		static void exp(const Matrix<Scalar> & A, Matrix<Scalar> & O) throw (DimensionException)
+		{
+			unsigned int n = A.nRows();
+			if(n != A.nCols()) throw DimensionException("MatrixTools::exp(). nrows != ncols.", A.nCols(), A.nRows()); 
+      EigenValue<Scalar> eigen(A);
+      RowMatrix<Scalar> rightEV, leftEV;
+      rightEV = eigen.getV();
+      inv(rightEV, leftEV);
+      mult(rightEV, VectorTools::exp(eigen.getRealEigenValues()), leftEV, O);
 		}
 	
 		/**
@@ -380,52 +407,52 @@ class MatrixTools
 		static bool isSquare(const Matrix & A) { return A.nRows() == A.nCols(); }
 
 		/**
-		 * @return The inverse matrix of A.
-		 * @param A The matrix to inverse.
+		 * @param A [in] The matrix to inverse.
+		 * @param O [out] The inverse matrix of A.
 		 * @throw DimensionException If A is not a square matrix.
 		 */
-		template<class Real>
-		static RowMatrix<Real> inv(const Matrix<Real> & A) throw (DimensionException)
+		template<class Scalar>
+		static void inv(const Matrix<Scalar> & A, Matrix<Scalar> & O) throw (DimensionException)
 		{
 			if(! isSquare(A)) throw DimensionException("MatrixTools::inv(). Matrix A is not a square matrix.", A.nRows(), A.nCols());
-			LUDecomposition<Real> lu(A);
-			RowMatrix<Real> I = getId<RowMatrix<Real> >(A.nRows());
-			return lu.solve(I);
+			LUDecomposition<Scalar> lu(A);
+			RowMatrix<Scalar> I;
+      getId(A.nRows(), I);
+			copy(lu.solve(I), O);
 		}
 
 		/**
-		 * @return The transposition of A.
-		 * @param A The matrix.
+		 * @param A [in] The matrix to transpose.
+		 * @param O [out] The transposition of A.
 		 */
-		template<class Real>
-		static RowMatrix<Real> transpose(const Matrix<Real> & A)
+		template<class MatrixA, class MatrixO>
+		static void transpose(const MatrixA & A, MatrixO & O)
 		{
-			RowMatrix<Real> M(A.nCols(), A.nRows());
+			O.resize(A.nCols(), A.nRows());
 			for(unsigned int i = 0; i < A.nCols(); i++)
       {
 				for(unsigned int j = 0; j < A.nRows(); j++)
         {
-					M(i, j) = A(j, i);
+					O(i, j) = A(j, i);
 				}
 			}
-			return M;
 		}
 	
     /**
      * @brief Compute the Kronecker product of two row matrices.
      *
-     * @param A The first row matrix.
-     * @param B The second row matrix.
-     * @return The product \f$A \otimes B\f$.
+     * @param A [in] The first row matrix.
+     * @param B [in] The second row matrix.
+     * @param O [out] The product \f$A \otimes B\f$.
      */
     template<class Scalar>
-    static RowMatrix<Scalar> kroneckerMult(const RowMatrix<Scalar> & A, const RowMatrix<Scalar> & B)
+    static void kroneckerMult(const Matrix<Scalar> & A, const Matrix<Scalar> & B, Matrix<Scalar> & O)
     {
 			unsigned int ncA = A.nCols();
 			unsigned int nrA = A.nRows();
 			unsigned int nrB = B.nRows();
 			unsigned int ncB = B.nCols();
-      RowMatrix<Scalar> C(nrA*nrB, ncA*ncB);
+      O.resize(nrA*nrB, ncA*ncB);
       for(unsigned int ia = 0; ia < nrA; ia++)
       {
         for(unsigned int ja = 0; ja < ncA; ja++)
@@ -435,79 +462,76 @@ class MatrixTools
           {
             for(unsigned int jb = 0; jb < ncB; jb++)
             {
-              C(ia*nrB+ib,ja*ncB+jb) = aij*B(ib,jb);
+              O(ia * nrB + ib, ja * ncB + jb) = aij * B(ib,jb);
             }
           }
         }
       }
-      return C;
     }
 
     /**
      * @brief Compute the Kronecker sum of two row matrices.
      *
-     * @param A The first row matrix.
-     * @param B The second row matrix.
-     * @return The product \f$A \oplus B\f$.
+     * @param A [in] The first row matrix.
+     * @param B [in] The second row matrix.
+     * @param O [out] The product \f$A \oplus B\f$.
      */
     template<class Scalar>
-    static RowMatrix<Scalar> kroneckerSum(const RowMatrix<Scalar> & A, const RowMatrix<Scalar> & B)
+    static void kroneckerSum(const Matrix<Scalar> & A, const Matrix<Scalar> & B, Matrix<Scalar> & O)
     {
 			unsigned int ncA = A.nCols();
 			unsigned int nrA = A.nRows();
 			unsigned int nrB = B.nRows();
 			unsigned int ncB = B.nCols();
-      RowMatrix<Scalar> C(nrA+nrB,ncA+ncB);
+      O.resize(nrA + nrB, ncA + ncB);
       for(unsigned int ia = 0; ia < nrA; ia++)
       {
         for(unsigned int ja = 0; ja < ncA; ja++)
         {
-          C(ia,ja) = A(ia,ja);
+          O(ia, ja) = A(ia,ja);
         }
       }
       for(unsigned int ib = 0; ib < nrB; ib++)
       {
         for(unsigned int jb = 0; jb < nrB; jb++)
         {
-          C(nrA+ib,ncA+jb) = B(ib,jb);
+          O(nrA + ib, ncA + jb) = B(ib,jb);
         }
       }
-      return C;
     }
 
     /**
      * @brief Compute the Kronecker sum of n row matrices.
      *
-     * @param A A vector of row matrices of any size.
-     * @return The product \f$\bigoplus_i A_i\f$.
+     * @param vA [in] A vector of row matrices of any size.
+     * @param O [out] The product \f$\bigoplus_i A_i\f$.
      */
     template<class Scalar>
-    static RowMatrix<Scalar> kroneckerSum(const vector< RowMatrix<Scalar> > & A)
+    static void kroneckerSum(const vector< Matrix<Scalar> *> & vA, Matrix<Scalar> & O)
     {
 			unsigned int nr = 0;
 			unsigned int nc = 0;
-      for(unsigned int k = 0; k < A.size(); k++)
+      for(unsigned int k = 0; k < vA.size(); k++)
       {
-        nr += A[k].nRows();
-        nc += A[k].nCols();
+        nr += vA[k]->nRows();
+        nc += vA[k]->nCols();
       }
-      RowMatrix<Scalar> C(nr,nc);
+      O.resize(nr, nc);
       unsigned int rk = 0; //Row counter
       unsigned int ck = 0; //Col counter
-      for(unsigned int k = 0; k < A.size(); k++)
+      for(unsigned int k = 0; k < vA.size(); k++)
       {
-        const RowMatrix<Scalar> * Ak = &A[k];
+        const Matrix<Scalar> * Ak = vA[k];
         for(unsigned int i = 0; i < Ak->nRows(); i++)
         {
           for(unsigned int j = 0; j < Ak->nCols(); j++)
           {
-            C(rk+i,ck+j) = (*Ak)(i,j);
+            O(rk + i, ck + j) = (*Ak)(i,j);
           }
         }
-        rk+=Ak->nRows();
-        ck+=Ak->nCols();
+        rk += Ak->nRows();
+        ck += Ak->nCols();
       }
-      return C;
     }
 
 	

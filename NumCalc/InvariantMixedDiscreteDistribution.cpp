@@ -48,11 +48,11 @@ using namespace bpp;
 
 InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
     DiscreteDistribution* dist, double p, double invariant, bool ownDist):
-  _dist(dist),
-  _ownDist(ownDist),
-  _invariant(invariant)
+  dist_(dist),
+  ownDist_(ownDist),
+  invariant_(invariant)
 {
-  _parameters.addParameters(_dist->getParameters());
+  _parameters.addParameters(dist_->getParameters());
   _parameters.addParameter(Parameter("p", p, &Parameter::PROP_CONSTRAINT_IN));
   applyParameters();
 }
@@ -61,7 +61,7 @@ InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
 
 void InvariantMixedDiscreteDistribution::fireParameterChanged(const ParameterList & parameters)
 {
-  _dist->matchParametersValues(parameters);
+  dist_->matchParametersValues(parameters);
   applyParameters();
 }
 
@@ -70,7 +70,7 @@ void InvariantMixedDiscreteDistribution::fireParameterChanged(const ParameterLis
 
 Domain InvariantMixedDiscreteDistribution::getDomain() const
 {
-  return Domain(_bounds, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(_distribution));
+  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(_distribution));
 }
 
 /******************************************************************************/
@@ -79,19 +79,19 @@ void InvariantMixedDiscreteDistribution::applyParameters()
 {
   double p = _parameters.getParameter("p")->getValue();
   _distribution.clear();
-  _distribution[_invariant] = p;
-  unsigned int distNCat = _dist->getNumberOfCategories();
-  _bounds.clear();
-  _bounds.push_back(0.);
-  vector<double> probs = _dist->getProbabilities();
-  vector<double> cats  = _dist->getCategories();
-  Domain d = _dist->getDomain();
+  _distribution[invariant_] = p;
+  unsigned int distNCat = dist_->getNumberOfCategories();
+  bounds_.clear();
+  bounds_.push_back(0.);
+  vector<double> probs = dist_->getProbabilities();
+  vector<double> cats  = dist_->getCategories();
+  Domain d = dist_->getDomain();
   for(unsigned int i = 0; i < distNCat; i++)
   {
     _distribution[cats[i]] = (1. - p) * probs[i];
-    _bounds.push_back(d.getBound(i));
+    bounds_.push_back(d.getBound(i));
   }
-  _bounds.push_back(d.getBound(distNCat));
+  bounds_.push_back(d.getBound(distNCat));
 }
 
 /******************************************************************************/

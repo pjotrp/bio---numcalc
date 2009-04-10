@@ -53,63 +53,65 @@ namespace bpp
  * @brief The matrix template interface.
  */
 template<class Scalar>
-class Matrix: public Clonable {
+class Matrix:
+  public Clonable
+{
 
-	public:
-		Matrix() {}
-		virtual ~Matrix() {};
+  public:
+    Matrix() {}
+    virtual ~Matrix() {};
 
-	public:
-	
-		/**
-		 * @return \f$m_{i,j}\f$.
-		 * @param i row index.
-		 * @param j column index.
-		 */
-		virtual const Scalar & operator()(unsigned int i, unsigned int j) const = 0;
-		/**
-		 * @return \f$m_{i,j}\f$.
-		 * @param i row index.
-		 * @param j column index.
-		 */
-		virtual Scalar & operator()(unsigned int i, unsigned int j) = 0;
-		/**
-		 * @return \f$m_{i,j}\f$.
-		 * @param i row index.
-		 * @param j column index.
-		 */
-		virtual const Scalar & operator()(int i, int j) const { return (*this)((unsigned int)i, (unsigned int)j); }
-		/**
-		 * @return \f$m_{i,j}\f$.
-		 * @param i row index.
-		 * @param j column index.
-		 */
-		virtual Scalar & operator()(int i, int j)  { return (*this)((unsigned int)i, (unsigned int)j); }
-		/**
-		 * @return The number of rows.
-		 */
-		virtual unsigned int nRows() const = 0;
-		/**
-		 * @return The number of columns.
-		 */
-		virtual unsigned int nCols() const = 0;
-		/**
-		 * @return the row at position i as a vector.
-		 * @param i The index of the row.
-		 */
-		virtual vector<Scalar> row(unsigned int i) const = 0;
-		/**
-		 * @return the column at position j as a vector.
-		 * @param j The index of the column.
-		 */
-		virtual vector<Scalar> col(unsigned int j) const = 0;
-		/**
-		 * @brief Resize the matrix.
-		 *
-		 * @param nRows The new number of rows.
-		 * @param nCols The new number of columns.
-		 */
-		virtual void resize(unsigned int nRows, unsigned int nCols) = 0;
+  public:
+    
+    /**
+     * @return \f$m_{i,j}\f$.
+     * @param i row index.
+     * @param j column index.
+     */
+    virtual const Scalar & operator()(unsigned int i, unsigned int j) const = 0;
+    /**
+     * @return \f$m_{i,j}\f$.
+     * @param i row index.
+     * @param j column index.
+     */
+    virtual Scalar & operator()(unsigned int i, unsigned int j) = 0;
+    /**
+     * @return \f$m_{i,j}\f$.
+     * @param i row index.
+     * @param j column index.
+     */
+    virtual const Scalar & operator()(int i, int j) const { return (*this)((unsigned int)i, (unsigned int)j); }
+    /**
+     * @return \f$m_{i,j}\f$.
+     * @param i row index.
+     * @param j column index.
+     */
+    virtual Scalar & operator()(int i, int j)  { return (*this)((unsigned int)i, (unsigned int)j); }
+    /**
+     * @return The number of rows.
+     */
+    virtual unsigned int nRows() const = 0;
+    /**
+     * @return The number of columns.
+     */
+    virtual unsigned int nCols() const = 0;
+    /**
+     * @return the row at position i as a vector.
+     * @param i The index of the row.
+     */
+    virtual vector<Scalar> row(unsigned int i) const = 0;
+    /**
+     * @return the column at position j as a vector.
+     * @param j The index of the column.
+     */
+    virtual vector<Scalar> col(unsigned int j) const = 0;
+    /**
+     * @brief Resize the matrix.
+     *
+     * @param nRows The new number of rows.
+     * @param nCols The new number of columns.
+     */
+    virtual void resize(unsigned int nRows, unsigned int nCols) = 0;
 };
 
 /**
@@ -121,84 +123,84 @@ class Matrix: public Clonable {
 template<class Scalar>
 class RowMatrix : public Matrix<Scalar>, public vector< vector<Scalar> > {
 
-	public:
-		RowMatrix() {}
+  public:
+    RowMatrix() {}
 
-		RowMatrix(unsigned int nRow, unsigned int nCol): vector< vector<Scalar> >(nRow)
-		{
-			for(unsigned int i = 0; i < nRow; i++) {
-				vector< vector<Scalar> >::operator[](i).resize(nCol);
-			}
-		}
+    RowMatrix(unsigned int nRow, unsigned int nCol): vector< vector<Scalar> >(nRow)
+    {
+      for(unsigned int i = 0; i < nRow; i++) {
+        vector< vector<Scalar> >::operator[](i).resize(nCol);
+      }
+    }
 
-		RowMatrix(const Matrix<Scalar> & m) 
-		{
-			resize(m.nRows(), m.nCols());
-			for(unsigned int i = 0; i < m.nRows(); i++)
+    RowMatrix(const Matrix<Scalar> & m) 
+    {
+      resize(m.nRows(), m.nCols());
+      for(unsigned int i = 0; i < m.nRows(); i++)
       {
-				for(unsigned int j = 0; j < m.nCols(); j++)
+        for(unsigned int j = 0; j < m.nCols(); j++)
         {
-					operator()(i, j) = m(i, j);
-				}
-			}
-		}
+          (*this)[i][j] = m(i, j);
+        }
+      }
+    }
 
-		virtual ~RowMatrix() {};
+    virtual ~RowMatrix() {};
 
-	public:
-		
-		Matrix<Scalar> & operator=(const Matrix<Scalar> & m)
-		{
-			vector< vector<Scalar> >::resize(m.nRows());	
-			for(unsigned int i = 0; i < m.nRows(); i++)
+  public:
+    
+    RowMatrix<Scalar> & operator=(const Matrix<Scalar> & m)
+    {
+      vector< vector<Scalar> >::resize(m.nRows());  
+      for(unsigned int i = 0; i < m.nRows(); i++)
       {
-				vector< vector<Scalar> >::operator[](i).resize(m.nCols());
-				for(unsigned int j = 0; j < m.nCols(); j++)
+        vector< vector<Scalar> >::operator[](i).resize(m.nCols());
+        for(unsigned int j = 0; j < m.nCols(); j++)
         {
-					operator()(i, j) = m(i, j);
-				}
-			}
-			return *this;
-		}
+          (*this)[i][j] = m(i, j);
+        }
+      }
+      return *this;
+    }
 
-		Clonable * clone() const { return new RowMatrix(* this); }
-		
-		const Scalar & operator()(unsigned int i, unsigned int j) const
-		{
-			return vector< vector<Scalar> >::operator[](i)[j];
-		}
-		
-		Scalar & operator()(unsigned int i, unsigned int j)
-		{
-			return vector< vector<Scalar> >::operator[](i)[j];
-		}
-		
-		unsigned int nRows() const { return vector< vector<Scalar> >::size(); }
-		
-		unsigned int nCols() const { return vector< vector<Scalar> >::size() == 0 ? 0 : vector< vector<Scalar> >::operator[](0).size(); }
-		
-		vector<Scalar> row(unsigned int i) const
-		{
-			vector<Scalar> r(nCols());
-			for(unsigned int j = 0; j < nCols(); j++) r[j] = operator()(i, j);
-			return(r);
-		}
-		
-		vector<Scalar> col(unsigned int j) const
-		{
-			vector<Scalar> c(nRows());
-			for(unsigned int i = 0; i < nRows(); i++) c[i] = operator()(i, j);
-			return(c);
-		}
+    Clonable * clone() const { return new RowMatrix(* this); }
+    
+    const Scalar & operator()(unsigned int i, unsigned int j) const
+    {
+      return vector< vector<Scalar> >::operator[](i)[j];
+    }
+    
+    Scalar & operator()(unsigned int i, unsigned int j)
+    {
+      return vector< vector<Scalar> >::operator[](i)[j];
+    }
+    
+    unsigned int nRows() const { return vector< vector<Scalar> >::size(); }
+    
+    unsigned int nCols() const { return vector< vector<Scalar> >::size() == 0 ? 0 : vector< vector<Scalar> >::operator[](0).size(); }
+    
+    vector<Scalar> row(unsigned int i) const
+    {
+      vector<Scalar> r(nCols());
+      for(unsigned int j = 0; j < nCols(); j++) r[j] = operator()(i, j);
+      return(r);
+    }
+    
+    vector<Scalar> col(unsigned int j) const
+    {
+      vector<Scalar> c(nRows());
+      for(unsigned int i = 0; i < nRows(); i++) c[i] = operator()(i, j);
+      return(c);
+    }
 
-		void resize(unsigned int nRows, unsigned int nCols)
-		{
-			vector< vector<Scalar> >::resize(nRows);
-			for(unsigned int i = 0; i < nRows; i++)
+    void resize(unsigned int nRows, unsigned int nCols)
+    {
+      vector< vector<Scalar> >::resize(nRows);
+      for(unsigned int i = 0; i < nRows; i++)
       {
-				vector< vector<Scalar> >::operator[](i).resize(nCols);
-			}
-		}
+        vector< vector<Scalar> >::operator[](i).resize(nCols);
+      }
+    }
 
 };
 

@@ -57,7 +57,8 @@ bool TestUnit::testEigen()
   RowMatrix<double> D  = eigen.getD();
   const vector<double>    L  = eigen.getRealEigenValues();
   RowMatrix<double> V1 = eigen.getV();
-  RowMatrix<double> V2 = MatrixTools::inv(V1);
+  RowMatrix<double> V2;
+  MatrixTools::inv(V1, V2);
   cout << "M=" << endl;
   MatrixTools::print(m);
   cout << "D=" << endl;
@@ -66,7 +67,8 @@ bool TestUnit::testEigen()
   MatrixTools::print(V1);
   cout << "V2=" << endl;
   MatrixTools::print(V2);
-  RowMatrix<double> test = MatrixTools::mult(V1, L, V2);
+  RowMatrix<double> test;
+  MatrixTools::mult(V1, L, V2, test);
   cout << "V1 . D . V2=" << endl;
   MatrixTools::print(test);
   return test == m;

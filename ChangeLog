@@ -5,6 +5,7 @@
 * Bug fixed in numerical derivatives, derivatives correctly updated when other
   methods than setParameters are called.
 * Several other implementation improvements...
+* Code updates (started to convert '_' prefixes into suffixes).
 
 05/02/09 Julien Dutheil
 * Bug fixed in EigenValue + code formating and improvement.

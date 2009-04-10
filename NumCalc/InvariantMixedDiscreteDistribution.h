@@ -55,10 +55,10 @@ class InvariantMixedDiscreteDistribution:
   public AbstractDiscreteDistribution
 {
   protected:
-    DiscreteDistribution* _dist;
-    bool _ownDist;
-    double _invariant;
-		vector<double> _bounds;
+    DiscreteDistribution* dist_;
+    bool ownDist_;
+    double invariant_;
+		vector<double> bounds_;
 
   public:
     /**
@@ -75,27 +75,27 @@ class InvariantMixedDiscreteDistribution:
     
     virtual ~InvariantMixedDiscreteDistribution()
     {
-      if(_ownDist) delete _dist;
+      if(ownDist_) delete dist_;
     }
     
     InvariantMixedDiscreteDistribution(const InvariantMixedDiscreteDistribution& imdd):
       AbstractDiscreteDistribution(imdd)
     {
-      _ownDist   = imdd._ownDist;
-      if(_ownDist) _dist = dynamic_cast<DiscreteDistribution *>(imdd._dist->clone());
-      else _dist = imdd._dist;
-      _invariant = imdd._invariant;
-      _bounds    = imdd._bounds;
+      ownDist_   = imdd.ownDist_;
+      if(ownDist_) dist_ = dynamic_cast<DiscreteDistribution *>(imdd.dist_->clone());
+      else dist_ = imdd.dist_;
+      invariant_ = imdd.invariant_;
+      bounds_    = imdd.bounds_;
     }
     
     InvariantMixedDiscreteDistribution& operator=(const InvariantMixedDiscreteDistribution& imdd)
     {
       AbstractDiscreteDistribution::operator=(imdd);
-      _ownDist   = imdd._ownDist;
-      if(_ownDist) _dist = dynamic_cast<DiscreteDistribution *>(imdd._dist->clone());
-      else _dist = imdd._dist;
-      _invariant = imdd._invariant;
-      _bounds    = imdd._bounds;
+      ownDist_   = imdd.ownDist_;
+      if(ownDist_) dist_ = dynamic_cast<DiscreteDistribution *>(imdd.dist_->clone());
+      else dist_ = imdd.dist_;
+      invariant_ = imdd.invariant_;
+      bounds_    = imdd.bounds_;
       return *this;
     }
 
@@ -109,6 +109,11 @@ class InvariantMixedDiscreteDistribution:
   public:
     Domain getDomain() const;
 		void fireParameterChanged(const ParameterList & parameters);
+
+    /**
+     * @return The nested, conditional, sub-distribution.
+     */
+    const DiscreteDistribution * getVariableSubDistribution() const { return dist_; }
 
   protected:
     void applyParameters();

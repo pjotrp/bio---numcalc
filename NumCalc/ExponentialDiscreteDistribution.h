@@ -56,23 +56,26 @@ class ExponentialDiscreteDistribution:
 	protected:
 		vector<double> _bounds;
 		IncludingPositiveReal * _lambdaConstraint;
+    bool _median;
 	
 		static const double VERYBIG;
 		
 	public:
-		ExponentialDiscreteDistribution(unsigned int n, double lambda = 1.);
+		ExponentialDiscreteDistribution(unsigned int n, double lambda = 1., bool median=false);
 
     ExponentialDiscreteDistribution(const ExponentialDiscreteDistribution & dist):
       //AbstractParametrizable(dist),
       AbstractDiscreteDistribution(dist),
       _bounds(dist._bounds),
-      _lambdaConstraint(dynamic_cast<IncludingPositiveReal *>(dist._lambdaConstraint->clone())) {}
+      _lambdaConstraint(dynamic_cast<IncludingPositiveReal *>(dist._lambdaConstraint->clone())),
+      _median(dist._median) {}
     
     ExponentialDiscreteDistribution & operator=(const ExponentialDiscreteDistribution & dist)
     {
       AbstractDiscreteDistribution::operator=(dist);
       _bounds = dist._bounds;
       _lambdaConstraint = dynamic_cast<IncludingPositiveReal *>(dist._lambdaConstraint->clone());
+      _median = dist._median;
       return *this;
     }
 

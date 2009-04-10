@@ -52,10 +52,11 @@ const double ExponentialDiscreteDistribution::VERYBIG = static_cast<double>(1.7E
 
 /** Constructor: **************************************************************/
 
-ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda) : AbstractDiscreteDistribution()
+ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda, bool median) : AbstractDiscreteDistribution()
 {
 	_lambdaConstraint = new IncludingPositiveReal(0.0);
 	_parameters.addParameter(Parameter("lambda", lambda, _lambdaConstraint, true));
+  _median = median;
 	applyParameters(n);
 }
 
@@ -80,7 +81,7 @@ Domain ExponentialDiscreteDistribution::getDomain() const
 
 void ExponentialDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
 {
-  discretize(numberOfCategories, _parameters[0]->getValue(), false);
+  discretize(numberOfCategories, _parameters[0]->getValue(), _median);
 }
 
 /******************************************************************************/
