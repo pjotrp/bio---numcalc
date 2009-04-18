@@ -41,7 +41,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _NUMCALCAPPLICATIONTOOLS_H_
 
 #include <Utils/StringTokenizer.h>
+#include <Utils/ApplicationTools.h>
 #include "VectorTools.h"
+#include "FunctionTools.h"
 
 namespace bpp
 {
@@ -54,7 +56,7 @@ class NumCalcApplicationTools
 
   public:
     /**
-     * @brief Build a vector of integers as describe by a string
+     * @brief Build a vector of integers as described by a string
      *
      * Build a vector of integers following a description like:
      * "2, 5, 7-10, 4" &rarr; [2, 5, 7, 8, 9, 10, 4]
@@ -65,7 +67,28 @@ class NumCalcApplicationTools
      * @param seqdelim Delimiter between min and max for a sequence.
      * @return A vector containing the integers
      */
-    static vector<int> seqFromString(const string & s, const string & delim = ",", const string & seqdelim = "-");
+    static vector<int> seqFromString(const string& s, const string& delim = ",", const string& seqdelim = "-");
+
+    /**
+     * @brief Build a vector of double from a structured text description.
+     *
+     * The syntax may be one of the following:
+     * - Specified values: 1.23, 2.34, 3.45, 4.56
+     * - Sequence macro: seq(from=1.23,to=2.45,step=0.1)
+     *   or              seq(from=1.23,to=2.45,size=5)
+     *   The meaning of these to form is equivalent as the R function:
+     *   The first one start from 1.23 and increment 0.1 until it reaches
+     *   the 2.45 value, wheras the seocnd one will compute 3 values at
+     *   equal distance from 1.23 and 2.45. the 'from' and 'to' values are
+     *   included, except for the first syntax when the interval is not an
+     *   exact multiple of the 'step' argument.
+     *
+     * @author Julien Dutheil
+     * @param desc The string to parse.
+     * @return A vector containing the corresponding values as double.
+     * @throw Exception If the syntax describing the set is not correct.
+     */
+    static vector<double> getVector(const string& desc) throw (Exception);
 
     /**
      * @brief Returns the value of the Parameter of the given name
@@ -76,7 +99,53 @@ class NumCalcApplicationTools
      * @param name A string name
      * @param x A double value
      */
-    static double getDefaultValue(const ParameterList & pl, const string& name, double x);
+    static double getDefaultValue(const ParameterList& pl, const string& name, double x);
+
+    /**
+     * @brief Design a parameter grid from input options.
+     *
+     * Example:
+     * @code
+     * grid.number_of_parameters=3
+     * grid.parameter1.name=x
+     * grid.parameter1.values=0.1,0.2,0.3,0.4,0.5
+     * grid.parameter2.name=y
+     * grid.parameter2.values=seq(from=0.1,to=0.5,step=0.1)
+     * grid.parameter3.name=z
+     * grid.parameter3.values=seq(from=0.1,to=0.5,size=5)
+     * @endcode
+     *
+     * @param params           The attribute map where options may be found.
+     * @param suffix           A suffix to be applied to the parameter name.
+     * @param suffixIsOptional Tell if the suffix is absolutely required.
+     * @param warn             Tell if a warning must be sent in case the parameter is not found.
+     * @return a parameter grid object.
+     */
+    static ParameterGrid* getParameterGrid(
+        map<string, string>& params,
+        const string& suffix = "",
+        bool suffixIsOptional = true,
+        bool warn = true) throw (Exception);
+
+    /**
+     * @brief Split a string into a key and a value (General purpose function).
+     *
+     * @param desc [in]  A string descibing the keyval, with format key=val (space are considered normal character, that's up to you to deal with that afterward!).
+     * @param key  [out] Will contain the text of the key.
+     * @param val  [out] Will contain the text of the value.
+     * @throw Exception If the syntax describing the keyval is not correct.
+     */
+    static void singleKeyval(const string& desc, string& key, string& val) throw (Exception);
+    
+    /**
+     * @brief Split a string into several keys and corresponding values (General purpose function).
+     *
+     * @param desc [in]  A string descibing the keyval, with format key1=val1,key2=val2,etc (space are considered normal character, that's up to you to deal with that afterward!).
+     * @param keyvals [out] Will contain the text of the keys and their corresponding values.
+     * @throw Exception If the syntax describing the keyval is not correct.
+     */
+    static void multipleKeyvals(const string& desc, map<string, string>& keyvals) throw (Exception);
+
 
 };
 

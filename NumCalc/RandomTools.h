@@ -69,107 +69,107 @@ namespace bpp
  */
 class RandomTools
 {
-	public:
-		RandomTools() {}
-		virtual ~RandomTools() {}
+  public:
+    RandomTools() {}
+    virtual ~RandomTools() {}
 
-	public:
-		static RandomFactory * DEFAULT_GENERATOR;
-		
-		/**
-		 * @brief Get a double random value (between 0 and specified range).
-		 *
-		 * Note : the number you get is between 0 and entry not including entry !
-		 * @param entry Max number to reach.
-		 * @param generator Random number generator to use.
-		 */
-		static double giveRandomNumberBetweenZeroAndEntry(double entry, const RandomFactory * generator = DEFAULT_GENERATOR);
+  public:
+    static RandomFactory * DEFAULT_GENERATOR;
+    
+    /**
+     * @brief Get a double random value (between 0 and specified range).
+     *
+     * Note : the number you get is between 0 and entry not including entry !
+     * @param entry Max number to reach.
+     * @param generator Random number generator to use.
+     */
+    static double giveRandomNumberBetweenZeroAndEntry(double entry, const RandomFactory * generator = DEFAULT_GENERATOR);
 
-		/**
-		 * @brief Get a boolean random value.
-		 *
-		 * @param generator Random number generator to use.
-		 */
-		static bool flipCoin(const RandomFactory * generator = DEFAULT_GENERATOR);
+    /**
+     * @brief Get a boolean random value.
+     *
+     * @param generator Random number generator to use.
+     */
+    static bool flipCoin(const RandomFactory * generator = DEFAULT_GENERATOR);
 
-		/**
-		 * @brief Get an integer random value (between 0 and specified range).
-		 *
-		 * Note : the number you get is between 0 and entry not including entry !
-		 * @param entry Max number to reach.
-		 * @param generator Random number generator to use.
-		 */
-		static int giveIntRandomNumberBetweenZeroAndEntry(int entry, const RandomFactory * generator = DEFAULT_GENERATOR);
+    /**
+     * @brief Get an integer random value (between 0 and specified range).
+     *
+     * Note : the number you get is between 0 and entry not including entry !
+     * @param entry Max number to reach.
+     * @param generator Random number generator to use.
+     */
+    static int giveIntRandomNumberBetweenZeroAndEntry(int entry, const RandomFactory * generator = DEFAULT_GENERATOR);
 
-		/**
-		 * @brief Set the default generator seed.
-		 *
-		 * @param seed New seed.
-		 */
-		static void setSeed(long seed);
+    /**
+     * @brief Set the default generator seed.
+     *
+     * @param seed New seed.
+     */
+    static void setSeed(long seed);
 
-		/**
-		 * @return A random number drawn from a normal distribution.
-		 * @param mean The mean of the law.
-		 * @param variance The variance of the law.
-		 * @param generator The uniform generator to use.
-		 */
-		static double randGaussian(double mean, double variance, const RandomFactory * generator = DEFAULT_GENERATOR);
-		
-		/**
-		 * @return A random number drawn from a gamma distribution with unit scale (beta=1).
-		 * @param dblAlpha The alpha parameter.
-		 * @param generator The uniform generator to use.
-		 */
-		static double randGamma(double dblAlpha, const RandomFactory * generator = DEFAULT_GENERATOR);
+    /**
+     * @return A random number drawn from a normal distribution.
+     * @param mean The mean of the law.
+     * @param variance The variance of the law.
+     * @param generator The uniform generator to use.
+     */
+    static double randGaussian(double mean, double variance, const RandomFactory * generator = DEFAULT_GENERATOR);
+    
+    /**
+     * @return A random number drawn from a gamma distribution with unit scale (beta=1).
+     * @param dblAlpha The alpha parameter.
+     * @param generator The uniform generator to use.
+     */
+    static double randGamma(double dblAlpha, const RandomFactory * generator = DEFAULT_GENERATOR);
 
-		/**
-		 * @return A random number drawn from a gamma distribution.
-		 * @param alpha The alpha parameter.
-		 * @param beta The beta parameter.
-		 * @param generator The uniform generator to use.
-		 */
-		static double randGamma(double alpha, double beta, const RandomFactory * generator = DEFAULT_GENERATOR);
-	
-		/**
-		 * @return A random number drawn from an exponential distribution.
-		 * @param mean The mean of the distribution.
-		 * @param generator The uniform generator to use.
-		 */
-  	static double randExponential(double mean, const RandomFactory * generator = DEFAULT_GENERATOR);
+    /**
+     * @return A random number drawn from a gamma distribution.
+     * @param alpha The alpha parameter.
+     * @param beta The beta parameter.
+     * @param generator The uniform generator to use.
+     */
+    static double randGamma(double alpha, double beta, const RandomFactory * generator = DEFAULT_GENERATOR);
+  
+    /**
+     * @return A random number drawn from an exponential distribution.
+     * @param mean The mean of the distribution.
+     * @param generator The uniform generator to use.
+     */
+    static double randExponential(double mean, const RandomFactory * generator = DEFAULT_GENERATOR);
 
-		/**
-		 * @brief Sample a vector.
-		 *
-		 * The sample is a new vector of the specified size.
-		 * If the size of the sample is identical to the original vector,
-		 * the result is a shuffle of the original vector.
-		 *
-		 * @param v The vector to sample.
-		 * @param size The size of the sample.
+    /**
+     * @brief Sample a vector.
+     *
+     * The sample is a new vector of the specified size.
+     * If the size of the sample is identical to the original vector,
+     * the result is a shuffle of the original vector.
+     *
+     * @param v The vector to sample.
+     * @param size The size of the sample.
      * @param replace Should sampling be with replacement?
-		 * @return A vector which is a sample of v.
+     * @return A vector which is a sample of v.
      * @throw IndexOutOfBoundException if the sample size exceeds the original size
      * when sampling without replacement.
-		 */
-		template<class T> 
-		static vector<T> getSample(const vector<T> & v, unsigned int size, bool replace = false) throw (IndexOutOfBoundsException) {
+     */
+    template<class T> 
+    static vector<T> getSample(const vector<T> & v, unsigned int size, bool replace = false) throw (IndexOutOfBoundsException) {
       if (size > v.size() && !replace)
         throw IndexOutOfBoundsException("RandomTools::getSample: size exceeded v.size.", size, 0, v.size());
-			vector<unsigned int> hat;
-			for (unsigned int i = 0 ; i < v.size() ; i++)
-				hat.push_back(i);
-			vector<T> sample;
-			for (unsigned int i = 0 ; i < size ; i++) {
-				unsigned int pos = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(hat.size());
-				sample.push_back(v[hat[pos]]);
+      vector<unsigned int> hat;
+      for (unsigned int i = 0 ; i < v.size() ; i++)
+        hat.push_back(i);
+      vector<T> sample;
+      for (unsigned int i = 0 ; i < size ; i++) {
+        unsigned int pos = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(hat.size());
+        sample.push_back(v[hat[pos]]);
         if (!replace) {
           hat[pos] = hat[hat.size() - 1];
           hat.pop_back();
         }
-			}
-			return sample;
-		}
+      }
+      return sample;
+    }
 
     /**
      * @brief Get a random state from a set of probabilities/scores.
@@ -183,17 +183,17 @@ class RandomTools
      */ 
     static vector<unsigned int> randMultinomial(unsigned int n, const vector<double>& probs);
 
-		/**
-		 * @name Probability functions.
-		 *
-		 * Adapted from Yang's PAML package.
-		 *
-		 * @{
-		 */
-		/**
-		 * @brief Normal quantile function.
-		 *
-		 * Returns z so that Prob{x<z}=prob where x ~ N(0,1) and (1e-12)<prob<1-(1e-12)
+    /**
+     * @name Probability functions.
+     *
+     * Adapted from Yang's PAML package.
+     *
+     * @{
+     */
+    /**
+     * @brief Normal quantile function.
+     *
+     * Returns z so that Prob{x<z}=prob where x ~ N(0,1) and (1e-12)<prob<1-(1e-12)
      * returns (-9999) if in error
      * Odeh RE & Evans JO (1974) The percentage points of the normal distribution.
      * Applied Statistics 22: 96-97 (AS70)
@@ -203,29 +203,29 @@ class RandomTools
      *    normal distribution.  37: 477-484.
      *  Beasley JD & Springer SG  (1977).  Algorithm AS 111: the percentage 
      *    points of the normal distribution.  26: 118-121.
-		 *
-		 * @param prob The probability.
-		 * @return The quantile corresponding to prob.
+     *
+     * @param prob The probability.
+     * @return The quantile corresponding to prob.
      */
-		static double qNorm(double prob);
-		
-		/**
-		 * @brief Computes \f$ln\left(\Gamma\left(\alpha\right)\right)\f$ given \f$\alpha\f$.
-		 * 
-		 * Returns ln(gamma(alpha)) for alpha>0, accurate to 10 decimal places.  
+    static double qNorm(double prob);
+    
+    /**
+     * @brief Computes \f$ln\left(\Gamma\left(\alpha\right)\right)\f$ given \f$\alpha\f$.
+     * 
+     * Returns ln(gamma(alpha)) for alpha>0, accurate to 10 decimal places.  
      * Stirling's formula is used for the central polynomial part of the procedure.
      * Pike MC & Hill ID (1966) Algorithm 291: Logarithm of the gamma function.
      * Communications of the Association for Computing Machinery, 9:684
-		 *
-		 * @param alpha Alpha parameter.
-		 * @return \f$ln\left(\Gamma\left(\alpha\right)\right)\f$
+     *
+     * @param alpha Alpha parameter.
+     * @return \f$ln\left(\Gamma\left(\alpha\right)\right)\f$
      */
-		static double lnGamma (double alpha);
+    static double lnGamma (double alpha);
 
-		/**
-		 * @brief Returns the incomplete gamma ratio I(x,alpha).
-		 *
-		 * X is the upper limit of the integration and alpha is the shape parameter.
+    /**
+     * @brief Returns the incomplete gamma ratio I(x,alpha).
+     *
+     * X is the upper limit of the integration and alpha is the shape parameter.
      * returns (-1) if in error
      * ln_gamma_alpha = ln(Gamma(alpha)), is almost redundant.
      * (1) series expansion     if (alpha>x || x<=1)
@@ -233,34 +233,34 @@ class RandomTools
      * RATNEST FORTRAN by
      * Bhattacharjee GP (1970) The incomplete gamma integral.  Applied Statistics,
      * 19: 285-287 (AS32)
-		 *
-		 * @param x the upper limit of the integration.
-		 * @param alpha the shape parameter.
-		 * @param ln_gamma_alpha ln(Gamma(alpha)).
+     *
+     * @param x the upper limit of the integration.
+     * @param alpha the shape parameter.
+     * @param ln_gamma_alpha ln(Gamma(alpha)).
      */
-		static double incompleteGamma(double x, double alpha, double ln_gamma_alpha);
+    static double incompleteGamma(double x, double alpha, double ln_gamma_alpha);
 
     /**
-		 * @brief \f$\chi^2\f$ quantile function.
-		 * 
+     * @brief \f$\chi^2\f$ quantile function.
+     * 
      * returns z so that Prob{x<z}=prob where x is Chi2 distributed with df=v
      * returns -1 if in error.   0.000002<prob<0.999998
      * RATNEST FORTRAN by
      * Best DJ & Roberts DE (1975) The percentage points of the 
      * Chi2 distribution.  Applied Statistics 24: 385-388.  (AS91)
      * Converted into C by Ziheng Yang, Oct. 1993.
-		 *
-		 * @param prob The probability.
-		 * @param v number of degree of freedom.
-		 * @return The quantile corresponding to prob.
+     *
+     * @param prob The probability.
+     * @param v number of degree of freedom.
+     * @return The quantile corresponding to prob.
      */
-		static double qChisq(double prob, double v);
+    static double qChisq(double prob, double v);
 
     /**
      * @brief \f$\chi^2\f$ cumulative probability function.
      *
      * @param x The quantile for which the probability should be computed.
-		 * @param v number of degree of freedom.
+     * @param v number of degree of freedom.
      * @return The corresponding probability of the quantile.
      */
     static double pChisq(double x, double v)
@@ -269,15 +269,15 @@ class RandomTools
       return pGamma(x, v / 2, 0.5);
     }
 
-		/**
-		 * @brief The Gamma quantile function.
-		 *
-		 * @param prob The probability.
-		 * @param alpha Alpha parameter.
-		 * @param beta  Beta parameter.
-		 * @return The quantile corresponding to prob.
-		 */
-		static double qGamma(double prob, double alpha, double beta)
+    /**
+     * @brief The Gamma quantile function.
+     *
+     * @param prob The probability.
+     * @param alpha Alpha parameter.
+     * @param beta  Beta parameter.
+     * @return The quantile corresponding to prob.
+     */
+    static double qGamma(double prob, double alpha, double beta)
     {
       return qChisq(prob,2.0*(alpha))/(2.0*(beta));
     }
@@ -286,8 +286,8 @@ class RandomTools
      * @brief \f$\Gamma\f$ cumulative probability function.
      *
      * @param x The quantile for which the probability should be computed.
-		 * @param alpha Alpha parameter.
-		 * @param beta  Beta parameter.
+     * @param alpha Alpha parameter.
+     * @param beta  Beta parameter.
      * @return The corresponding probability of the quantile.
      */
     static double pGamma(double x, double alpha, double beta)
@@ -295,15 +295,15 @@ class RandomTools
       return incompleteGamma(beta*x, alpha, lnGamma(alpha));
     }
 
-		/** @} */
-		
+    /** @} */
+    
 
-	private:
-		static double DblGammaGreaterThanOne(double dblAlpha, const RandomFactory * generator);
-		static double DblGammaLessThanOne(double dblAlpha, const RandomFactory * generator);
+  private:
+    static double DblGammaGreaterThanOne(double dblAlpha, const RandomFactory * generator);
+    static double DblGammaLessThanOne(double dblAlpha, const RandomFactory * generator);
 };
 
 } //end of namespace bpp.
 
-#endif	//_RANDOMTOOLS_H_
+#endif  //_RANDOMTOOLS_H_
 

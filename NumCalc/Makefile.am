@@ -36,6 +36,7 @@ NumTools.h\
 Parametrizable.h\
 AbstractParametrizable.h\
 Functions.h\
+FunctionTools.h\
 OneDimensionOptimizationTools.h\
 PowellMultiDimensions.h\
 BrentOneDimension.h\
@@ -134,6 +135,7 @@ ReparametrizationFunctionWrapper.cpp\
 NumConstants.cpp\
 AbstractParametrizable.cpp\
 NumCalcApplicationTools.cpp\
+FunctionTools.cpp\
 TestUnit.cpp
 
 

@@ -50,50 +50,50 @@ using namespace bpp;
 /******************************************************************************/
 
 DataTable::DataTable(unsigned int nRow, unsigned int nCol) :
-  _nRow(nRow), _nCol(nCol)
+  nRow_(nRow), nCol_(nCol)
 {
-  _data.resize(nCol);
+  data_.resize(nCol);
   for(unsigned int i = 0; i < nCol; i++)
-    _data[i].resize(nRow);
-  _colNames = NULL;
-  _rowNames = NULL;
+    data_[i].resize(nRow);
+  colNames_ = NULL;
+  rowNames_ = NULL;
 }
   
 DataTable::DataTable(unsigned int nCol) :
-  _nRow(0), _nCol(nCol)
+  nRow_(0), nCol_(nCol)
 {
-  _data.resize(nCol);
-  _colNames = NULL;
-  _rowNames = NULL;
+  data_.resize(nCol);
+  colNames_ = NULL;
+  rowNames_ = NULL;
 }
   
 DataTable::DataTable(const vector<string> & colNames) throw (DuplicatedTableColumnNameException) :
-  _nRow(0), _nCol(colNames.size())
+  nRow_(0), nCol_(colNames.size())
 {
-  _data.resize(_nCol);
-  _colNames = NULL;
-  _rowNames = NULL;
+  data_.resize(nCol_);
+  colNames_ = NULL;
+  rowNames_ = NULL;
   setColumnNames(colNames); //May throw an exception.  
 }
   
 DataTable::DataTable(const DataTable & table) :
-  _nRow(table._nRow), _nCol(table._nCol), _data(table._data), _rowNames(NULL), _colNames(NULL)
+  nRow_(table.nRow_), nCol_(table.nCol_), data_(table.data_), rowNames_(NULL), colNames_(NULL)
 {
-  if(table._rowNames) _rowNames = new vector<string>(*table._rowNames);
-  if(table._colNames) _colNames = new vector<string>(*table._colNames);
+  if(table.rowNames_) rowNames_ = new vector<string>(*table.rowNames_);
+  if(table.colNames_) colNames_ = new vector<string>(*table.colNames_);
 }
 
 DataTable & DataTable::operator=(const DataTable & table)
 {
-  _nRow = table._nRow;
-  _nCol = table._nCol;
-  _data = table._data;
-  if(_rowNames) delete _rowNames;
-  if(_colNames) delete _colNames;
-  _rowNames = NULL;
-  _colNames = NULL;
-  if(table._rowNames) _rowNames = new vector<string>(*table._rowNames);
-  if(table._colNames) _colNames = new vector<string>(*table._colNames);
+  nRow_ = table.nRow_;
+  nCol_ = table.nCol_;
+  data_ = table.data_;
+  if(rowNames_) delete rowNames_;
+  if(colNames_) delete colNames_;
+  rowNames_ = NULL;
+  colNames_ = NULL;
+  if(table.rowNames_) rowNames_ = new vector<string>(*table.rowNames_);
+  if(table.colNames_) colNames_ = new vector<string>(*table.colNames_);
   return *this;
 }
 
@@ -101,8 +101,8 @@ DataTable & DataTable::operator=(const DataTable & table)
 
 DataTable::~DataTable()
 {
-  if(_rowNames != NULL) delete _rowNames;
-  if(_colNames != NULL) delete _colNames;
+  if(rowNames_ != NULL) delete rowNames_;
+  if(colNames_ != NULL) delete colNames_;
 }
 
 /******************************************************************************/
@@ -111,16 +111,16 @@ DataTable::~DataTable()
 
 string & DataTable::operator()(unsigned int rowIndex, unsigned int colIndex) throw (IndexOutOfBoundsException)
 {
-  if(colIndex >= _nCol) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, unsigned int).", colIndex, 0, _nCol - 1);
-  if(rowIndex >= _data[colIndex].size()) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, unsigned int).", rowIndex, 0, _data[colIndex].size() - 1);
-  return _data[colIndex][rowIndex];
+  if(colIndex >= nCol_) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, unsigned int).", colIndex, 0, nCol_ - 1);
+  if(rowIndex >= data_[colIndex].size()) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, unsigned int).", rowIndex, 0, data_[colIndex].size() - 1);
+  return data_[colIndex][rowIndex];
 }
 
 const string & DataTable::operator()(unsigned int rowIndex, unsigned int colIndex) const throw (IndexOutOfBoundsException)
 {
-  if(colIndex >= _nCol) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, unsigned int).", colIndex, 0, _nCol - 1);
-  if(rowIndex >= _data[colIndex].size()) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, unsigned int).", rowIndex, 0, _data[colIndex].size() - 1);
-  return _data[colIndex][rowIndex];
+  if(colIndex >= nCol_) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, unsigned int).", colIndex, 0, nCol_ - 1);
+  if(rowIndex >= data_[colIndex].size()) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, unsigned int).", rowIndex, 0, data_[colIndex].size() - 1);
+  return data_[colIndex][rowIndex];
 }
 
 /******************************************************************************/
@@ -128,12 +128,12 @@ const string & DataTable::operator()(unsigned int rowIndex, unsigned int colInde
 string & DataTable::operator()(const string & rowName, const string & colName)
 throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException)
 {
-  if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, const string &).");
-  if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::operator(const string &, const string &).");
+  if(rowNames_ == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, const string &).");
+  if(colNames_ == NULL) throw NoTableColumnNamesException("DataTable::operator(const string &, const string &).");
   try
   {
-    unsigned int rowIndex = VectorTools::which(*_rowNames, rowName);
-    unsigned int colIndex = VectorTools::which(*_colNames, colName);
+    unsigned int rowIndex = VectorTools::which(*rowNames_, rowName);
+    unsigned int colIndex = VectorTools::which(*colNames_, colName);
     return (*this)(rowIndex, colIndex);
   }
   catch(ElementNotFoundException<string> & ex)
@@ -145,12 +145,12 @@ throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundE
 const string & DataTable::operator()(const string & rowName, const string & colName) const
 throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException)
 {
-  if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, const string &).");
-  if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::operator(const string &, const string &).");
+  if(rowNames_ == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, const string &).");
+  if(colNames_ == NULL) throw NoTableColumnNamesException("DataTable::operator(const string &, const string &).");
   try
   {
-    unsigned int rowIndex = VectorTools::which(*_rowNames, rowName);
-    unsigned int colIndex = VectorTools::which(*_colNames, colName);
+    unsigned int rowIndex = VectorTools::which(*rowNames_, rowName);
+    unsigned int colIndex = VectorTools::which(*colNames_, colName);
     return (*this)(rowIndex, colIndex);
   }
   catch(ElementNotFoundException<string> & ex) 
@@ -164,11 +164,11 @@ throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundE
 string & DataTable::operator()(const string & rowName, unsigned int colIndex)
 throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException)
 {
-  if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, unsigned int).");
-  if(colIndex >= _nCol) throw IndexOutOfBoundsException("DataTable::operator(const string &, unsigned int).", colIndex, 0, _nCol - 1);
+  if(rowNames_ == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, unsigned int).");
+  if(colIndex >= nCol_) throw IndexOutOfBoundsException("DataTable::operator(const string &, unsigned int).", colIndex, 0, nCol_ - 1);
   try
   {
-    unsigned int rowIndex = VectorTools::which(*_rowNames, rowName);
+    unsigned int rowIndex = VectorTools::which(*rowNames_, rowName);
     return (*this)(rowIndex, colIndex);
   }
   catch(ElementNotFoundException<string> & ex)
@@ -180,11 +180,11 @@ throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsExc
 const string & DataTable::operator()(const string & rowName, unsigned int colIndex) const
 throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException)
 {
-  if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, unsigned int).");
-  if(colIndex >= _nCol) throw IndexOutOfBoundsException("DataTable::operator(const string &, unsigned int).", colIndex, 0, _nCol - 1);
+  if(rowNames_ == NULL) throw NoTableRowNamesException("DataTable::operator(const string &, unsigned int).");
+  if(colIndex >= nCol_) throw IndexOutOfBoundsException("DataTable::operator(const string &, unsigned int).", colIndex, 0, nCol_ - 1);
   try
   {
-    unsigned int rowIndex = VectorTools::which(*_rowNames, rowName);
+    unsigned int rowIndex = VectorTools::which(*rowNames_, rowName);
     return (*this)(rowIndex, colIndex);
   }
   catch(ElementNotFoundException<string> & ex)
@@ -198,11 +198,11 @@ throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsExc
 string & DataTable::operator()(unsigned int rowIndex, const string & colName)
 throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException)
 {
-  if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::operator(unsigned int, const string &).");
+  if(colNames_ == NULL) throw NoTableColumnNamesException("DataTable::operator(unsigned int, const string &).");
   try
   {
-    unsigned int colIndex = VectorTools::which(*_colNames, colName);
-    if(rowIndex >= _data[colIndex].size()) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, const string &).", rowIndex, 0, _data[colIndex].size() - 1);
+    unsigned int colIndex = VectorTools::which(*colNames_, colName);
+    if(rowIndex >= data_[colIndex].size()) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, const string &).", rowIndex, 0, data_[colIndex].size() - 1);
     return (*this)(rowIndex, colIndex);
   }
   catch(ElementNotFoundException<string> & ex)
@@ -214,11 +214,11 @@ throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFound
 const string & DataTable::operator()(unsigned int rowIndex, const string & colName) const
 throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException)
 {
-  if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::operator(unsigned int, const string &).");
+  if(colNames_ == NULL) throw NoTableColumnNamesException("DataTable::operator(unsigned int, const string &).");
   try
   {
-    unsigned int colIndex = VectorTools::which(*_colNames, colName);
-    if(rowIndex >= _data[colIndex].size()) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, const string &).", rowIndex, 0, _data[colIndex].size() - 1);
+    unsigned int colIndex = VectorTools::which(*colNames_, colName);
+    if(rowIndex >= data_[colIndex].size()) throw IndexOutOfBoundsException("DataTable::operator(unsigned int, const string &).", rowIndex, 0, data_[colIndex].size() - 1);
     return (*this)(rowIndex, colIndex);
   }
   catch(ElementNotFoundException<string> & ex)
@@ -238,25 +238,25 @@ throw (DimensionException, DuplicatedTableRowNameException)
   {
     throw DuplicatedTableRowNameException("DataTable::setRowNames(...). Row names must be unique.");
   }
-  if(rowNames.size() != _nRow) throw DimensionException("DataTable::setRowNames.", rowNames.size(), _nRow);
+  if(rowNames.size() != nRow_) throw DimensionException("DataTable::setRowNames.", rowNames.size(), nRow_);
   else
   {
-    if(_rowNames != NULL) delete _rowNames;
-    _rowNames = new vector<string>(rowNames.begin(), rowNames.end());
+    if(rowNames_ != NULL) delete rowNames_;
+    rowNames_ = new vector<string>(rowNames.begin(), rowNames.end());
   }
 }
 
 vector<string> DataTable::getRowNames() const throw (NoTableRowNamesException)
 {
-  if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::getRowNames().");
-  return * _rowNames;
+  if(rowNames_ == NULL) throw NoTableRowNamesException("DataTable::getRowNames().");
+  return * rowNames_;
 }
 
 string DataTable::getRowName(unsigned int index) const throw (NoTableRowNamesException, IndexOutOfBoundsException)
 {
-  if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::getRowName(unsigned int).");
-  if(index >= _nRow)    throw IndexOutOfBoundsException("DataTable::getRowName(unsigned int).", index, 0, _nRow - 1);
-  return (* _rowNames)[index];
+  if(rowNames_ == NULL) throw NoTableRowNamesException("DataTable::getRowName(unsigned int).");
+  if(index >= nRow_)    throw IndexOutOfBoundsException("DataTable::getRowName(unsigned int).", index, 0, nRow_ - 1);
+  return (* rowNames_)[index];
 }
 
 /******************************************************************************/
@@ -265,25 +265,25 @@ void DataTable::setColumnNames(const vector<string> & colNames)
 throw (DimensionException, DuplicatedTableColumnNameException)
 {
   if(!VectorTools::isUnique(colNames)) throw DuplicatedTableColumnNameException("DataTable::setColumnNames(...). Column names must be unique.");
-  if(colNames.size() != _nCol) throw DimensionException("DataTable::setColumnNames.", colNames.size(), _nCol);
+  if(colNames.size() != nCol_) throw DimensionException("DataTable::setColumnNames.", colNames.size(), nCol_);
   else
   {
-    if(_colNames != NULL) delete _colNames;
-    _colNames = new vector<string>(colNames.begin(), colNames.end());
+    if(colNames_ != NULL) delete colNames_;
+    colNames_ = new vector<string>(colNames.begin(), colNames.end());
   }
 }
 
 vector<string> DataTable::getColumnNames() const throw (NoTableColumnNamesException)
 {
-  if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::getColumnNames().");
-  return *_colNames;
+  if(colNames_ == NULL) throw NoTableColumnNamesException("DataTable::getColumnNames().");
+  return *colNames_;
 }
 
 string DataTable::getColumnName(unsigned int index) const throw (NoTableColumnNamesException, IndexOutOfBoundsException)
 {
-  if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::getColumnName(unsigned int).");
-  if(index >= _nCol)    throw IndexOutOfBoundsException("DataTable::getColumnName(unsigned int).", index, 0, _nCol - 1);
-  return (* _colNames)[index];
+  if(colNames_ == NULL) throw NoTableColumnNamesException("DataTable::getColumnName(unsigned int).");
+  if(index >= nCol_)    throw IndexOutOfBoundsException("DataTable::getColumnName(unsigned int).", index, 0, nCol_ - 1);
+  return (* colNames_)[index];
 }
 
 /******************************************************************************/
@@ -293,25 +293,25 @@ string DataTable::getColumnName(unsigned int index) const throw (NoTableColumnNa
 vector<string> & DataTable::getColumn(unsigned int index)
   throw (IndexOutOfBoundsException)
 {
-  if(index >= _nCol) throw IndexOutOfBoundsException("DataTable::getColumn(unsigned int).", index, 0, _nCol - 1);
-  return _data[index];
+  if(index >= nCol_) throw IndexOutOfBoundsException("DataTable::getColumn(unsigned int).", index, 0, nCol_ - 1);
+  return data_[index];
 }
 
 const vector<string> & DataTable::getColumn(unsigned int index) const
   throw (IndexOutOfBoundsException)
 {
-  if(index >= _nCol) throw IndexOutOfBoundsException("DataTable::getColumn(unsigned int).", index, 0, _nCol - 1);
-  return _data[index];
+  if(index >= nCol_) throw IndexOutOfBoundsException("DataTable::getColumn(unsigned int).", index, 0, nCol_ - 1);
+  return data_[index];
 }  
 
 vector<string> & DataTable::getColumn(const string & colName)
   throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
 {
-  if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::getColumn(const string &).");
+  if(colNames_ == NULL) throw NoTableColumnNamesException("DataTable::getColumn(const string &).");
   try
   {
-    unsigned int colIndex = VectorTools::which(*_colNames, colName);
-    return _data[colIndex];
+    unsigned int colIndex = VectorTools::which(*colNames_, colName);
+    return data_[colIndex];
   }
   catch(ElementNotFoundException<string> & ex)
   {
@@ -322,11 +322,11 @@ vector<string> & DataTable::getColumn(const string & colName)
 const vector<string> & DataTable::getColumn(const string & colName) const
   throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
 {
-  if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::getColumn(const string &).");
+  if(colNames_ == NULL) throw NoTableColumnNamesException("DataTable::getColumn(const string &).");
   try
   {
-    unsigned int colIndex = VectorTools::which(*_colNames, colName);
-    return _data[colIndex];
+    unsigned int colIndex = VectorTools::which(*colNames_, colName);
+    return data_[colIndex];
   }
   catch(ElementNotFoundException<string> & ex)
   {
@@ -336,33 +336,31 @@ const vector<string> & DataTable::getColumn(const string & colName) const
 
 bool DataTable::hasColumn(const string & colName) const
 { 
-  if(_colNames == NULL) return false;
-  for(unsigned int i = 0; i < _colNames->size(); i++)
-  {
-    if((* _colNames)[i] == colName) return true;
-  }
+  if(colNames_ == NULL) return false;
+  for(unsigned int i = 0; i < colNames_->size(); i++)
+    if((* colNames_)[i] == colName) return true;
   return false;
 }
 
 void DataTable::deleteColumn(unsigned int index)
   throw (IndexOutOfBoundsException)
 {
-  if(index >= _nCol) throw IndexOutOfBoundsException("DataTable::deleteColumn(unsigned int).", index, 0, _nCol - 1);
-  _data.erase(_data.begin() + index);
-  if(_colNames != NULL) _colNames->erase(_colNames->begin()+index);
-  _nCol--;
+  if(index >= nCol_) throw IndexOutOfBoundsException("DataTable::deleteColumn(unsigned int).", index, 0, nCol_ - 1);
+  data_.erase(data_.begin() + index);
+  if(colNames_ != NULL) colNames_->erase(colNames_->begin()+index);
+  nCol_--;
 }
 
 void DataTable::deleteColumn(const string & colName)
   throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
 {
-  if(_colNames == NULL) throw NoTableColumnNamesException("DataTable::deleteColumn(const string &).");
+  if(colNames_ == NULL) throw NoTableColumnNamesException("DataTable::deleteColumn(const string &).");
   try
   {
-    unsigned int colIndex = VectorTools::which(*_colNames, colName);
-    _data.erase(_data.begin() + colIndex);
-    _colNames->erase(_colNames->begin() + colIndex);
-    _nCol--;
+    unsigned int colIndex = VectorTools::which(*colNames_, colName);
+    data_.erase(data_.begin() + colIndex);
+    colNames_->erase(colNames_->begin() + colIndex);
+    nCol_--;
   }
   catch(ElementNotFoundException<string> & ex)
   {
@@ -373,29 +371,27 @@ void DataTable::deleteColumn(const string & colName)
 void DataTable::addColumn(const vector<string> & newColumn)
   throw (DimensionException, TableColumnNamesException)
 {
-  if(_colNames != NULL) throw TableColumnNamesException("DataTable::addColumn. Table has column names.");
-  if(newColumn.size() != _nRow) throw DimensionException("DataTable::addColumn.", newColumn.size(), _nRow);
-  for(unsigned int i = 0; i < _nRow; i++)
-  {
-    _data[i].push_back(newColumn[i]);
-  }
-  _nCol++;
+  if(colNames_ != NULL) throw TableColumnNamesException("DataTable::addColumn. Table has column names.");
+  if(newColumn.size() != nRow_) throw DimensionException("DataTable::addColumn.", newColumn.size(), nRow_);
+  for(unsigned int i = 0; i < nRow_; i++)
+    data_[i].push_back(newColumn[i]);
+  nCol_++;
 }
 
 void DataTable::addColumn(const string & colName, const vector<string> & newColumn)
   throw (DimensionException, NoTableColumnNamesException, DuplicatedTableColumnNameException)
 {
-  if(_colNames == NULL)
+  if(colNames_ == NULL)
   {
-    if(_nCol == 0) _colNames = new vector<string>();
+    if(nCol_ == 0) colNames_ = new vector<string>();
     else throw NoTableColumnNamesException("DataTable::addColumn. Table has column names.");
   }
-  if(newColumn.size() != _nRow) throw DimensionException("DataTable::addColumn.", newColumn.size(), _nRow);
-  if(_nCol > 0 && find(_colNames->begin(), _colNames->end(), colName) != _colNames->end())
+  if(newColumn.size() != nRow_) throw DimensionException("DataTable::addColumn.", newColumn.size(), nRow_);
+  if(nCol_ > 0 && find(colNames_->begin(), colNames_->end(), colName) != colNames_->end())
     throw DuplicatedTableColumnNameException("DataTable::addColumn(const string &, const vector<string> &). Column names must be unique.");
-  _colNames->push_back(colName);
-  _data.push_back(newColumn);
-  _nCol++;
+  colNames_->push_back(colName);
+  data_.push_back(newColumn);
+  nCol_++;
 }
 
 /******************************************************************************/
@@ -405,24 +401,23 @@ void DataTable::addColumn(const string & colName, const vector<string> & newColu
 vector<string> DataTable::getRow(unsigned int index) const
   throw (IndexOutOfBoundsException)
 {
-  if(index >= _nRow) throw IndexOutOfBoundsException("DataTable::getRow(unsigned int).", index, 0, _nRow - 1);
+  if(index >= nRow_) throw IndexOutOfBoundsException("DataTable::getRow(unsigned int).", index, 0, nRow_ - 1);
   vector<string> row;
-  for (unsigned int i = 0 ; i < _nCol ; i++) {
-    row.push_back(_data[i][index]);
-  }
+  for (unsigned int i = 0 ; i < nCol_ ; i++)
+    row.push_back(data_[i][index]);
   return row;
 }
 
 vector<string> DataTable::getRow(const string & rowName) const
   throw (NoTableRowNamesException, TableRowNameNotFoundException)
 {
-  if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::getRow(const string &).");
+  if(rowNames_ == NULL) throw NoTableRowNamesException("DataTable::getRow(const string &).");
   try
   {
-    unsigned int rowIndex = VectorTools::which(*_rowNames, rowName);
+    unsigned int rowIndex = VectorTools::which(*rowNames_, rowName);
     vector<string> row;
-    for (unsigned int i = 0 ; i < _nCol ; i++)
-      row.push_back(_data[i][rowIndex]);
+    for (unsigned int i = 0 ; i < nCol_ ; i++)
+      row.push_back(data_[i][rowIndex]);
     return row;
   }
   catch(ElementNotFoundException<string> & ex)
@@ -433,9 +428,10 @@ vector<string> DataTable::getRow(const string & rowName) const
 
 bool DataTable::hasRow(const string & rowName) const
 { 
-  if(_rowNames == NULL) return false;
-  for(unsigned int i = 0; i < _rowNames->size(); i++) {
-    if((* _rowNames)[i] == rowName) return true;
+  if(rowNames_ == NULL) return false;
+  for(unsigned int i = 0; i < rowNames_->size(); i++)
+  {
+    if((* rowNames_)[i] == rowName) return true;
   }
   return false;
 }
@@ -443,29 +439,30 @@ bool DataTable::hasRow(const string & rowName) const
 void DataTable::deleteRow(unsigned int index)
   throw (IndexOutOfBoundsException)
 {
-  for(unsigned int j = 0; j < _nCol; j++) {
-    vector<string> * column = & _data[j];
+  for(unsigned int j = 0; j < nCol_; j++)
+  {
+    vector<string> * column = & data_[j];
     if(index >= column->size()) throw IndexOutOfBoundsException("DataTable::deleteRow(unsigned int).", index, 0, column->size() - 1);
     column->erase(column->begin()+index);
   }
-  if(_rowNames != NULL) _rowNames->erase(_rowNames->begin()+index);
-  _nRow--;
+  if(rowNames_ != NULL) rowNames_->erase(rowNames_->begin()+index);
+  nRow_--;
 }
 
 void DataTable::deleteRow(const string & rowName)
   throw (NoTableRowNamesException, TableRowNameNotFoundException)
 {
-  if(_rowNames == NULL) throw NoTableRowNamesException("DataTable::deleteRow(const string &).");
+  if(rowNames_ == NULL) throw NoTableRowNamesException("DataTable::deleteRow(const string &).");
   try
   {
-    unsigned int rowIndex = VectorTools::which(*_rowNames, rowName);
-    for(unsigned int j = 0; j < _nCol; j++)
+    unsigned int rowIndex = VectorTools::which(*rowNames_, rowName);
+    for(unsigned int j = 0; j < nCol_; j++)
     {
-      vector<string> * column = & _data[j];
+      vector<string> * column = & data_[j];
       column->erase(column->begin()+rowIndex);
     }
-    _rowNames->erase(_rowNames->begin()+rowIndex);
-    _nRow--;
+    rowNames_->erase(rowNames_->begin()+rowIndex);
+    nRow_--;
   }
   catch(ElementNotFoundException<string> & ex)
   {
@@ -476,29 +473,27 @@ void DataTable::deleteRow(const string & rowName)
 void DataTable::addRow(const vector<string> & newRow)
   throw (DimensionException, TableRowNamesException)
 {
-  if(_rowNames != NULL) throw TableRowNamesException("DataTable::addRow. Table has row names.");
-  if(newRow.size() != _nCol) throw DimensionException("DataTable::addRow.", newRow.size(), _nCol);
-  for(unsigned int j = 0; j < _nCol; j++) {
-    _data[j].push_back(newRow[j]);
-  }
-  _nRow++;
+  if(rowNames_ != NULL) throw TableRowNamesException("DataTable::addRow. Table has row names.");
+  if(newRow.size() != nCol_) throw DimensionException("DataTable::addRow.", newRow.size(), nCol_);
+  for(unsigned int j = 0; j < nCol_; j++)
+    data_[j].push_back(newRow[j]);
+  nRow_++;
 }
 
 void DataTable::addRow(const string & rowName, const vector<string> & newRow)
   throw (DimensionException, NoTableRowNamesException, DuplicatedTableRowNameException)
 {
-  if(_rowNames == NULL) {
-    if(_nRow == 0) _rowNames = new vector<string>();
+  if(rowNames_ == NULL) {
+    if(nRow_ == 0) rowNames_ = new vector<string>();
     else throw NoTableRowNamesException("DataTable::addRow. Table has row names.");
   }
-  if(newRow.size() != _nCol) throw DimensionException("DataTable::addRow.", newRow.size(), _nCol);
-  if(_nRow > 0 && find(_rowNames->begin(), _rowNames->end(), rowName) != _rowNames->end())
-      throw DuplicatedTableRowNameException("DataTable::addRow(const string &, const vector<string> &). Row names must be unique.");
-  _rowNames->push_back(rowName);
-  for(unsigned int j = 0; j < _nCol; j++) {
-    _data[j].push_back(newRow[j]);
-  }
-  _nRow++;
+  if(newRow.size() != nCol_) throw DimensionException("DataTable::addRow.", newRow.size(), nCol_);
+  if(nRow_ > 0 && find(rowNames_->begin(), rowNames_->end(), rowName) != rowNames_->end())
+    throw DuplicatedTableRowNameException("DataTable::addRow(const string &, const vector<string> &). Row names must be unique.");
+  rowNames_->push_back(rowName);
+  for(unsigned int j = 0; j < nCol_; j++)
+    data_[j].push_back(newRow[j]);
+  nRow_++;
 }
 
 /******************************************************************************/
