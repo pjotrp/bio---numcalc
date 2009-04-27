@@ -1118,11 +1118,11 @@ class VectorTools
      * @param base The base of the logarithm to use.
      */
     template<class InputType, class OutputType>
-    static double shannon(const vector<InputType> & v1, double base = 2.7182818)
+    static double shannon(const vector<InputType> & v, double base = 2.7182818)
     {
       OutputType s = 0;
-      for(unsigned int i = 0; i < v1.size(); i++)
-        s += v1[i] * std::log(v1[i]) / std::log(base);
+      for(unsigned int i = 0; i < v.size(); i++)
+        if(v[i] > 0) s += v[i] * std::log(v[i]) / std::log(base);
       return -s;
     }
 

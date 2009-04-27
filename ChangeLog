@@ -1,3 +1,6 @@
+27/04/09 Julien Dutheil
+* Bug fixed in shannon variability index (when a frequency is 0).
+
 17/04/09 Julien Dutheil
 * New class FunctionTools and ParameterGrid.
 * New functions in NumCalcApplicationTools to support the keyval 
@@ -5,7 +8,7 @@
 
 29/03/09 Julien Dutheil
 * New class ParameterListener
-* Interface Parametrizable now supports "aliasing", with a defautl
+* Interface Parametrizable now supports "aliasing", with a default
   implementation in AbstractParametrizable, which is now in a separate file.
 * Bug fixed in numerical derivatives, derivatives correctly updated when other
   methods than setParameters are called.
