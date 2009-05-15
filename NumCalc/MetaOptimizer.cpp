@@ -120,8 +120,11 @@ void MetaOptimizer::doInit(const ParameterList & parameters)
     _optParameters[i].reset();
     for (unsigned int j = 0; j < _optDesc->getParameterNames(i).size(); j++)
     {
-      const Parameter *p = &parameters.getParameter(_optDesc->getParameterNames(i)[j]);
-      _optParameters[i].addParameter(*p);
+      string pname = _optDesc->getParameterNames(i)[j];
+      if (parameters.hasParameter(pname))
+      {
+        _optParameters[i].addParameter(parameters.getParameter(pname));
+      }
     }
     _nbParameters[i] = _optParameters[i].size();
   }
