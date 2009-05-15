@@ -76,7 +76,7 @@ class TwoPointsNumericalDerivative:
   public AbstractNumericalDerivative
 {
   protected:
-    double _f1, _f2;
+    double f1_, f2_;
     
   public:
     TwoPointsNumericalDerivative(Function * function): AbstractNumericalDerivative(function) {}
@@ -92,10 +92,8 @@ class TwoPointsNumericalDerivative:
 
   public:
     
-    double getValue() const throw (Exception)
-    {
-      return _f1;
-    }
+    double getValue() const throw (Exception) { return f1_; }
+
     /**
      * @name The DerivableSecondOrder interface
      *

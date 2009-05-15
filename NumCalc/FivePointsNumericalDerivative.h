@@ -87,12 +87,12 @@ class FivePointsNumericalDerivative:
   public AbstractNumericalDerivative
 {
   protected:
-    double _f1, _f2, _f3, _f4, _f5;
+    double f1_, f2_, f3_, f4_, f5_;
     
   public:
-    FivePointsNumericalDerivative (Function * function): AbstractNumericalDerivative(function) {}
-    FivePointsNumericalDerivative (DerivableFirstOrder * function): AbstractNumericalDerivative(function) {}
-    FivePointsNumericalDerivative (DerivableSecondOrder * function): AbstractNumericalDerivative(function) {}
+    FivePointsNumericalDerivative(Function* function) : AbstractNumericalDerivative(function) {}
+    FivePointsNumericalDerivative(DerivableFirstOrder* function) : AbstractNumericalDerivative(function) {}
+    FivePointsNumericalDerivative(DerivableSecondOrder* function) : AbstractNumericalDerivative(function) {}
     virtual ~FivePointsNumericalDerivative() {}
 
 #ifndef NO_VIRTUAL_COV
@@ -106,10 +106,10 @@ class FivePointsNumericalDerivative:
     
     double getValue() const throw (Exception)
     {
-      return _f3;
+      return f3_;
     }
 
-		double getSecondOrderDerivative(const string & variable1, const string & variable2) const
+    double getSecondOrderDerivative(const string & variable1, const string & variable2) const
       throw (Exception)
     {
       throw Exception("Unimplemented cross derivative.");

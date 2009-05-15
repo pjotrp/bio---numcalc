@@ -45,7 +45,7 @@ using namespace bpp;
 
 ConstantDistribution::ConstantDistribution(double value) : AbstractDiscreteDistribution(), _value(value)
 {
-    _distribution[_value] = 1; //One single class of rate 1 with probability 1.
+    distribution_[_value] = 1; //One single class of rate 1 with probability 1.
 }
 
 /******************************************************************************/

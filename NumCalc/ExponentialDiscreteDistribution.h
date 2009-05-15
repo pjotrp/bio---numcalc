@@ -49,33 +49,37 @@ namespace bpp
 
 /**
  * @brief Discretized Exponential distribution.
+ *
+ * @author Julien Dutheil
  */
 class ExponentialDiscreteDistribution:
   public AbstractDiscreteDistribution
 {
 	protected:
-		vector<double> _bounds;
-		IncludingPositiveReal * _lambdaConstraint;
-    bool _median;
+		vector<double> bounds_;
+		IncludingPositiveReal * lambdaConstraint_;
+    bool median_;
+    string prefix_;
 	
-		static const double VERYBIG;
-		
 	public:
-		ExponentialDiscreteDistribution(unsigned int n, double lambda = 1., bool median=false);
+		ExponentialDiscreteDistribution(unsigned int n, double lambda = 1., bool median=false, const string& parameterPrefix="");
 
     ExponentialDiscreteDistribution(const ExponentialDiscreteDistribution & dist):
       //AbstractParametrizable(dist),
       AbstractDiscreteDistribution(dist),
-      _bounds(dist._bounds),
-      _lambdaConstraint(dynamic_cast<IncludingPositiveReal *>(dist._lambdaConstraint->clone())),
-      _median(dist._median) {}
+      bounds_(dist.bounds_),
+      lambdaConstraint_(dynamic_cast<IncludingPositiveReal *>(dist.lambdaConstraint_->clone())),
+      median_(dist.median_),
+      prefix_(dist.prefix_)
+    {}
     
     ExponentialDiscreteDistribution & operator=(const ExponentialDiscreteDistribution & dist)
     {
       AbstractDiscreteDistribution::operator=(dist);
-      _bounds = dist._bounds;
-      _lambdaConstraint = dynamic_cast<IncludingPositiveReal *>(dist._lambdaConstraint->clone());
-      _median = dist._median;
+      bounds_ = dist.bounds_;
+      lambdaConstraint_ = dynamic_cast<IncludingPositiveReal *>(dist.lambdaConstraint_->clone());
+      median_ = dist.median_;
+      prefix_ = dist.prefix_;
       return *this;
     }
 
@@ -95,7 +99,7 @@ class ExponentialDiscreteDistribution:
   public:
     double randC() const throw (Exception)
     {
-      return RandomTools::randExponential(_parameters.getParameter("lambda")->getValue());
+      return RandomTools::randExponential(getParameterValue("lambda"));
     }
     
 	protected:

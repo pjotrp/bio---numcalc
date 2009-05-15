@@ -70,24 +70,24 @@ class AbstractNumericalDerivative:
   public FunctionWrapper
 {
   protected:
-    DerivableFirstOrder *_function1;
-    DerivableSecondOrder *_function2;
-    double _h;
-    vector<string> _variables;
-    mutable map<string, unsigned int> _index; //Store positions in array corresponding to variable names.
-    vector<double> _der1;
-    vector<double> _der2;
-    RowMatrix<double> _crossDer2;
-    bool _computeD1, _computeD2, _computeCrossD2;
+    DerivableFirstOrder *function1_;
+    DerivableSecondOrder *function2_;
+    double h_;
+    vector<string> variables_;
+    mutable map<string, unsigned int> index_; //Store positions in array corresponding to variable names.
+    vector<double> der1_;
+    vector<double> der2_;
+    RowMatrix<double> crossDer2_;
+    bool computeD1_, computeD2_, computeCrossD2_;
     
-	public:
-		AbstractNumericalDerivative (Function * function):
-      FunctionWrapper(function), _function1(NULL), _function2(NULL), _h(0.0001), _computeD1(true), _computeD2(true), _computeCrossD2(false) {}
-		AbstractNumericalDerivative (DerivableFirstOrder * function):
-      FunctionWrapper(function), _function1(function), _function2(NULL), _h(0.0001), _computeD1(true), _computeD2(true), _computeCrossD2(false) {}
-	  AbstractNumericalDerivative (DerivableSecondOrder * function):
-      FunctionWrapper(function), _function1(function), _function2(function), _h(0.0001), _computeD1(true), _computeD2(true), _computeCrossD2(false) {}
-		virtual ~AbstractNumericalDerivative() {}
+  public:
+    AbstractNumericalDerivative (Function * function):
+      FunctionWrapper(function), function1_(NULL), function2_(NULL), h_(0.0001), computeD1_(true), computeD2_(true), computeCrossD2_(false) {}
+    AbstractNumericalDerivative (DerivableFirstOrder * function):
+      FunctionWrapper(function), function1_(function), function2_(NULL), h_(0.0001), computeD1_(true), computeD2_(true), computeCrossD2_(false) {}
+    AbstractNumericalDerivative (DerivableSecondOrder * function):
+      FunctionWrapper(function), function1_(function), function2_(function), h_(0.0001), computeD1_(true), computeD2_(true), computeCrossD2_(false) {}
+    virtual ~AbstractNumericalDerivative() {}
 
 #ifndef NO_VIRTUAL_COV
     AbstractNumericalDerivative*
@@ -104,7 +104,7 @@ class AbstractNumericalDerivative:
      *
      * @param h Interval value.
      */
-    void setInterval(double h) { _h = h; }
+    void setInterval(double h) { h_ = h; }
     
     /**
      * @brief Set the list of parameters to derivate.
@@ -113,13 +113,13 @@ class AbstractNumericalDerivative:
      */
     void setParametersToDerivate(const vector<string> & variables)
     {
-      _variables = variables;
-      _index.clear();
-      for(unsigned int i = 0; i < _variables.size(); i++)
-        _index[_variables[i]] = i;
-      _der1.resize(_variables.size());
-      _der2.resize(_variables.size());
-      _crossDer2.resize(_variables.size(), _variables.size());
+      variables_ = variables;
+      index_.clear();
+      for(unsigned int i = 0; i < variables_.size(); i++)
+        index_[variables_[i]] = i;
+      der1_.resize(variables_.size());
+      der2_.resize(variables_.size());
+      crossDer2_.resize(variables_.size(), variables_.size());
     }
     
     /**
@@ -127,70 +127,69 @@ class AbstractNumericalDerivative:
      *
      * @{
      */
-    void enableFirstOrderDerivatives(bool yn) { _computeD1 = yn; }
-    bool enableFirstOrderDerivatives() const { return _computeD1; }
+    void enableFirstOrderDerivatives(bool yn) { computeD1_ = yn; }
+    bool enableFirstOrderDerivatives() const { return computeD1_; }
     
     double getFirstOrderDerivative(const string & variable) const
       throw (Exception)
     {
-      if(_function1 != NULL)
+      if(function1_ != NULL)
       {
         try
         {
-          return _function1->getFirstOrderDerivative(variable);
+          return function1_->getFirstOrderDerivative(variable);
         }
         catch(Exception & e) {}
       }    
-      map<string, unsigned int>::iterator it = _index.find(variable);
-      if(_computeD1 && it != _index.end()) return _der1[it->second];
+      map<string, unsigned int>::iterator it = index_.find(variable);
+      if(computeD1_ && it != index_.end()) return der1_[it->second];
       else throw Exception("First order derivative not computed for variable " + variable + "."); 
     }
     /** @} */
-		
+    
     /**
      * @name The DerivableSecondOrder interface
      *
      * @{
      */
 
-    void enableSecondOrderDerivatives(bool yn) { _computeD2 = yn; }
-    bool enableSecondOrderDerivatives() const { return _computeD2; }
+    void enableSecondOrderDerivatives(bool yn) { computeD2_ = yn; }
+    bool enableSecondOrderDerivatives() const { return computeD2_; }
 
     double getSecondOrderDerivative(const string & variable) const
       throw (Exception)
     {
-      if(_function2 != NULL)
+      if(function2_ != NULL)
       {
         try
         {
-          return _function2->getSecondOrderDerivative(variable);
+          return function2_->getSecondOrderDerivative(variable);
         }
         catch(Exception & e) {}
       }    
-      map<string, unsigned int>::iterator it = _index.find(variable);
-      if(_computeD2 && it != _index.end()) return _der2[it->second];
+      map<string, unsigned int>::iterator it = index_.find(variable);
+      if(computeD2_ && it != index_.end()) return der2_[it->second];
       else throw Exception("Second order derivative not computed for variable " + variable + "."); 
     }
 
-		double getSecondOrderDerivative(const string & variable1, const string & variable2) const
+    double getSecondOrderDerivative(const string & variable1, const string & variable2) const
       throw (Exception)
     {
-      //throw Exception("Unimplemented cross derivative.");
-      if(_function2 != NULL)
+      if(function2_ != NULL)
       {
         try
         {
-          return _function2->getSecondOrderDerivative(variable1, variable2);
+          return function2_->getSecondOrderDerivative(variable1, variable2);
         }
         catch(Exception & e) {}
       }    
-      map<string, unsigned int>::iterator it1 = _index.find(variable1);
-      map<string, unsigned int>::iterator it2 = _index.find(variable2);
-      if(_computeCrossD2 && it1 != _index.end() && it2 != _index.end()) return _crossDer2(it1->second, it2->second);
+      map<string, unsigned int>::iterator it1 = index_.find(variable1);
+      map<string, unsigned int>::iterator it2 = index_.find(variable2);
+      if(computeCrossD2_ && it1 != index_.end() && it2 != index_.end()) return crossDer2_(it1->second, it2->second);
       else throw Exception("Cross second order derivative not computed for variables " + variable1 + " and " + variable2 + "."); 
     }
     /** @} */
-	   
+     
     /**
      * @name The Parametrizable interface.
      *
@@ -204,40 +203,40 @@ class AbstractNumericalDerivative:
     void setParameters(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException)
     {
-      _function->setParameters(parameters);
+      function_->setParameters(parameters);
       updateDerivatives(parameters);
     }
     void setAllParametersValues(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException)
     {
-      _function->setAllParametersValues(parameters);
+      function_->setAllParametersValues(parameters);
       updateDerivatives(parameters);
     }
     
     void setParameterValue(const string & name, double value)
       throw (ParameterNotFoundException, ConstraintException)
     {
-      _function->setParameterValue(name, value);
-      updateDerivatives(_function->getParameters().subList(name));
+      function_->setParameterValue(name, value);
+      updateDerivatives(function_->getParameters().subList(name));
     }
     
     void setParametersValues(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException)
     {
-      _function->setParametersValues(parameters);
+      function_->setParametersValues(parameters);
       updateDerivatives(parameters);
     }
     
     void matchParametersValues(const ParameterList & parameters)
       throw (ConstraintException)
     {
-      _function->matchParametersValues(parameters);
+      function_->matchParametersValues(parameters);
       updateDerivatives(parameters);
     }
     /** @} */
 
-    void enableSecondOrderCrossDerivatives(bool yn) { _computeCrossD2 = yn; }
-    bool enableSecondOrderCrossDerivatives() const { return _computeCrossD2; }
+    void enableSecondOrderCrossDerivatives(bool yn) { computeCrossD2_ = yn; }
+    bool enableSecondOrderCrossDerivatives() const { return computeCrossD2_; }
 
   protected:
     virtual void updateDerivatives(const ParameterList & parameters) = 0;

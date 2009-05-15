@@ -272,91 +272,91 @@ class FunctionWrapper:
   public virtual Function
 {
   protected:
-    Function * _function;
+    Function * function_;
 
   public:
-    FunctionWrapper(Function * function): _function(function) {}
+    FunctionWrapper(Function * function): function_(function) {}
 
   public:
+    bool hasParameter(const string& name) const
+    {
+      return function_->hasParameter(name);
+    }
+
     void setParameters(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException)
     {
-      _function->setParameters(parameters);
+      function_->setParameters(parameters);
     }
 
     const ParameterList & getParameters() const throw (Exception)
     {
-      return _function->getParameters();  
-    }
-
-    const ParameterList & getIndependentParameters() const throw (Exception)
-    {
-      return _function->getIndependentParameters();  
+      return function_->getParameters();  
     }
 
     const Parameter & getParameter(const string & name) const throw (ParameterNotFoundException)
     {
-      return _function->getParameter(name);
+      return function_->getParameter(name);
     }
 
     double getValue() const throw (Exception)
     {
-      return _function->getValue();
+      return function_->getValue();
     }
     
     double f(const ParameterList & parameters) throw (Exception)
     {
-      return _function->f(parameters);
+      return function_->f(parameters);
     }
     
     double getParameterValue(const string & name) const throw (ParameterNotFoundException)
     {
-      return _function->getParameterValue(name);
+      return function_->getParameterValue(name);
     }
       
     void setAllParametersValues(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException)
     {
-      _function->setAllParametersValues(parameters);
+      function_->setAllParametersValues(parameters);
     }
     
     void setParameterValue(const string & name, double value)
       throw (ParameterNotFoundException, ConstraintException)
     {
-      _function->setParameterValue(name, value);
+      function_->setParameterValue(name, value);
     }
     
     void setParametersValues(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException)
     {
-      _function->setParametersValues(parameters);
+      function_->setParametersValues(parameters);
     }
     
     void matchParametersValues(const ParameterList & parameters)
       throw (ConstraintException)
     {
-      _function->matchParametersValues(parameters);
+      function_->matchParametersValues(parameters);
     }
 
     unsigned int getNumberOfParameters() const
     {
-      return _function->getNumberOfParameters();
+      return function_->getNumberOfParameters();
     }
 
-    unsigned int getNumberOfIndependentParameters() const
+    void setNamespace(const string& prefix)
     {
-      return _function->getNumberOfIndependentParameters();
+      function_->setNamespace(prefix);
     }
 
-    void aliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception)
+    string getNamespace() const
     {
-      _function->aliasParameters(p1, p2);
+      return function_->getNamespace();
     }
 
-    void unaliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception)
+    string getParameterNameWithoutNamespace(const string& name) const
     {
-      _function->aliasParameters(p1, p2);
-    } 
+      return function_->getParameterNameWithoutNamespace(name);
+    }
 
 };
 
@@ -369,12 +369,12 @@ class InfinityFunctionWrapper:
   public FunctionWrapper
 {
   protected:
-    mutable bool _constraintMatch;
+    mutable bool constraintMatch_;
     
   public:
     InfinityFunctionWrapper(Function * function):
       FunctionWrapper(function),
-      _constraintMatch(false) {}
+      constraintMatch_(false) {}
     virtual ~InfinityFunctionWrapper() {}
 
 #if defined(NO_VIRTUAL_COV)
@@ -388,20 +388,23 @@ class InfinityFunctionWrapper:
     void setParameters(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException)
     {
-      try {
-        _function->setParameters(parameters);
-        _constraintMatch = false;
-      } catch(ConstraintException ce) {
-        _constraintMatch = true;
+      try
+      {
+        function_->setParameters(parameters);
+        constraintMatch_ = false;
+      }
+      catch(ConstraintException& ce)
+      {
+        constraintMatch_ = true;
       }
     }
 
     double getValue() const throw (Exception)
     {
-      return _constraintMatch ? -log(0.) :  _function->getValue();
+      return constraintMatch_ ? -log(0.) :  function_->getValue();
     }
     
-    double f(const ParameterList & parameters) throw (Exception)
+    double f(const ParameterList& parameters) throw (Exception)
     {
       setParameters(parameters);
       return getValue();
@@ -410,44 +413,56 @@ class InfinityFunctionWrapper:
     void setAllParametersValues(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException)
     {
-      try {
-        _function->setAllParametersValues(parameters);
-        _constraintMatch = false;
-      } catch(ConstraintException ce) {
-        _constraintMatch = true;
+      try
+      {
+        function_->setAllParametersValues(parameters);
+        constraintMatch_ = false;
+      }
+      catch(ConstraintException& ce)
+      {
+        constraintMatch_ = true;
       }
     }
     
     void setParameterValue(const string & name, double value)
       throw (ParameterNotFoundException, ConstraintException)
     {
-      try {
-        _function->setParameterValue(name, value);
-        _constraintMatch = false;
-      } catch(ConstraintException ce) {
-        _constraintMatch = true;
+      try
+      {
+        function_->setParameterValue(name, value);
+        constraintMatch_ = false;
+      }
+      catch(ConstraintException& ce)
+      {
+        constraintMatch_ = true;
       }
     }
     
     void setParametersValues(const ParameterList & parameters)
       throw (ParameterNotFoundException, ConstraintException)
     {
-      try {
-        _function->setParametersValues(parameters);
-        _constraintMatch = false;
-      } catch(ConstraintException ce) {
-        _constraintMatch = true;
+      try
+      {
+        function_->setParametersValues(parameters);
+        constraintMatch_ = false;
+      }
+      catch(ConstraintException& ce)
+      {
+        constraintMatch_ = true;
       }
     }
     
     void matchParametersValues(const ParameterList & parameters)
       throw (ConstraintException)
     {
-      try {
-        _function->matchParametersValues(parameters);
-        _constraintMatch = false;
-      } catch(ConstraintException ce) {
-        _constraintMatch = true;
+      try
+      {
+        function_->matchParametersValues(parameters);
+        constraintMatch_ = false;
+      }
+      catch(ConstraintException& ce)
+      {
+        constraintMatch_ = true;
       }
     }
 
@@ -473,8 +488,9 @@ class InfinityDerivableFirstOrderWrapper:
 
   public:
     
-    double getFirstOrderDerivative(const string & variable) const throw (Exception) {
-      return _constraintMatch ? -log(0.) :  (dynamic_cast<DerivableFirstOrder *>(_function)->getFirstOrderDerivative(variable));    
+    double getFirstOrderDerivative(const string & variable) const throw (Exception)
+    {
+      return constraintMatch_ ? -log(0.) :  (dynamic_cast<DerivableFirstOrder *>(function_)->getFirstOrderDerivative(variable));    
     }
     
     double df(const string & variable, const ParameterList & parameters) throw (Exception) {
@@ -507,7 +523,7 @@ class InfinityDerivableSecondOrderWrapper:
 
     double getSecondOrderDerivative(const string & variable) const throw (Exception)
     {
-      return _constraintMatch ? -log(0.) :  (dynamic_cast<DerivableSecondOrder *>(_function)->getSecondOrderDerivative(variable));          
+      return constraintMatch_ ? -log(0.) :  (dynamic_cast<DerivableSecondOrder *>(function_)->getSecondOrderDerivative(variable));          
     }
   
     double d2f(const string & variable, const ParameterList & parameters) throw (Exception)
@@ -518,7 +534,7 @@ class InfinityDerivableSecondOrderWrapper:
 
     double getSecondOrderDerivative(const string & variable1, const string & variable2) const throw (Exception)
     {
-      return _constraintMatch ? -log(0.) :  (dynamic_cast<DerivableSecondOrder *>(_function) -> getSecondOrderDerivative(variable1, variable2));      
+      return constraintMatch_ ? -log(0.) :  (dynamic_cast<DerivableSecondOrder *>(function_) -> getSecondOrderDerivative(variable1, variable2));      
     }
     
     double d2f(const string & variable1, const string & variable2, const ParameterList & parameters) throw (Exception)

@@ -92,33 +92,37 @@ class ParameterList:
      * @brief Get the parameter with name <i>name</i>.
      *
      * @param name The name of the parameter to look for.
-     * @return A const pointer toward the parameter with name <i>name</i>, or NULL if not found.
+     * @return A const reference toward the parameter with name <i>name</i>.
+     * @throw ParameterNotFoundException If no parameter with the given name is found.
      */
-    virtual const Parameter * getParameter(const string & name) const;
+    virtual const Parameter & getParameter(const string & name) const throw (ParameterNotFoundException);
   
     /**
      * @brief Get the parameter with name <i>name</i>.
      *
      * @param name The name of the parameter to look for.
-     * @return A pointer toward the parameter with name <i>name</i>, or NULL if not found.
+     * @return A reference toward the parameter with name <i>name</i>.
+     * @throw ParameterNotFoundException If no parameter with the given name is found.
      */
-    virtual Parameter * getParameter(const string & name);
+    virtual Parameter & getParameter(const string & name) throw (ParameterNotFoundException);
 
     /**
      * @brief Get given parameters as a sublist.
      *
      * @param names Name of the parameters to be included in the list.
      * @return A list with all parameters specified.
+     * @throw ParameterNotFoundException If at least one name does not correspond to a parameter in the list.
      */
-    virtual ParameterList subList(const vector<string> & names) const ;
+    virtual ParameterList subList(const vector<string> & names) const throw (ParameterNotFoundException);
     
     /**
      * @brief Get given parameter as a sublist.
      *
      * @param name Name of the parameter to be included in the list.
      * @return A list with the parameter specified.
+     * @throw ParameterNotFoundException If no parameter with the given name is found.
      */
-    virtual ParameterList subList(const string & name) const;
+    virtual ParameterList subList(const string & name) const throw (ParameterNotFoundException);
 
     /**
      * @brief Get given parameters as a sublist.
@@ -170,6 +174,8 @@ class ParameterList:
      *
      * @param name the name of the parameter to set.
      * @param value The value of the parameter.
+     * @throw ParameterNotFoundException If no parameter with the given name is found in the list.
+     * @throw ConstraintException If the value is incorrect.
      */
     virtual void setParameterValue(const string & name, double value) 
       throw (ParameterNotFoundException, ConstraintException);
@@ -182,6 +188,8 @@ class ParameterList:
      *
      * @param params A list with all parameters.
      * @see setParameters(), matchParameters();
+     * @throw ParameterNotFoundException If at least one name does not correspond to a parameter in the list.
+     * @throw ConstraintException If one value is incorrect (and the two parameter list do not have the same constraints).
      */
     virtual void setAllParametersValues(const ParameterList & params)
       throw (ParameterNotFoundException, ConstraintException);
@@ -193,6 +201,8 @@ class ParameterList:
      *
      * @param params A list containing all parameters to update.
      * @see setAllParameters(), matchParameters()
+     * @throw ParameterNotFoundException If at least one name does not correspond to a parameter in the list.
+     * @throw ConstraintException If one value is incorrect (and the two parameter list do not have the same constraints).
      */
     virtual void setParametersValues(const ParameterList & params)
       throw (ParameterNotFoundException, ConstraintException);
@@ -285,7 +295,7 @@ class ParameterList:
      * the position of the first one is returned.
      * @throw ParameterNotFoundException If no parameter with the given name is found.
      */
-    virtual unsigned int whichParameterHasName(const string & name) throw (ParameterNotFoundException);
+    virtual unsigned int whichParameterHasName(const string & name) const throw (ParameterNotFoundException);
 
     /**
      * @brief Print all parameters.

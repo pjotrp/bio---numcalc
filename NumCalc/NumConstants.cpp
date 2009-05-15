@@ -50,7 +50,8 @@ const double NumConstants::GOLDEN_RATIO_R   = NumConstants::GOLDEN_RATIO_PHI - 1
 const double NumConstants::GOLDEN_RATIO_C   = 1. - NumConstants::GOLDEN_RATIO_R;
 
 const double NumConstants::TINY =  1e-12;
-const double NumConstants::VERY_TINY =  1e-20;
+const double NumConstants::VERY_TINY = 1e-20;
+const double NumConstants::VERY_BIG = static_cast<double>(1.7E+23);
 
 const double NumConstants::PI = 3.141593;
 

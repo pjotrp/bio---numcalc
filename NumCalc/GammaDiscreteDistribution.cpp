@@ -39,6 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "GammaDiscreteDistribution.h"
 #include "RandomTools.h"
+#include "NumConstants.h"
 
 // From Utils:
 #include <Utils/MapTools.h>
@@ -50,18 +51,19 @@ using namespace bpp;
 
 using namespace std;
 
-const double GammaDiscreteDistribution::VERYBIG = static_cast<double>(1.7E+23);
-
 /** Constructor: **************************************************************/
 
-GammaDiscreteDistribution::GammaDiscreteDistribution(unsigned int n, double alpha) : AbstractDiscreteDistribution()
+GammaDiscreteDistribution::GammaDiscreteDistribution(unsigned int n, double alpha, double beta, const string& parameterPrefix) : AbstractDiscreteDistribution(parameterPrefix) 
 {
   // We use a lower bound of 0.05 for alpha to prohibe errors due to computer
   // floating precision: if alpha is quite low (gamma -> constant), some classes
   // may have the same category value, leading to a classe number lower than expected.
   // NB: if this is the case, then a warning is shown. This may happen in optimization
   // algorithms.
-  _parameters.addParameter(Parameter("alpha", alpha, new IncludingPositiveReal(0.05), true));
+  Parameter p1(getNamespace() + "alpha", alpha, new IncludingPositiveReal(0.05), true);
+  addParameter_(p1);
+  Parameter p2(getNamespace() + "beta", beta, new IncludingPositiveReal(0.05), true);
+  addParameter_(p2);
   applyParameters(n);
 }
 
@@ -71,7 +73,7 @@ GammaDiscreteDistribution::~GammaDiscreteDistribution() {}
 
 void GammaDiscreteDistribution::fireParameterChanged(const ParameterList & parameters)
 {
-  //cout << "Parameter changed, alpha = " << getParameter("alpha") << endl;
+  AbstractDiscreteDistribution::fireParameterChanged(parameters);
   applyParameters(getNumberOfCategories());  
 }
 
@@ -79,7 +81,7 @@ void GammaDiscreteDistribution::fireParameterChanged(const ParameterList & param
 
 Domain GammaDiscreteDistribution::getDomain() const
 {
-  return Domain(_bounds, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(_distribution));
+  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
 }
 
 /******************************************************************************/
@@ -88,17 +90,16 @@ void GammaDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
 {
   if(numberOfCategories <= 0)
     cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in GammaDiscreteDistribution::applyParameters()." << endl;
-  _distribution.clear();
-  _bounds.clear();
-  _bounds.resize(numberOfCategories + 1);
+  distribution_.clear();
+  bounds_.clear();
+  bounds_.resize(numberOfCategories + 1);
   double alpha = getParameterValue("alpha");
-  vector<double> means = computeValues(numberOfCategories, alpha, alpha, false);
-  //cout<<"number of categories is: "<<categories()<<endl;
-  //cout<<"alpha is: "<<alpha<<endl;
+  double beta = getParameterValue("beta");
+  vector<double> means = computeValues(numberOfCategories, alpha, beta, false);
   if(numberOfCategories == 1)
   {
-    _distribution[means[0]] = 1.0;
-    _bounds[0] = 0; _bounds[1] = VERYBIG;
+    distribution_[means[0]] = 1.0;
+    bounds_[0] = 0; bounds_[1] = NumConstants::VERY_BIG;
     return;
   }
   else if(numberOfCategories > 1)
@@ -106,9 +107,9 @@ void GammaDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
     double p = 1. / (double)numberOfCategories;
     for(unsigned int i = 0; i < numberOfCategories; i++)
     {
-      _distribution[means[i]] = p;
+      distribution_[means[i]] = p;
     }
-    _bounds = computeBounds(numberOfCategories, alpha, alpha);
+    bounds_ = computeBounds(numberOfCategories, alpha, beta);
     if(getNumberOfCategories() != numberOfCategories)
     {
       cout << "WARNING!!! Couldn't create " << numberOfCategories << " distinct categories." << endl;
@@ -167,7 +168,7 @@ vector<double> GammaDiscreteDistribution::computeBounds(unsigned int nbClasses, 
   vector<double> bounds(nbClasses + 1);
   bounds[0] = 0;
   for(unsigned int i = 1; i < nbClasses; i++) bounds[i] = RandomTools::qGamma((double)i/(double)nbClasses, alpha, beta);
-  bounds[nbClasses] = VERYBIG;
+  bounds[nbClasses] = NumConstants::VERY_BIG;
   return bounds;
 }
 

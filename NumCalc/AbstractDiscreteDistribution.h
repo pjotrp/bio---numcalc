@@ -41,7 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _ABSTRACTDISCRETEDISTRIBUTION_H_
 
 #include "DiscreteDistribution.h"
-#include "AbstractParametrizable.h"
+#include "AbstractParameterAliasable.h"
 
 #include <map>
 
@@ -59,7 +59,7 @@ namespace bpp
  */
 class AbstractDiscreteDistribution:
   public DiscreteDistribution,
-  public AbstractParametrizable
+  public AbstractParameterAliasable
 {
 
   public:
@@ -70,7 +70,8 @@ class AbstractDiscreteDistribution:
 		class Order
     {
       public:
-        bool operator() (double l1, double l2) const {
+        bool operator() (double l1, double l2) const
+        {
           return (l1 < l2 - 0.000000001); //precision of E9
         }
     };
@@ -79,10 +80,10 @@ class AbstractDiscreteDistribution:
 		/**
 		 * This field must be initialized in the constructor of the derived classes.
 		 */
-		map<double, double, Order> _distribution;
+		map<double, double, Order> distribution_;
 	
 	public:
-		AbstractDiscreteDistribution() {}
+		AbstractDiscreteDistribution(const string& prefix = "") : AbstractParameterAliasable(prefix) {}
 
     virtual ~AbstractDiscreteDistribution() {}
 

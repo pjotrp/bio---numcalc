@@ -62,6 +62,7 @@ class NumConstants
 
     static const double TINY;
     static const double VERY_TINY;
+    static const double VERY_BIG;
 
     static const double PI;
 };

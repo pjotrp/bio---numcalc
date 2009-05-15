@@ -41,101 +41,29 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
-AbstractParametrizable::AbstractParametrizable(const AbstractParametrizable & ap):
-  _independentParameters(ap._independentParameters),
-  _parameters(ap._parameters),
-  _aliasListenersRegister(ap._aliasListenersRegister)
+void AbstractParametrizable::setNamespace(const string& prefix)
 {
-  //Actualize the register with adequate pointers:
-  for(map<string, AliasParameterListener *>::iterator it = _aliasListenersRegister.begin();
-    it != _aliasListenersRegister.end();
-    it++)
+  //We need to update all parameter names!
+  //First correct the global parameter list
+  string currentName;
+  for(unsigned int i = 0; i < parameters_.size(); i++)
   {
-    it->second->setParameterList(&_parameters);
+    currentName = parameters_[i]->getName();
+    if(TextTools::startsWith(currentName, prefix_))
+      parameters_[i]->setName(prefix + currentName.substr(prefix_.size()));
+    else
+      parameters_[i]->setName(prefix + currentName);
   }
-}
-   
-AbstractParametrizable & AbstractParametrizable::operator=(const AbstractParametrizable & ap)
-{
-  _independentParameters = ap._independentParameters;
-  _parameters = ap._parameters;
-  _aliasListenersRegister = ap._aliasListenersRegister;
 
-  //Actualize the register with adequate pointers:
-  for(map<string, AliasParameterListener *>::iterator it = _aliasListenersRegister.begin();
-    it != _aliasListenersRegister.end();
-    it++)
-  {
-    it->second->setParameterList(&_parameters);
-  }
-  return *this;
+  //Then we store the new namespace:
+  prefix_ = prefix;
 }
 
-AbstractParametrizable::~AbstractParametrizable()
+string AbstractParametrizable::getParameterNameWithoutNamespace(const string& name) const
 {
-  //Delete the registry content:
-  for(map<string, AliasParameterListener *>::iterator it = _aliasListenersRegister.begin();
-      it != _aliasListenersRegister.end();
-      it++)
-    delete it->second;
-}
-
-void AbstractParametrizable::aliasParameters(const string & p1, const string & p2)
-  throw (ParameterNotFoundException, Exception)
-{
-  //In case this is the first time we call this method:
-  if(_parameters.size() > 0 && _independentParameters.size() == 0) _independentParameters = _parameters;
- 
-  if(!_parameters.hasParameter(p1))
-    throw ParameterNotFoundException("AbstractParametrizable::aliasParameters", p1);
-  if(!_parameters.hasParameter(p2))
-    throw ParameterNotFoundException("AbstractParametrizable::aliasParameters", p2);
-  if(!_independentParameters.hasParameter(p2))
-    throw Exception("AbstractParametrizable::aliasParameters. Parameter " + p2 + " is already aliased to a parameter and can't be aliased twice.");
-
-  string id = "__alias_" + p2 + "_to_" + p1;
-  string idCheck = "__alias_" + p1 + "_to_" + p2;
-  if(_aliasListenersRegister.find(idCheck) != _aliasListenersRegister.end())
-    throw Exception("AbstractParametrizable::aliasParameters. Trying to alias parameter " + p2 + " to " + p1 + ", but parameter " + p1 + " is already aliased to parameter " + p2 + ".");
-  Parameter *param1 = _parameters.getParameter(p1);
-  Parameter *param2 = _parameters.getParameter(p2);
-  if(!param1->hasConstraint())
-  {
-    if(param2->hasConstraint())
-      throw Exception("AbstractParametrizable::aliasParameters. Cannot alias parameter " + p2 + " to " + p1 + ", because the constraints aatached to these two parameters are different.");
-  }
+  if(TextTools::startsWith(name, prefix_))
+    return name.substr(prefix_.size());
   else
-    //We use a small trick here, we test the constraints on the basis of their string description (C++ does not provide a default operator==() :( ).
-    if(param2->hasConstraint() && (param1->getConstraint()->getDescription() != param2->getConstraint()->getDescription()))
-        throw Exception("AbstractParametrizable::aliasParameters. Cannot alias parameter " + p2 + " to " + p1 + ", because the constraints aatached to these two parameters are different.");
-
-  //Every thing seems ok, let's create the listener and register it:
-  AliasParameterListener * aliasListener = new AliasParameterListener(id, _parameters.whichParameterHasName(p2), &_parameters);
-  _aliasListenersRegister[id] = aliasListener;
-  //Now we add it to the appropriate parameter, that is p1.
-  //The parameter will not own the listener, the bookkeeping being achieved by the register:
-  param1->addParameterListener(aliasListener, false);
-  //Finally we remove p2 from the list of independent parameters:
-  _independentParameters.deleteParameter(p2);
+    return name;
 }
 
-void AbstractParametrizable::unaliasParameters(const string & p1, const string & p2)
-  throw (ParameterNotFoundException, Exception)
-{
-  if(!_parameters.hasParameter(p1))
-    throw ParameterNotFoundException("AbstractParametrizable::unaliasParameters", p1);
-  if(!_parameters.hasParameter(p2))
-    throw ParameterNotFoundException("AbstractParametrizable::unaliasParameters", p2);
-
-  string id = "__alias_" + p2 + "_to_" + p1;
-  map<string, AliasParameterListener *>::iterator it = _aliasListenersRegister.find(id);
-  if(it == _aliasListenersRegister.end())
-    throw Exception("AbstractParametrizable::unaliasParameters. Parameter " + p2 + " is not aliased to parameter " + p1 + ".");
-  //Remove the listener:
-  _parameters.getParameter(p1)->removeParameterListener(id);
-  delete it->second;
-  _aliasListenersRegister.erase(it);
-  //Finally we re-add p2 to the list of independent parameters:
-  _independentParameters.addParameter(*_parameters.getParameter(p2));
-}
-	

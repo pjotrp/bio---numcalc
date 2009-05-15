@@ -54,48 +54,47 @@ namespace bpp
 class InvariantMixedDiscreteDistribution:
   public AbstractDiscreteDistribution
 {
-  protected:
+  private:
     DiscreteDistribution* dist_;
-    bool ownDist_;
     double invariant_;
 		vector<double> bounds_;
+    string nestedPrefix_;
 
   public:
     /**
      * @brief Build a new InvariantMixedDiscreteDistribution object.
      *
-     * @param dist The distribution to use.
-     * @param p    The probability of being in the invariant category.
-     * @param invariant The value of the invariant category (typically 0, but other values may be specified). 
-     * @param ownDist Tell if this instance own the distribution passed as an argument.
-     * If yes, the distribution will be cloned in case of copy of this instance, and will be deleted with this instance.
+     * @param dist            The distribution to use. The mixed distribution will "own" this distribution object.
+     * This means that the distribution will be cloned in case of copy of this instance, and will be
+     * deleted with this instance.
+     * @param p               The probability of being in the invariant category.
+     * @param invariant       The value of the invariant category (typically 0, but other values may be specified). 
+     * @param parameterPrefix A prefix to use in parameter names.
      */
     InvariantMixedDiscreteDistribution(
-        DiscreteDistribution* dist, double p, double invariant = 0., bool ownDist = false);
+        DiscreteDistribution* dist, double p, double invariant = 0., const string& parameterPrefix = "");
     
     virtual ~InvariantMixedDiscreteDistribution()
     {
-      if(ownDist_) delete dist_;
+      delete dist_;
     }
     
     InvariantMixedDiscreteDistribution(const InvariantMixedDiscreteDistribution& imdd):
       AbstractDiscreteDistribution(imdd)
     {
-      ownDist_   = imdd.ownDist_;
-      if(ownDist_) dist_ = dynamic_cast<DiscreteDistribution *>(imdd.dist_->clone());
-      else dist_ = imdd.dist_;
-      invariant_ = imdd.invariant_;
-      bounds_    = imdd.bounds_;
+      dist_         = dynamic_cast<DiscreteDistribution *>(imdd.dist_->clone());
+      invariant_    = imdd.invariant_;
+      bounds_       = imdd.bounds_;
+      nestedPrefix_ = imdd.nestedPrefix_;
     }
     
     InvariantMixedDiscreteDistribution& operator=(const InvariantMixedDiscreteDistribution& imdd)
     {
       AbstractDiscreteDistribution::operator=(imdd);
-      ownDist_   = imdd.ownDist_;
-      if(ownDist_) dist_ = dynamic_cast<DiscreteDistribution *>(imdd.dist_->clone());
-      else dist_ = imdd.dist_;
-      invariant_ = imdd.invariant_;
-      bounds_    = imdd.bounds_;
+      dist_         = dynamic_cast<DiscreteDistribution *>(imdd.dist_->clone());
+      invariant_    = imdd.invariant_;
+      bounds_       = imdd.bounds_;
+      nestedPrefix_ = imdd.nestedPrefix_;
       return *this;
     }
 
@@ -109,6 +108,8 @@ class InvariantMixedDiscreteDistribution:
   public:
     Domain getDomain() const;
 		void fireParameterChanged(const ParameterList & parameters);
+
+    void setNamespace(const string& prefix);
 
     /**
      * @return The nested, conditional, sub-distribution.

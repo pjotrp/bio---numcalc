@@ -48,14 +48,14 @@ using namespace bpp;
 	
 unsigned int AbstractDiscreteDistribution::getNumberOfCategories() const
 {
-	return _distribution.size();
+	return distribution_.size();
 }
 
 /******************************************************************************/
 
 double AbstractDiscreteDistribution::getCategory(unsigned int categoryIndex) const
 { 
-	map<double, double>::const_iterator it = _distribution.begin();
+	map<double, double>::const_iterator it = distribution_.begin();
 	for(unsigned int i = 0; i < categoryIndex; i++) it++;
 	return it->first;
 }
@@ -64,7 +64,7 @@ double AbstractDiscreteDistribution::getCategory(unsigned int categoryIndex) con
 
 double AbstractDiscreteDistribution::getProbability(unsigned int categoryIndex) const
 {
-	map<double, double>::const_iterator it = _distribution.begin();
+	map<double, double>::const_iterator it = distribution_.begin();
 	for(unsigned int i = 0; i < categoryIndex; i++) it++;
 	return it->second;
 }
@@ -73,17 +73,17 @@ double AbstractDiscreteDistribution::getProbability(unsigned int categoryIndex) 
 
 double AbstractDiscreteDistribution::getProbability(double category) const 
 {
-	return _distribution.find(category)->second;
+	return distribution_.find(category)->second;
 }
 
 /******************************************************************************/
 
 Vdouble AbstractDiscreteDistribution::getCategories() const
 {
-	Vdouble result(_distribution.size());
+	Vdouble result(distribution_.size());
 	unsigned int i = 0;
-	for(map<double, double>::const_iterator it = _distribution.begin();
-		it != _distribution.end();
+	for(map<double, double>::const_iterator it = distribution_.begin();
+		it != distribution_.end();
 		it++)
 	{
 		result[i] = it->first;
@@ -96,10 +96,10 @@ Vdouble AbstractDiscreteDistribution::getCategories() const
 
 Vdouble AbstractDiscreteDistribution::getProbabilities() const
 {
-	Vdouble result(_distribution.size());
+	Vdouble result(distribution_.size());
 	int i = 0;
-	for(map<double, double>::const_iterator it = _distribution.begin();
-		it != _distribution.end();
+	for(map<double, double>::const_iterator it = distribution_.begin();
+		it != distribution_.end();
 		it++) 
 	{
 		result[i] = it->second;
@@ -112,22 +112,22 @@ Vdouble AbstractDiscreteDistribution::getProbabilities() const
 
 void AbstractDiscreteDistribution::set(double category, double probability)
 {
-	_distribution[category] = probability;
+	distribution_[category] = probability;
 }
 
 /******************************************************************************/
 
 void AbstractDiscreteDistribution::add(double category, double probability)
 {
-	if(_distribution.find(category) == _distribution.end())
+	if(distribution_.find(category) == distribution_.end())
   {
 		//new category
-		_distribution[category] = probability;
+		distribution_[category] = probability;
 	}
   else
   {
 		//existing category
-		_distribution[category] += probability;
+		distribution_[category] += probability;
 	}
 }
 
@@ -137,8 +137,8 @@ double AbstractDiscreteDistribution::rand() const
 {
 	double r = RandomTools::giveRandomNumberBetweenZeroAndEntry(1);
 	double cumprob = 0;
-	for(map<double,double>::const_iterator i = _distribution.begin(); 
-		i != _distribution.end();
+	for(map<double,double>::const_iterator i = distribution_.begin(); 
+		i != distribution_.end();
 		i++)
 	{
 		cumprob += i->second;
@@ -153,10 +153,10 @@ double AbstractDiscreteDistribution::rand() const
 double AbstractDiscreteDistribution::getInfCumulativeProbability(double category) const 
 {
 	double prob = 0;
-	map<double, double>::const_iterator it = _distribution.find(category);
-	for(map<double, double>::const_iterator i = _distribution.begin();
+	map<double, double>::const_iterator it = distribution_.find(category);
+	for(map<double, double>::const_iterator i = distribution_.begin();
 		i != it;
-		i++) prob += i -> second;
+		i++) prob += i->second;
 	return prob;
 }
 
@@ -165,11 +165,11 @@ double AbstractDiscreteDistribution::getInfCumulativeProbability(double category
 double AbstractDiscreteDistribution::getIInfCumulativeProbability(double category) const
 {
 	double prob = 0;
-	map<double, double>::const_iterator it = _distribution.find(category);
-	if(it == _distribution.end()) return 0;
+	map<double, double>::const_iterator it = distribution_.find(category);
+	if(it == distribution_.end()) return 0;
 	for(map<double, double>::const_iterator i = ++it;
-		i != _distribution.end();
-		i++) prob += i -> second;
+		i != distribution_.end();
+		i++) prob += i->second;
 	return 1. - prob;
 }
 
@@ -178,11 +178,11 @@ double AbstractDiscreteDistribution::getIInfCumulativeProbability(double categor
 double AbstractDiscreteDistribution::getSupCumulativeProbability(double category) const 
 {
 	double prob = 0;
-	map<double, double>::const_iterator it = _distribution.find(category);
-	if(it == _distribution.end()) return 0;
+	map<double, double>::const_iterator it = distribution_.find(category);
+	if(it == distribution_.end()) return 0;
 	for(map<double, double>::const_iterator i = ++it;
-		i != _distribution.end();
-		i++) prob += i -> second;
+		i != distribution_.end();
+		i++) prob += i->second;
 	return prob;
 }
 
@@ -191,10 +191,10 @@ double AbstractDiscreteDistribution::getSupCumulativeProbability(double category
 double AbstractDiscreteDistribution::getSSupCumulativeProbability(double category) const
 {
 	double prob = 0;
-	map<double, double>::const_iterator it = _distribution.find(category);
-	for(map<double, double>::const_iterator i = _distribution.begin(); 
+	map<double, double>::const_iterator it = distribution_.find(category);
+	for(map<double, double>::const_iterator i = distribution_.begin(); 
 		i != it;
-		i++) prob += i -> second;
+		i++) prob += i->second;
 	return 1. - prob;
 }
 
@@ -202,8 +202,9 @@ double AbstractDiscreteDistribution::getSSupCumulativeProbability(double categor
 
 void AbstractDiscreteDistribution::print(ostream & out) const
 {
-	for(map<double, double>::const_iterator i = _distribution.begin(); i != _distribution.end(); i++) {
-		out << "Pr(" << (i -> first) << ") = " << (i -> second) << endl;
+	for(map<double, double>::const_iterator i = distribution_.begin(); i != distribution_.end(); i++)
+  {
+		out << "Pr(" << (i->first) << ") = " << (i->second) << endl;
 	}
 }
 

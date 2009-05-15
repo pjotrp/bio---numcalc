@@ -44,18 +44,18 @@ using namespace bpp;
 void ThreePointsNumericalDerivative::updateDerivatives(const ParameterList & parameters)
 throw (ParameterNotFoundException, ConstraintException)
 {
-  if(_computeD1 && _variables.size() > 0)
+  if(computeD1_ && variables_.size() > 0)
   {
-    if(_function1) _function1->enableFirstOrderDerivatives(false);
-    if(_function2) _function2->enableSecondOrderDerivatives(false);
-    _function->setParameters(parameters);
-    _f2 = _function->getValue();
+    if(function1_) function1_->enableFirstOrderDerivatives(false);
+    if(function2_) function2_->enableSecondOrderDerivatives(false);
+    function_->setParameters(parameters);
+    f2_ = function_->getValue();
     string lastVar;
     ParameterList p;
-    for(unsigned int i = 0; i < _variables.size(); i++)
+    for(unsigned int i = 0; i < variables_.size(); i++)
     {
-      string var = _variables[i];
-      if(parameters.getParameter(var) == NULL) continue;
+      string var = variables_[i];
+      if (!parameters.hasParameter(var)) continue;
       if(i > 0)
       {
         vector<string> vars(2);
@@ -68,67 +68,67 @@ throw (ParameterNotFoundException, ConstraintException)
         p = parameters.subList(var);
       }
       lastVar = var;
-      double value = _function->getParameterValue(var);
-      double h = (1. + std::abs(value)) * _h; 
+      double value = function_->getParameterValue(var);
+      double h = (1. + std::abs(value)) * h_; 
       //Compute one other point:
       try
       {
         p[0]->setValue(value - h);
-        _function->setParameters(p); //also reset previous parameter...
+        function_->setParameters(p); //also reset previous parameter...
         p = p.subList(0);
-        _f1 = _function->getValue();
+        f1_ = function_->getValue();
         try
         {
           p[0]->setValue(value + h);
-          _function->setParameters(p);
-          _f3 = _function->getValue();
+          function_->setParameters(p);
+          f3_ = function_->getValue();
+          //No limit raised, use central approximation:
+          der1_[i] = (-f1_ + f3_) / (2.*h);
+          der2_[i] = (f1_ -2*f2_ + f3_) / (h*h);
         }
         catch(ConstraintException & ce)
         {
           //Right limit raised, use backward approximation:
           p[0]->setValue(value - h);
-          _function->setParameters(p);
-          _f1 = _function->getValue();
+          function_->setParameters(p);
+          f1_ = function_->getValue();
           p[0]->setValue(value - 2*h);
-          _function->setParameters(p);
-          _f3 = _function->getValue();
-          _der1[i] = (_f2 - _f1) / h;
-          _der2[i] = (_f2 - 2.*_f1 + _f3) / (h*h);        
+          function_->setParameters(p);
+          f3_ = function_->getValue();
+          der1_[i] = (f2_ - f1_) / h;
+          der2_[i] = (f2_ - 2.*f1_ + f3_) / (h*h);        
         }
-        //No limit raised, use central approximation:
-        _der1[i] = (-_f1 + _f3) / (2.*h);
-        _der2[i] = (_f1 -2*_f2 + _f3) / (h*h);
       }
       catch(ConstraintException & ce)
       {
         //Left limit raised, use forward approximation:
         p[0]->setValue(value + h);
-        _function->setParameters(p);
-        _f3 = _function->getValue();
+        function_->setParameters(p);
+        f3_ = function_->getValue();
         p[0]->setValue(value + 2*h);
-        _function->setParameters(p);
-        _f1 = _function->getValue();
-        _der1[i] = (_f3 - _f2) / h;
-        _der2[i] = (_f1 - 2.*_f3 + _f2) / (h*h);
+        function_->setParameters(p);
+        f1_ = function_->getValue();
+        der1_[i] = (f3_ - f2_) / h;
+        der2_[i] = (f1_ - 2.*f3_ + f2_) / (h*h);
       }
     }
 
-    if(_computeCrossD2)
+    if(computeCrossD2_)
     {
       string lastVar1, lastVar2;
-      for(unsigned int i = 0; i < _variables.size(); i++)
+      for(unsigned int i = 0; i < variables_.size(); i++)
       {
-        string var1 = _variables[i];
-        if(parameters.getParameter(var1) == NULL) continue;
-        for(unsigned int j = 0; j < _variables.size(); j++)
+        string var1 = variables_[i];
+        if(!parameters.hasParameter(var1)) continue;
+        for(unsigned int j = 0; j < variables_.size(); j++)
         {
           if(j==i)
           {
-            _crossDer2(i,j) = _der2[i];
+            crossDer2_(i,j) = der2_[i];
             continue;
           }
-          string var2 = _variables[j];
-          if(parameters.getParameter(var2) == NULL) continue;
+          string var2 = variables_[j];
+          if (!parameters.hasParameter(var2)) continue;
         
           vector<string> vars(2);
           vars[0] = var1;
@@ -140,36 +140,36 @@ throw (ParameterNotFoundException, ConstraintException)
           }
           p = parameters.subList(vars);
         
-          double value1 = _function->getParameterValue(var1);
-          double value2 = _function->getParameterValue(var2);
-          double h1 = (1. + std::abs(value1)) * _h; 
-          double h2 = (1. + std::abs(value2)) * _h; 
+          double value1 = function_->getParameterValue(var1);
+          double value2 = function_->getParameterValue(var2);
+          double h1 = (1. + std::abs(value1)) * h_; 
+          double h2 = (1. + std::abs(value2)) * h_; 
         
           //Compute 4 additional points:
           try
           {
             p[0]->setValue(value1 - h1);
             p[1]->setValue(value2 - h2);
-            _function->setParameters(p); //also reset previous parameter...
+            function_->setParameters(p); //also reset previous parameter...
             vector<unsigned int> tmp(2);
             tmp[0] = 0;
             tmp[1] = 1;
             p = p.subList(tmp); //removed the previous parameters.
-            _f11 = _function->getValue();
+            f11_ = function_->getValue();
 
             p[1]->setValue(value2 + h2);
-            _function->setParameters(p.subList(1));
-            _f12 = _function->getValue();
+            function_->setParameters(p.subList(1));
+            f12_ = function_->getValue();
 
             p[0]->setValue(value1 + h1);
-            _function->setParameters(p.subList(0));
-            _f22 = _function->getValue();
+            function_->setParameters(p.subList(0));
+            f22_ = function_->getValue();
 
             p[1]->setValue(value2 - h2);
-            _function->setParameters(p.subList(1));
-            _f21 = _function->getValue();
+            function_->setParameters(p.subList(1));
+            f21_ = function_->getValue();
 
-            _crossDer2(i,j) = ((_f22 - _f21) - (_f12 - _f11)) / (4*h1*h2);
+            crossDer2_(i,j) = ((f22_ - f21_) - (f12_ - f11_)) / (4 * h1 * h2);
           }
           catch(ConstraintException & ce)
           {
@@ -183,18 +183,18 @@ throw (ParameterNotFoundException, ConstraintException)
     }
    
     //Reset last parameter and compute analytical derivatives if any.
-    if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
-    if(_function2) _function2->enableSecondOrderDerivatives(_computeD2);
-    _function->setParameters(parameters.subList(lastVar));
+    if(function1_) function1_->enableFirstOrderDerivatives(computeD1_);
+    if(function2_) function2_->enableSecondOrderDerivatives(computeD2_);
+    function_->setParameters(parameters.subList(lastVar));
   }
   else
   {
     //Reset initial value and compute analytical derivatives if any.
-    if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
-    if(_function2) _function2->enableSecondOrderDerivatives(_computeD2);
-    _function->setParameters(parameters);
+    if(function1_) function1_->enableFirstOrderDerivatives(computeD1_);
+    if(function2_) function2_->enableSecondOrderDerivatives(computeD2_);
+    function_->setParameters(parameters);
     //Just in case derivatives are not computed:
-    _f2 = _function->getValue();
+    f2_ = function_->getValue();
   }
 }
 

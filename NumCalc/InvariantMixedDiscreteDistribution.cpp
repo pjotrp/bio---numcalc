@@ -47,13 +47,17 @@ using namespace bpp;
 /******************************************************************************/
 
 InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
-    DiscreteDistribution* dist, double p, double invariant, bool ownDist):
+    DiscreteDistribution* dist, double p, double invariant, const string& parameterPrefix):
+  AbstractDiscreteDistribution(parameterPrefix),
   dist_(dist),
-  ownDist_(ownDist),
-  invariant_(invariant)
+  invariant_(invariant),
+  nestedPrefix_(dist->getNamespace())
 {
-  _parameters.addParameters(dist_->getParameters());
-  _parameters.addParameter(Parameter("p", p, &Parameter::PROP_CONSTRAINT_IN));
+  //We first change the namespace of the nested distribution:
+  dist_->setNamespace(parameterPrefix + nestedPrefix_);
+  addParameters_(dist_->getParameters());
+  Parameter pinv(getNamespace() + "p", p, &Parameter::PROP_CONSTRAINT_IN);
+  addParameter_(pinv);
   applyParameters();
 }
 
@@ -61,6 +65,7 @@ InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
 
 void InvariantMixedDiscreteDistribution::fireParameterChanged(const ParameterList & parameters)
 {
+  AbstractDiscreteDistribution::fireParameterChanged(parameters);
   dist_->matchParametersValues(parameters);
   applyParameters();
 }
@@ -70,16 +75,16 @@ void InvariantMixedDiscreteDistribution::fireParameterChanged(const ParameterLis
 
 Domain InvariantMixedDiscreteDistribution::getDomain() const
 {
-  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(_distribution));
+  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
 }
 
 /******************************************************************************/
 
 void InvariantMixedDiscreteDistribution::applyParameters()
 {
-  double p = _parameters.getParameter("p")->getValue();
-  _distribution.clear();
-  _distribution[invariant_] = p;
+  double p = getParameterValue("p");
+  distribution_.clear();
+  distribution_[invariant_] = p;
   unsigned int distNCat = dist_->getNumberOfCategories();
   bounds_.clear();
   bounds_.push_back(0.);
@@ -88,10 +93,19 @@ void InvariantMixedDiscreteDistribution::applyParameters()
   Domain d = dist_->getDomain();
   for(unsigned int i = 0; i < distNCat; i++)
   {
-    _distribution[cats[i]] = (1. - p) * probs[i];
+    distribution_[cats[i]] = (1. - p) * probs[i];
     bounds_.push_back(d.getBound(i));
   }
   bounds_.push_back(d.getBound(distNCat));
+}
+
+/******************************************************************************/
+
+void InvariantMixedDiscreteDistribution::setNamespace(const string& prefix)
+{
+  AbstractDiscreteDistribution::setNamespace(prefix);
+  //We also need to update the namespace of the nested distribution:
+  dist_->setNamespace(prefix + nestedPrefix_);
 }
 
 /******************************************************************************/

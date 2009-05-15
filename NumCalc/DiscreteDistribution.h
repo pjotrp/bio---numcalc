@@ -41,7 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _DISCRETEDISTRIBUTION_H_
 
 #include "VectorTools.h"
-#include "Parametrizable.h"
+#include "ParameterAliasable.h"
 #include "Domain.h"
 
 // From the STL:
@@ -68,7 +68,7 @@ namespace bpp
  * discretization used.
  */
 class DiscreteDistribution:
-  public virtual Parametrizable
+  public virtual ParameterAliasable
 {
 	public:
 		DiscreteDistribution() {}

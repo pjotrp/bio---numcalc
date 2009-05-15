@@ -48,13 +48,13 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
 	const map<double, double> & distribution
 ) {
 	for(map<double, double>::const_iterator i = distribution.begin(); i != distribution.end(); i++)
-		_distribution[i -> first] = i -> second;
+		distribution_[i->first] = i->second;
 }
 
 Domain SimpleDiscreteDistribution::getDomain() const
 {
 	// Compute a new arbitray bounderi:
-	vector<double> values = MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(_distribution);
+	vector<double> values = MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_);
 	unsigned int n = values.size(); 
 	vector<double> bounderi(n + 1);
 	

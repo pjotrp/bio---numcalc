@@ -90,48 +90,48 @@ ParameterList::~ParameterList()
 	
 /******************************************************************************/
 
-const Parameter * ParameterList::getParameter(const string & name) const
+const Parameter& ParameterList::getParameter(const string & name) const throw (ParameterNotFoundException)
 {
-	for(unsigned int i = 0; i < size(); i++)
+	for (unsigned int i = 0; i < size(); i++)
   {
-		const Parameter * p = operator[](i);
-		if(p->getName() == name) return p;
+		const Parameter* p = operator[](i);
+		if(p->getName() == name) return *p;
 	}
-	return NULL;
+	throw ParameterNotFoundException("ParameterList::getParameter().", name);
 }
 
 /******************************************************************************/
 
-Parameter * ParameterList::getParameter(const string & name)
+Parameter& ParameterList::getParameter(const string & name) throw (ParameterNotFoundException)
 {
 	for(unsigned int i = 0; i < size(); i++)
   {
-		Parameter * p = operator[](i);
-		if(p->getName() == name) return p;
+		Parameter* p = operator[](i);
+		if(p->getName() == name) return *p;
 	}
-	return NULL;
+	throw ParameterNotFoundException("ParameterList::getParameter().", name);
 }
 
 /******************************************************************************/
 
-ParameterList ParameterList::subList(const vector<string> & names) const
+ParameterList ParameterList::subList(const vector<string> & names) const throw (ParameterNotFoundException)
 {
 	ParameterList pl;
 	for(unsigned int i = 0; i < names.size(); i++)
   {
-		const Parameter * param = getParameter(names[i]);
-		if(param != NULL) pl.push_back(dynamic_cast<Parameter *>(param->clone()));
+		Parameter param = getParameter(names[i]);
+		pl.addParameter(param);
 	}
 	return pl;
 }
 
 /******************************************************************************/
 
-ParameterList ParameterList::subList(const string & name) const
+ParameterList ParameterList::subList(const string & name) const throw (ParameterNotFoundException)
 {
 	ParameterList pl;
-	const Parameter * param = getParameter(name);
-	if(param != NULL) pl.push_back(dynamic_cast<Parameter *>(param->clone()));
+	Parameter param = getParameter(name);
+	pl.addParameter(param);
 	return pl;
 }
 
@@ -163,9 +163,9 @@ ParameterList ParameterList::getCommonParametersWith(const ParameterList & param
 	ParameterList pl;
   for(unsigned int i = 0; i < params.size(); i++)
   {
-		Parameter * p = params[i];
-		if(getParameter(p->getName()) != NULL)
-			pl.push_back(dynamic_cast<Parameter *>(p->clone()));
+		Parameter* p = params[i];
+		if(hasParameter(p->getName()))
+			pl.push_back(dynamic_cast<Parameter *>(p->clone())); //We use push_back instead of addParameter because we are sure the name is not duplicated.
 	}
 	
 	return pl;
@@ -184,7 +184,7 @@ vector<string> ParameterList::getParameterNames() const
 
 void ParameterList::addParameter(const Parameter & param) throw (ParameterException)
 {
-	if(getParameter(param.getName()) != NULL)
+	if (hasParameter(param.getName()))
 		throw ParameterException("ParameterList::addParameter. Parameter with name '" + param.getName() + "' already exists.", &param); 
 	push_back(dynamic_cast<Parameter *>(param.clone()));
 }
@@ -194,7 +194,8 @@ void ParameterList::addParameter(const Parameter & param) throw (ParameterExcept
 void ParameterList::addParameters(const ParameterList & params)
 throw (ParameterException)
 {
-	for(unsigned int i = 0; i < params.size(); i++) addParameter(* params[i]);
+	for (unsigned int i = 0; i < params.size(); i++)
+    addParameter(* params[i]);
 }
 
 /******************************************************************************/
@@ -202,8 +203,7 @@ throw (ParameterException)
 void ParameterList::setParameterValue(const string & name, double value)
 throw (ParameterNotFoundException, ConstraintException)
 {
-	Parameter * p = getParameter(name);
-	if(p == NULL) throw ParameterNotFoundException("ParameterList::setParameter", name);
+	Parameter* p = &getParameter(name);
 	p->setValue(value);
 }
 	
@@ -213,18 +213,17 @@ void ParameterList::setAllParametersValues(const ParameterList & params)
 throw (ParameterNotFoundException, ConstraintException)
 {
 	// First we check if all values are correct:
-	for(ParameterList::iterator it = begin(); it < end(); it++)
+	for (ParameterList::iterator it = begin(); it < end(); it++)
   {
-		const Parameter * p = params.getParameter((*it) -> getName());
-		if(p == NULL) throw ParameterNotFoundException("ParameterList::setAllParameters", (* it)->getName());
-		if((*it)->hasConstraint() && !(*it)->getConstraint()->isCorrect(p->getValue()))
+		const Parameter* p = &params.getParameter((*it)->getName());
+		if ((*it)->hasConstraint() && !(*it)->getConstraint()->isCorrect(p->getValue()))
 			throw ConstraintException("ParameterList::setParametersValues()", *it, p->getValue());
 	}		
 
 	// If all values are ok, we set them: 
-	for(ParameterList::iterator it = begin(); it < end(); it++)
+	for (ParameterList::iterator it = begin(); it < end(); it++)
   {
-		const Parameter * p = params.getParameter((*it)->getName());
+		const Parameter* p = &params.getParameter((*it)->getName());
 		(*it)->setValue(p->getValue());
 	}		
 }
@@ -235,18 +234,17 @@ void ParameterList::setParametersValues(const ParameterList & params)
 throw (ParameterNotFoundException, ConstraintException)
 {
 	// First we check if all values are correct:
-	for(ParameterList::const_iterator it = params.begin(); it < params.end(); it++)
+	for (ParameterList::const_iterator it = params.begin(); it < params.end(); it++)
   {
-		Parameter * p = getParameter((*it)->getName());
-		if(p == NULL) throw ParameterNotFoundException("ParameterList::setParameters", (* it)->getName());
-		if(p->hasConstraint() && !p->getConstraint()->isCorrect((*it)->getValue()))
+		Parameter* p = &getParameter((*it)->getName());
+		if (p->hasConstraint() && !p->getConstraint()->isCorrect((*it)->getValue()))
 			throw ConstraintException("ParameterList::setParametersValues()", p, (*it)->getValue());
 	}
 	
 	// If all values are ok, we set them: 
-	for(ParameterList::const_iterator it = params.begin(); it < params.end(); it++)
+	for (ParameterList::const_iterator it = params.begin(); it < params.end(); it++)
   {
-		Parameter * p = getParameter((*it)->getName());
+		Parameter* p = &getParameter((*it)->getName());
 		p->setValue((*it)->getValue());
 	}
 }
@@ -259,16 +257,22 @@ throw (ConstraintException)
 	// First we check if all values are correct:
 	for(ParameterList::const_iterator it = params.begin(); it < params.end(); it++)
   {
-		Parameter * p = getParameter((*it)->getName());
-		if(p != NULL) if(p->hasConstraint() && !p->getConstraint()->isCorrect((*it)->getValue()))
-			throw ConstraintException("ParameterList::matchParametersValues()", p, (*it)->getValue());
+    if(hasParameter((*it)->getName()))
+    {
+		  Parameter* p = &getParameter((*it)->getName());
+		  if (p->hasConstraint() && !p->getConstraint()->isCorrect((*it)->getValue()))
+			  throw ConstraintException("ParameterList::matchParametersValues()", p, (*it)->getValue());
+    }
 	}		
 
 	// If all values are ok, we set them: 
 	for(ParameterList::const_iterator it = params.begin(); it < params.end(); it++)
   {
-		Parameter * p = getParameter((*it)->getName());
-		if(p != NULL) p->setValue((*it)->getValue());
+    if (hasParameter((*it)->getName()))
+    {
+		  Parameter* p = &getParameter((*it)->getName());
+		  p->setValue((*it)->getValue());
+    }
 	}		
 }
 
@@ -277,10 +281,9 @@ throw (ConstraintException)
 void ParameterList::setAllParameters(const ParameterList & params)
 throw (ParameterNotFoundException)
 {
-	for(ParameterList::iterator it = begin(); it < end(); it++)
+	for (ParameterList::iterator it = begin(); it < end(); it++)
   {
-		const Parameter * p = params.getParameter((*it)->getName());
-		if(p == NULL) throw ParameterNotFoundException("ParameterList::setAllParameters", (* it)->getName());
+		const Parameter* p = &params.getParameter((*it)->getName());
 		**it = *p;
 	}		
 }
@@ -292,8 +295,7 @@ throw (ParameterNotFoundException)
 {
 	for(ParameterList::const_iterator it = params.begin(); it < params.end(); it++)
   {
-		Parameter * p = getParameter((*it)->getName());
-		if(p == NULL) throw ParameterNotFoundException("ParameterList::setParameters", (* it)->getName());
+		Parameter* p = &getParameter((*it)->getName());
 		*p = **it;
 	}
 }
@@ -302,10 +304,10 @@ throw (ParameterNotFoundException)
 
 bool ParameterList::hasParameter(const string& name) const
 {
-  for(unsigned int i = 0; i < size(); i++)
+  for (unsigned int i = 0; i < size(); i++)
   {
-    Parameter * p = operator[](i);
-    if(p->getName() == name)
+    Parameter* p = operator[](i);
+    if (p->getName() == name)
       return true;
   }
   return false;
@@ -318,8 +320,11 @@ void ParameterList::matchParameters(const ParameterList & params)
 {
 	for(ParameterList::const_iterator it = params.begin(); it < params.end(); it++)
   {
-		Parameter * p = getParameter((*it)->getName());
-		if(p != NULL) *p = **it;
+    if (hasParameter((*it)->getName()))
+    {
+		  Parameter* p = &getParameter((*it)->getName());
+		  *p = **it;
+    }
 	}		
 }
 
@@ -378,7 +383,7 @@ void ParameterList::deleteParameters(const vector<unsigned int> & indices) throw
 
 /******************************************************************************/
 
-unsigned int ParameterList::whichParameterHasName(const string & name) throw (ParameterNotFoundException)
+unsigned int ParameterList::whichParameterHasName(const string & name) const throw (ParameterNotFoundException)
 {
   for(unsigned int i = 0; i < size(); i++)
     if((*this)[i]->getName() == name) return i;

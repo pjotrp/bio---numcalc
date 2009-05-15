@@ -44,7 +44,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
-ReparametrizationFunctionWrapper::ReparametrizationFunctionWrapper(Function * function, bool verbose):
+ReparametrizationFunctionWrapper::ReparametrizationFunctionWrapper(Function * function, bool verbose) :
+  AbstractParametrizable(""),
   _function(function)
 {
   _functionParameters = function->getParameters();
@@ -57,7 +58,8 @@ ReparametrizationFunctionWrapper::ReparametrizationFunctionWrapper(Function * fu
     if(! constraint)
     {
       if(verbose) ApplicationTools::displayMessage("Parameter " + name + " does not need to be transformed.");
-      _parameters.addParameter(PlaceboTransformedParameter(name, value));
+      PlaceboTransformedParameter p(name, value);
+      addParameter_(p);
     }
     else
     {
@@ -67,7 +69,8 @@ ReparametrizationFunctionWrapper::ReparametrizationFunctionWrapper(Function * fu
         if(interval)
         {
           if(verbose) ApplicationTools::displayMessage("Parameter " + name + " was tanh transformed.");
-          _parameters.addParameter(IntervalTransformedParameter(name, value, interval->getLowerBound(), interval->getUpperBound()));
+          IntervalTransformedParameter p(name, value, interval->getLowerBound(), interval->getUpperBound());
+          addParameter_(p);
         }
         else throw Exception("");
       }
@@ -79,7 +82,8 @@ ReparametrizationFunctionWrapper::ReparametrizationFunctionWrapper(Function * fu
           if(epr)
           {
             if(verbose) ApplicationTools::displayMessage("Parameter " + name + " was log transformed.");
-            _parameters.addParameter(RTransformedParameter(name, value, epr->getLowerBound(), true));
+            RTransformedParameter p(name, value, epr->getLowerBound(), true);
+            addParameter_(p);
           }
           else throw Exception("");
         }
@@ -91,7 +95,8 @@ ReparametrizationFunctionWrapper::ReparametrizationFunctionWrapper(Function * fu
             if(ipr)
             {
               if(verbose) ApplicationTools::displayMessage("Parameter " + name + " was log transformed.");
-              _parameters.addParameter(RTransformedParameter(name, value, ipr->getLowerBound(), true));
+              RTransformedParameter p(name, value, ipr->getLowerBound(), true);
+              addParameter_(p);
             }
             else throw Exception("");
           }
@@ -103,7 +108,8 @@ ReparametrizationFunctionWrapper::ReparametrizationFunctionWrapper(Function * fu
               if(enr)
               {
                 if(verbose) ApplicationTools::displayMessage("Parameter " + name + " was log transformed.");
-                _parameters.addParameter(RTransformedParameter(name, value, enr->getUpperBound(), false));
+                RTransformedParameter p(name, value, enr->getUpperBound(), false);
+                addParameter_(p);
               }
               else throw Exception("");
             }
@@ -115,14 +121,16 @@ ReparametrizationFunctionWrapper::ReparametrizationFunctionWrapper(Function * fu
                 if(inr)
                 {
                   if(verbose) ApplicationTools::displayMessage("Parameter " + name + " was log transformed.");
-                  _parameters.addParameter(RTransformedParameter(name, value, inr->getUpperBound(), false));
+                  RTransformedParameter p(name, value, inr->getUpperBound(), false);
+                  addParameter_(p);
                 }
                 else throw Exception("");
               }
               catch(exception & e)
               {
                 if(verbose) ApplicationTools::displayWarning("No transformation found for this constraint! Parameter " + p->getName());
-                _parameters.addParameter(PlaceboTransformedParameter(name, value));
+                PlaceboTransformedParameter p(name, value);
+                addParameter_(p);
               }
             }
           }
@@ -139,9 +147,9 @@ void ReparametrizationFunctionWrapper::fireParameterChanged (const ParameterList
   //but that would implied a quick sort on parameter names (nlog(n))
   //whereas using a loop over the set is in o(n). It should hence be 
   //more efficient in most cases.
-  for(unsigned int i = 0; i < _parameters.size(); i++)
+  for(unsigned int i = 0; i < getNumberOfParameters(); i++)
   {
-    double x = dynamic_cast<TransformedParameter *>(_parameters[i])->getOriginalValue();
+    double x = dynamic_cast<TransformedParameter *>(&getParameter_(i))->getOriginalValue();
     _functionParameters[i]->setValue(x);
   }
 }

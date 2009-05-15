@@ -86,13 +86,13 @@ class ThreePointsNumericalDerivative:
   public AbstractNumericalDerivative
 {
   protected:
-    double _f1, _f2, _f3, _f11, _f22, _f12, _f21;
+    double f1_, f2_, f3_, f11_, f22_, f12_, f21_;
     
-	public:
-		ThreePointsNumericalDerivative (Function * function): AbstractNumericalDerivative(function) {}
-		ThreePointsNumericalDerivative (DerivableFirstOrder * function): AbstractNumericalDerivative(function) {}
-		ThreePointsNumericalDerivative (DerivableSecondOrder * function): AbstractNumericalDerivative(function) {}
-		virtual ~ThreePointsNumericalDerivative() {}
+  public:
+    ThreePointsNumericalDerivative (Function * function): AbstractNumericalDerivative(function) {}
+    ThreePointsNumericalDerivative (DerivableFirstOrder * function): AbstractNumericalDerivative(function) {}
+    ThreePointsNumericalDerivative (DerivableSecondOrder * function): AbstractNumericalDerivative(function) {}
+    virtual ~ThreePointsNumericalDerivative() {}
 
 #ifndef NO_VIRTUAL_COV
     ThreePointsNumericalDerivative*
@@ -105,7 +105,7 @@ class ThreePointsNumericalDerivative:
     
     double getValue() const throw (Exception)
     {
-      return _f2;
+      return f2_;
     }
     
   protected:

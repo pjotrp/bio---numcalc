@@ -49,17 +49,24 @@ namespace bpp
 
 /**
  * @brief Discretized Gamma distribution.
+ *
+ * @author Julien Dutheil, David Fournier, with original code from Tal Pupko and Ziheng Yang.
  */
 class GammaDiscreteDistribution:
   public AbstractDiscreteDistribution
 {
 	protected:
-		vector<double> _bounds;
+		vector<double> bounds_;
 	
-		static const double VERYBIG;
-		
 	public:
-		GammaDiscreteDistribution(unsigned int n, double alpha = 1.);
+    /**
+     * @brief Build a new discretized gamma distribution.
+     * @param n the number of categories to use.
+     * @param alpha The alpha parameter.
+     * @param beta The beta parameter.
+     * @param parameterPrefix A prefix to use for parameter names.
+     */
+		GammaDiscreteDistribution(unsigned int n, double alpha = 1., double beta= 1., const string& parameterPrefix="");
 
 		virtual ~GammaDiscreteDistribution();
 
@@ -76,7 +83,7 @@ class GammaDiscreteDistribution:
 	
     double randC() const throw (Exception)
     {
-      return RandomTools::randGamma(_parameters.getParameter("alpha")->getValue());
+      return RandomTools::randGamma(getParameterValue("alpha"));
     }
     
 	protected:

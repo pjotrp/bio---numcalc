@@ -43,17 +43,17 @@ using namespace bpp;
 void FivePointsNumericalDerivative::updateDerivatives(const ParameterList & parameters)
 throw (ParameterNotFoundException, ConstraintException)
 {
-  if(_computeD1 && _variables.size() > 0)
+  if(computeD1_ && variables_.size() > 0)
   {
-    if(_function1) _function1->enableFirstOrderDerivatives(false);
-    if(_function2) _function2->enableSecondOrderDerivatives(false);
-    _function->setParameters(parameters);
-    _f3 = _function->getValue();
+    if(function1_) function1_->enableFirstOrderDerivatives(false);
+    if(function2_) function2_->enableSecondOrderDerivatives(false);
+    function_->setParameters(parameters);
+    f3_ = function_->getValue();
     string lastVar;
-    for(unsigned int i = 0; i < _variables.size(); i++)
+    for(unsigned int i = 0; i < variables_.size(); i++)
     {
-      string var = _variables[i];
-      if(parameters.getParameter(var) == NULL) continue;
+      string var = variables_[i];
+      if (!parameters.hasParameter(var)) continue;
       ParameterList p;
       if(i > 0)
       {
@@ -68,68 +68,68 @@ throw (ParameterNotFoundException, ConstraintException)
         p = parameters.subList(var);
         lastVar = var;
       }
-      double value = _function->getParameterValue(var);
-      double h = (1. + std::abs(value)) * _h; 
+      double value = function_->getParameterValue(var);
+      double h = (1. + std::abs(value)) * h_; 
       //Compute four other points:
       try
       {
         p[0]->setValue(value - 2*h);
-        _function->setParameters(p);
-        _f1 = _function->getValue();
+        function_->setParameters(p);
+        f1_ = function_->getValue();
         try
         {
           p[0]->setValue(value + 2*h);
-          _function->setParameters(p);
-          _f5 = _function->getValue();
+          function_->setParameters(p);
+          f5_ = function_->getValue();
+          //No limit raised, use central approximation:
+          p[0]->setValue(value - h);
+          function_->setParameters(p);
+          f2_ = function_->getValue();
+          p[0]->setValue(value + h);
+          function_->setParameters(p);
+          f4_ = function_->getValue();
+          der1_[i] = (f1_ - 8.*f2_ + 8.*f4_ - f5_) / (12.*h);
+          der2_[i] = (-f1_ + 16.*f2_ -30.*f3_ + 16.*f4_ - f5_) / (12.*h*h);
         }
         catch(ConstraintException & ce)
         {
           //Right limit raised, use backward approximation:
           p[0]->setValue(value - h);
-          _function->setParameters(p);
-          _f2 = _function->getValue();
+          function_->setParameters(p);
+          f2_ = function_->getValue();
           p[0]->setValue(value - 2*h);
-          _function->setParameters(p);
-          _f1 = _function->getValue();
-          _der1[i] = (_f3 - _f2) / h;
-          _der2[i] = (_f3 - 2.*_f2 + _f1) / (h*h);        
+          function_->setParameters(p);
+          f1_ = function_->getValue();
+          der1_[i] = (f3_ - f2_) / h;
+          der2_[i] = (f3_ - 2.*f2_ + f1_) / (h*h);        
         }
-        //No limit raised, use central approximation:
-        p[0]->setValue(value - h);
-        _function->setParameters(p);
-        _f2 = _function->getValue();
-        p[0]->setValue(value + h);
-        _function->setParameters(p);
-        _f4 = _function->getValue();
-        _der1[i] = (_f1 - 8.*_f2 + 8.*_f4 - _f5) / (12.*h);
-        _der2[i] = (-_f1 + 16.*_f2 -30.*_f3 + 16.*_f4 - _f5) / (12.*h*h);
       }
       catch(ConstraintException & ce)
       {
         //Left limit raised, use forward approximation:
         p[0]->setValue(value + h);
-        _function->setParameters(p);
-        _f4 = _function->getValue();
+        function_->setParameters(p);
+        f4_ = function_->getValue();
         p[0]->setValue(value + 2*h);
-        _function->setParameters(p);
-        _f5 = _function->getValue();
-        _der1[i] = (_f4 - _f3) / h;
-        _der2[i] = (_f5 - 2.*_f4 + _f3) / (h*h);
+        function_->setParameters(p);
+        f5_ = function_->getValue();
+        der1_[i] = (f4_ - f3_) / h;
+        der2_[i] = (f5_ - 2.*f4_ + f3_) / (h*h);
       }
     }
-    //Reset last parameter and compute analytical derivatives if any>
-    if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
-    if(_function2) _function2->enableSecondOrderDerivatives(_computeD2);
-    _function->setParameters(parameters.subList(lastVar));
+    //Reset last parameter and compute analytical derivatives if any.
+    if(function1_) function1_->enableFirstOrderDerivatives(computeD1_);
+    if(function2_) function2_->enableSecondOrderDerivatives(computeD2_);
+    function_->setParameters(parameters.subList(lastVar));
   }
   else
   {
     //Reset initial value and compute analytical derivatives if any.
-    if(_function1) _function1->enableFirstOrderDerivatives(_computeD1);
-    if(_function2) _function2->enableSecondOrderDerivatives(_computeD2);
-    _function->setParameters(parameters);
+    if(function1_) function1_->enableFirstOrderDerivatives(computeD1_);
+    if(function2_) function2_->enableSecondOrderDerivatives(computeD2_);
+    function_->setParameters(parameters);
     //Just in  case derivatives are not computed:
-    _f3 = _function->getValue();
+    f3_ = function_->getValue();
   }
 }
 

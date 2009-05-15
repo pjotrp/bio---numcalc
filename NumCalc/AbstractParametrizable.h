@@ -64,144 +64,143 @@ class AbstractParametrizable:
   public virtual Parametrizable
 {
   private:
-    /**
-     * This lst is only for bookkeeping only.
-     * It will automatically be updated from _parameters.
-     */
-		mutable ParameterList _independentParameters;
+    ParameterList parameters_;
+    string prefix_;
 
-	protected:
-		mutable ParameterList _parameters;
+  public:
+    AbstractParametrizable(const string& prefix) : prefix_(prefix) {}
 
-    class AliasParameterListener:
-      public ParameterListener
-    {
-      protected:
-        string _id;
-        unsigned int _alias;
-        ParameterList *_pl;
-        string _name;
+    virtual ~AbstractParametrizable() {}
 
-      public:
-        AliasParameterListener(const string & id, unsigned int alias, ParameterList * pl): _id(id), _alias(alias), _pl(pl)
-        {
-          //This allow us to check if the parameter position have changed at some point...
-          _name = (*_pl)[alias]->getName();
-        }
-        AliasParameterListener * clone() const { return new AliasParameterListener(*this); }
+  public:
+    bool hasParameter(const string & name) const { return parameters_.hasParameter(prefix_ + name); }
 
-      public:
-        const string & getId() const { return _id; }
-
-        void setParameterList(ParameterList *pl) { _pl = pl; }
-
-        void parameterNameChanged(ParameterEvent & event) throw (Exception)
-        {
-          Parameter * p = (*_pl)[_alias];
-          if(p->getName() != _name)
-            throw Exception("AbstractParametrizable::AliasParameterListener::parameterNameChanged. Error, aliased parameter have change, maybe because a parameter was removed?");
-          p->setName(event.getParameter()->getName());
-          _name = p->getName();
-        }
-    
-        void parameterValueChanged(ParameterEvent & event) throw (Exception)
-        {
-          Parameter * p = (*_pl)[_alias];
-          if(p->getName() != _name)
-            throw Exception("AbstractParametrizable::AliasParameterListener::parameterValueChanged. Error, aliased parameter have change, maybe because a parameter was removed?");
-          p->setValue(event.getParameter()->getValue());
-        }
-      
-    };
-
-    /**
-     * Contains all parameter listeners for maintening alias relationships.
-     * The registry will be updated appropriately upon cloning and deleting.
-     */
-    map<string, AliasParameterListener *> _aliasListenersRegister;
-	
-	public:
-		AbstractParametrizable() {}
-
-    AbstractParametrizable(const AbstractParametrizable & ap);
-    
-    AbstractParametrizable & operator=(const AbstractParametrizable & ap);
-
-		virtual ~AbstractParametrizable();
-
-	public:
-
-		const ParameterList & getParameters() const { return _parameters; }
-		
-    const ParameterList & getIndependentParameters() const
-    {
-      //A small precaution in case _independentParameters was not initialized:
-      if(_parameters.size() > 0 && _independentParameters.size() == 0) _independentParameters = _parameters;
-      return _independentParameters;
-    }
+    const ParameterList & getParameters() const { return parameters_; }
     
     const Parameter & getParameter(const string & name) const throw (ParameterNotFoundException)
     {
-      const Parameter * p = _parameters.getParameter(name);
-      if(p) return *p;
-      else throw ParameterNotFoundException("AbstractParametrizable::getParameter.", name);
+      return parameters_.getParameter(prefix_ + name);
     }
-	
-		double getParameterValue(const string & name) const
-			throw (ParameterNotFoundException)
-		{ 
-			return _parameters.getParameter(name)->getValue();
-		}
+  
+    double getParameterValue(const string & name) const
+      throw (ParameterNotFoundException)
+    { 
+      return getParameter(name).getValue();
+    }
 
-		void setAllParametersValues(const ParameterList & parameters) 
-			throw (ParameterNotFoundException, ConstraintException)
-		{
-			_parameters.setAllParametersValues(parameters);
-      _independentParameters.matchParametersValues(_parameters);
-			fireParameterChanged(parameters);
-		}
+    void setAllParametersValues(const ParameterList & parameters) 
+      throw (ParameterNotFoundException, ConstraintException)
+    {
+      parameters_.setAllParametersValues(parameters);
+      fireParameterChanged(parameters);
+    }
 
-		void setParameterValue(const string & name, double value) 
-			throw (ParameterNotFoundException, ConstraintException)
-		{ 
-			_parameters.setParameterValue(name, value);
-      _independentParameters.matchParametersValues(_parameters);
-			fireParameterChanged(_parameters.subList(name));
-		}
+    void setParameterValue(const string & name, double value) 
+      throw (ParameterNotFoundException, ConstraintException)
+    {
+      parameters_.setParameterValue(prefix_ + name, value);
+      fireParameterChanged(parameters_.subList(prefix_ + name));
+    }
 
-		void setParametersValues(const ParameterList & parameters)
-			throw (ParameterNotFoundException, ConstraintException)
-		{ 
-			_parameters.setParametersValues(parameters);
-      _independentParameters.matchParametersValues(_parameters);
-			fireParameterChanged(parameters);
-		}
+    void setParametersValues(const ParameterList & parameters)
+      throw (ParameterNotFoundException, ConstraintException)
+    { 
+      parameters_.setParametersValues(parameters);
+      fireParameterChanged(parameters);
+    }
 
-		void matchParametersValues(const ParameterList & parameters)
-			throw (ConstraintException)
-		{ 
-			_parameters.matchParametersValues(parameters);
-      _independentParameters.matchParametersValues(_parameters);
-			fireParameterChanged(parameters);
-		}
+    void matchParametersValues(const ParameterList & parameters)
+      throw (ConstraintException)
+    { 
+      parameters_.matchParametersValues(parameters);
+      fireParameterChanged(parameters);
+    }
 
-    unsigned int getNumberOfParameters() const { return _parameters.size(); }
+    unsigned int getNumberOfParameters() const { return parameters_.size(); }
+     
+    void setNamespace(const string& prefix);
     
-    unsigned int getNumberOfIndependentParameters() const { return _independentParameters.size(); }
+    string getNamespace() const { return prefix_; }
+    
+    string getParameterNameWithoutNamespace(const string& name) const;
 
-    void aliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception);
+    /**
+     * @brief Notify the class when one or several parameters have changed.
+     *
+     * @param parameters A ParameterList object with parameters that changed.
+     */
+    virtual void fireParameterChanged(const ParameterList & parameters) = 0;
 
-    void unaliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception);
-	
-		/**
-		 * @brief Notify the class when one or several parameters have changed.
-		 *
-		 * @param parameters A ParameterList object with parameters that changed.
-		 */
-		virtual void fireParameterChanged(const ParameterList & parameters) = 0;
+  protected:
+    void addParameter_(const Parameter& parameter)
+    {
+      parameters_.addParameter(parameter);
+    }
 
+    void addParameters_(const ParameterList& parameters)
+    {
+      parameters_.addParameters(parameters);
+    }
+
+    void deleteParameter_(unsigned int index) throw (IndexOutOfBoundsException)
+    {
+      if(index >= parameters_.size())
+        throw IndexOutOfBoundsException("AbstractParametrizable::deleteParameter_.", index, 0, parameters_.size() - 1);
+      string name = parameters_[index]->getName();
+      parameters_.deleteParameter(index);
+    }
+
+    void resetParameters_()
+    {
+      parameters_.reset();
+    }
+
+    /**
+     * @param The name of the parameter.
+     * @return A reference toward the corresponding parameter.
+     * @throw ParameterNotFoundException If no parameter with that name is found in the list.
+     */
+    Parameter& getParameter_(const string & name) throw (ParameterNotFoundException)
+    {
+      return parameters_.getParameter(prefix_ + name);
+    }
+  
+    /**
+     * @param The name of the parameter, including its namespace.
+     * @return A reference toward the corresponding parameter.
+     * @throw ParameterNotFoundException If no parameter with that name is found in the list.
+     */
+    Parameter& getParameterWithNamespace_(const string& name) throw (ParameterNotFoundException)
+    {
+      return getParameter_(name);
+    }
+    /**
+     * @param The name of the parameter, including its namespace.
+     * @return A reference toward the corresponding parameter.
+     * @throw ParameterNotFoundException If no parameter with that name is found in the list.
+     */
+    const Parameter& getParameterWithNamespace_(const string& name) const throw (ParameterNotFoundException)
+    {
+      return getParameter(name);
+    }
+
+    Parameter& getParameter_(unsigned int index) throw (IndexOutOfBoundsException)
+    {
+      if(index >= parameters_.size())
+        throw IndexOutOfBoundsException("AbstractParametrizable::getParameter_.", index, 0, parameters_.size() - 1);
+      return *parameters_[index];
+    }
+    const Parameter& getParameter_(unsigned int index) const throw (IndexOutOfBoundsException)
+    {
+      if(index >= parameters_.size())
+        throw IndexOutOfBoundsException("AbstractParametrizable::getParameter_.", index, 0, parameters_.size() - 1);
+      return *parameters_[index];
+    }
+    
+    ParameterList& getParameters_() { return parameters_; }
 };
 
 } //end of namespace bpp.
+
 #endif //_ABSTRACTPARAMETRIZABLE_H_
 

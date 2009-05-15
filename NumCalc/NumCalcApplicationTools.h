@@ -127,26 +127,6 @@ class NumCalcApplicationTools
         bool suffixIsOptional = true,
         bool warn = true) throw (Exception);
 
-    /**
-     * @brief Split a string into a key and a value (General purpose function).
-     *
-     * @param desc [in]  A string descibing the keyval, with format key=val (space are considered normal character, that's up to you to deal with that afterward!).
-     * @param key  [out] Will contain the text of the key.
-     * @param val  [out] Will contain the text of the value.
-     * @throw Exception If the syntax describing the keyval is not correct.
-     */
-    static void singleKeyval(const string& desc, string& key, string& val) throw (Exception);
-    
-    /**
-     * @brief Split a string into several keys and corresponding values (General purpose function).
-     *
-     * @param desc [in]  A string descibing the keyval, with format key1=val1,key2=val2,etc (space are considered normal character, that's up to you to deal with that afterward!).
-     * @param keyvals [out] Will contain the text of the keys and their corresponding values.
-     * @throw Exception If the syntax describing the keyval is not correct.
-     */
-    static void multipleKeyvals(const string& desc, map<string, string>& keyvals) throw (Exception);
-
-
 };
 
 } //End of namespace bpp.

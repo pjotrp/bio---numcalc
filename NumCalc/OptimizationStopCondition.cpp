@@ -168,15 +168,17 @@ bool ParametersStopCondition::isToleranceReached() const
 {
   _callCount++;
   _lastParametersEstimates = _newParametersEstimates;
-  _newParametersEstimates   = _optimizer -> getParameters();
+  _newParametersEstimates   = _optimizer->getParameters();
   if(_callCount <= _burnin) return false;
-  for(unsigned int i = 0; i < _newParametersEstimates.size(); i++) {
-    Parameter * p = _newParametersEstimates[i];
+  for(unsigned int i = 0; i < _newParametersEstimates.size(); i++)
+  {
+    Parameter* p = _newParametersEstimates[i];
     if(p == NULL) throw ParameterNotFoundException("ParameterStopCondition::isToleranceReached.", p -> getName());
-    double lastEstimate = _lastParametersEstimates.getParameter(p -> getName()) -> getValue();
-    double newEstimate = p -> getValue();
+    double lastEstimate = _lastParametersEstimates.getParameter(p->getName()).getValue();
+    double newEstimate = p->getValue();
     double tol = NumTools::abs<double>(newEstimate - lastEstimate);
-    if(tol > _tolerance) {
+    if(tol > _tolerance)
+    {
       return false;
     }
   }

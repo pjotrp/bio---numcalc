@@ -39,6 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "ExponentialDiscreteDistribution.h"
 #include "RandomTools.h"
+#include "NumConstants.h"
 
 // From Utils:
 #include <Utils/MapTools.h>
@@ -48,15 +49,14 @@ using namespace bpp;
 #include <cmath>
 using namespace std;
   
-const double ExponentialDiscreteDistribution::VERYBIG = static_cast<double>(1.7E+23);
-
 /** Constructor: **************************************************************/
 
-ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda, bool median) : AbstractDiscreteDistribution()
+ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda, bool median, const string& parameterPrefix) : AbstractDiscreteDistribution(), prefix_(parameterPrefix)
 {
-	_lambdaConstraint = new IncludingPositiveReal(0.0);
-	_parameters.addParameter(Parameter("lambda", lambda, _lambdaConstraint, true));
-  _median = median;
+	lambdaConstraint_ = new IncludingPositiveReal(0.0);
+	Parameter p(getNamespace() + "lambda", lambda, lambdaConstraint_, true);
+	addParameter_(p);
+  median_ = median;
 	applyParameters(n);
 }
 
@@ -66,7 +66,7 @@ ExponentialDiscreteDistribution::~ExponentialDiscreteDistribution() {}
 
 void ExponentialDiscreteDistribution::fireParameterChanged(const ParameterList & parameters)
 {
-	//cout << "Parameter changed, alpha = " << getParameter("alpha") << endl;
+  AbstractDiscreteDistribution::fireParameterChanged(parameters);
 	applyParameters(getNumberOfCategories());	
 }
 
@@ -74,14 +74,14 @@ void ExponentialDiscreteDistribution::fireParameterChanged(const ParameterList &
 
 Domain ExponentialDiscreteDistribution::getDomain() const
 {
-    return Domain(_bounds, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(_distribution));
+  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
 }
 
 /******************************************************************************/
 
 void ExponentialDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
 {
-  discretize(numberOfCategories, _parameters[0]->getValue(), _median);
+  discretize(numberOfCategories, getParameter(0).getValue(), median_);
 }
 
 /******************************************************************************/
@@ -90,30 +90,30 @@ void ExponentialDiscreteDistribution::discretize(unsigned int numberOfCategories
 {
 	if(numberOfCategories == 0)
 		cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in ExponentialDiscreteDistribution::applyParameters()." << endl;
-	_distribution.clear();
-	_bounds.resize(numberOfCategories + 1);
+	distribution_.clear();
+	bounds_.resize(numberOfCategories + 1);
 	if(numberOfCategories == 1)
   {
     double value = median ? log(2.) / lambda : 1. / lambda;
-		_distribution[value] = 1.0;
-		_bounds[0] = 0; _bounds[1] = VERYBIG;
+		distribution_[value] = 1.0;
+		bounds_[0] = 0; bounds_[1] = NumConstants::VERY_BIG;
 		return;
 	}
   else if(numberOfCategories > 1)
   {
-    _bounds.resize(numberOfCategories + 1);
-    _distribution.clear();
+    bounds_.resize(numberOfCategories + 1);
+    distribution_.clear();
 
-	  _bounds[0] = 0;
+	  bounds_[0] = 0;
     vector<double> values(numberOfCategories);
 
 	  for(unsigned int i = 1; i <= numberOfCategories; i++)
     {
-      double a = _bounds[i-1];
+      double a = bounds_[i-1];
       double b = (i == numberOfCategories)
-        ? VERYBIG
+        ? NumConstants::VERY_BIG
         : (1. / lambda) * log((double)numberOfCategories / ((double)(numberOfCategories - i)));
-      _bounds[i] = b;
+      bounds_[i] = b;
       if(median)
         values[i-1] = (1. / lambda) * log((double)(2*numberOfCategories) / (double)(2*(numberOfCategories - i) + 1)); 
       else
@@ -123,7 +123,7 @@ void ExponentialDiscreteDistribution::discretize(unsigned int numberOfCategories
 		double p = 1. / (double)numberOfCategories;
 		for(unsigned int i = 0; i < numberOfCategories; i++)
     {
-			_distribution[values[i]] += p;
+			distribution_[values[i]] += p;
 		}
 		if(getNumberOfCategories() != numberOfCategories)
     {

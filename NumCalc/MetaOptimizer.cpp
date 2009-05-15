@@ -115,13 +115,13 @@ void MetaOptimizer::doInit(const ParameterList & parameters)
   throw (Exception)
 {
   _optParameters.resize(_optDesc->getNumberOfOptimizers());
-  for(unsigned int i = 0; i < _optDesc->getNumberOfOptimizers(); i++)
+  for (unsigned int i = 0; i < _optDesc->getNumberOfOptimizers(); i++)
   {
     _optParameters[i].reset();
-    for(unsigned int j = 0; j < _optDesc->getParameterNames(i).size(); j++)
+    for (unsigned int j = 0; j < _optDesc->getParameterNames(i).size(); j++)
     {
-      const Parameter *p = parameters.getParameter(_optDesc->getParameterNames(i)[j]);
-      if(p) _optParameters[i].addParameter(*p);
+      const Parameter *p = &parameters.getParameter(_optDesc->getParameterNames(i)[j]);
+      _optParameters[i].addParameter(*p);
     }
     _nbParameters[i] = _optParameters[i].size();
   }

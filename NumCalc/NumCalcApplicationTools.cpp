@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 //From utils:
 #include <Utils/ApplicationTools.h>
+#include <Utils/KeyvalTools.h>
 
 using namespace bpp;
 
@@ -75,7 +76,7 @@ vector<double> NumCalcApplicationTools::getVector(const string& desc) throw (Exc
   if(desc.substr(0,3) == "seq") // Bounds specified as sequence
   {
     map<string, string> keyvals;
-    multipleKeyvals(desc.substr(4, desc.size() - 5), keyvals);
+    KeyvalTools::multipleKeyvals(desc.substr(4, desc.size() - 5), keyvals);
     if(keyvals.find("from") == keyvals.end()) throw Exception("Unvalid sequence specification, missing 'from' key: " + desc.substr(3, desc.size() - 5));
     if(keyvals.find("to") == keyvals.end()) throw Exception("Unvalid sequence specification, missing 'to' key: " + desc.substr(3, desc.size() - 5));
     if(keyvals.find("step") == keyvals.end() && keyvals.find("size") == keyvals.end())
@@ -137,22 +138,4 @@ ParameterGrid* NumCalcApplicationTools::getParameterGrid(
   return grid;
 }
 
-void NumCalcApplicationTools::singleKeyval(const string& desc, string& key, string& val) throw (Exception)
-{
-  StringTokenizer st(desc, "=");
-  if(st.numberOfRemainingTokens() != 2) throw Exception("NumCalcApplicationTools::keyval(). Bad syntax! keyval should be of the form 'key=value'.");
-  key = st.nextToken();
-  val = st.nextToken();
-}
-
-void NumCalcApplicationTools::multipleKeyvals(const string& desc, map<string,string>& keyvals) throw (Exception)
-{
-  StringTokenizer st(desc, ",");
-  string key, val;
-  while(st.hasMoreToken())
-  {
-    singleKeyval(st.nextToken(), key, val);
-    keyvals[key] = val;
-  }
-}
 

@@ -35,6 +35,8 @@ DownhillSimplexMethod.h\
 NumTools.h\
 Parametrizable.h\
 AbstractParametrizable.h\
+ParameterAliasable.h\
+AbstractParameterAliasable.h\
 Functions.h\
 FunctionTools.h\
 OneDimensionOptimizationTools.h\
@@ -134,6 +136,7 @@ InvariantMixedDiscreteDistribution.cpp\
 ReparametrizationFunctionWrapper.cpp\
 NumConstants.cpp\
 AbstractParametrizable.cpp\
+AbstractParameterAliasable.cpp\
 NumCalcApplicationTools.cpp\
 FunctionTools.cpp\
 TestUnit.cpp

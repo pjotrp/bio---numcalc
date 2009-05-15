@@ -90,7 +90,14 @@ class Parametrizable:
 		virtual ~Parametrizable() {}
 
 	public:
-
+    /**
+     * @brief Tell if there is a parameter with specified name.
+     *
+     * @param name The name of the parameter to look for.
+     * @return y/n.
+     */
+    virtual bool hasParameter(const string & name) const = 0;
+	
 		/**
 		 * @brief Get all parameters available.
      *
@@ -177,43 +184,24 @@ class Parametrizable:
     virtual unsigned int getNumberOfParameters() const = 0;
 
     /**
-     * @brief Get the number of independent parameters.
+     * @brief Set the namespace for the parameter names.
      *
-     * @return The number of independent parameters.
-     * If no parameters are aliased, this is equivalent to the getNumberOfParameters() method.
+     * @param prefix The 'namespace', that is a prefix to add to all parameter names.
+     * If parameter names are already prefixed, the new prefix will be used instead.
      */
-    virtual unsigned int getNumberOfIndependentParameters() const = 0;
+    virtual void setNamespace(const string& prefix) = 0;
 
     /**
-     * @brief Set two parameters as 'aliased'.
-     *
-     * The values of the two parameters will be synchronized, so that setting the value of one parameter will automatically set the value of the other one accordingly.
-     * @param p1 Original parameter.
-     * @param p2 Aliased parameter.
-     * @throw ParameterNotFoundException if p1 or p2 do not correspond to existing parameters.
-     * @throw Exception when trying to perform non-valid association.
+     * @return The current namespace used. This is an empty string if no namespace is currently defined.
      */
-    virtual void aliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception) = 0; 
+    virtual string getNamespace() const = 0;
 
     /**
-     * @brief Detach two parameters previously set as 'aliased'.
+     * @brief Resolves a parameter name according to the current namespace.
      *
-     * The values of the two parameters will now be independent.
-     * @param p1 Original parameter.
-     * @param p2 Aliased parameter.
-     * @throw ParameterNotFoundException if p1 or p2 do not correspond to existing parameters.
-     * @throw Exception when trying to perform non-valid dissociation.
-      */
-    virtual void unaliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception)  = 0;
-
-    /**
-     * @brief Get the minimal list of parameters to set the model.
-     *
-     * If no parameters are aliased, this is the same a getParameters().
-     *
-     * @return A minimal set of parameters.
+     * @return The parameter name without the namespace prefix, if any.
      */
-    virtual const ParameterList & getIndependentParameters() const = 0;
+    virtual string getParameterNameWithoutNamespace(const string& name) const = 0;
 
 };
 
@@ -226,8 +214,8 @@ class ParametrizableAdapter:
   public virtual Parametrizable
 {
   protected:
-    ParameterList _parameters;
-    Parameter _parameter;
+    ParameterList parameters_;
+    Parameter parameter_;
 
 	public:
 		ParametrizableAdapter() {}
@@ -240,9 +228,9 @@ class ParametrizableAdapter:
 		 *
 		 * @{
 		 */
-		const ParameterList & getParameters() const { return _parameters; }
-		const ParameterList & getIndependentParameters() const { return _parameters; }
-    const Parameter & getParameter(const string & name) const throw (ParameterNotFoundException) { return _parameter; }
+    bool hasParameter(const string & name) const { parameters_.hasParameter(name); }
+		const ParameterList & getParameters() const { return parameters_; }
+    const Parameter & getParameter(const string & name) const throw (ParameterNotFoundException) { return parameter_; }
 		double getParameterValue(const string & name) const
 			throw (ParameterNotFoundException) { return 0; };
 		void setAllParametersValues(const ParameterList & parameters) 
@@ -253,10 +241,10 @@ class ParametrizableAdapter:
 			throw (ParameterNotFoundException, ConstraintException) {}
 		void matchParametersValues(const ParameterList & parameters)
 			throw (ConstraintException) {};
-    void aliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception) {}
-    void unaliasParameters(const string & p1, const string & p2) throw (ParameterNotFoundException, Exception) {}
     unsigned int getNumberOfParameters() const{ return 0; }
-    unsigned int getNumberOfIndependentParameters() const{ return 0; }
+    void setNamespace(const string& prefix) {}
+    string getNamespace() const { return ""; }
+    string getParameterNameWithoutNamespace(const string& name) const { return name; }
 		/** @} */
 
 };
