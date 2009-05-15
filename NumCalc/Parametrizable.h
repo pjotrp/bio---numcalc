@@ -228,7 +228,7 @@ class ParametrizableAdapter:
 		 *
 		 * @{
 		 */
-    bool hasParameter(const string & name) const { parameters_.hasParameter(name); }
+    bool hasParameter(const string & name) const { return parameters_.hasParameter(name); }
 		const ParameterList & getParameters() const { return parameters_; }
     const Parameter & getParameter(const string & name) const throw (ParameterNotFoundException) { return parameter_; }
 		double getParameterValue(const string & name) const
