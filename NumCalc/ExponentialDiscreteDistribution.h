@@ -59,7 +59,6 @@ class ExponentialDiscreteDistribution:
 		vector<double> bounds_;
 		IncludingPositiveReal * lambdaConstraint_;
     bool median_;
-    string prefix_;
 	
 	public:
 		ExponentialDiscreteDistribution(unsigned int n, double lambda = 1., bool median=false, const string& parameterPrefix="");
@@ -69,8 +68,7 @@ class ExponentialDiscreteDistribution:
       AbstractDiscreteDistribution(dist),
       bounds_(dist.bounds_),
       lambdaConstraint_(dynamic_cast<IncludingPositiveReal *>(dist.lambdaConstraint_->clone())),
-      median_(dist.median_),
-      prefix_(dist.prefix_)
+      median_(dist.median_)
     {}
     
     ExponentialDiscreteDistribution & operator=(const ExponentialDiscreteDistribution & dist)
@@ -79,7 +77,6 @@ class ExponentialDiscreteDistribution:
       bounds_ = dist.bounds_;
       lambdaConstraint_ = dynamic_cast<IncludingPositiveReal *>(dist.lambdaConstraint_->clone());
       median_ = dist.median_;
-      prefix_ = dist.prefix_;
       return *this;
     }
 

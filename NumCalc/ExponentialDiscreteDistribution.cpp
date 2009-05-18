@@ -51,7 +51,8 @@ using namespace std;
   
 /** Constructor: **************************************************************/
 
-ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda, bool median, const string& parameterPrefix) : AbstractDiscreteDistribution(), prefix_(parameterPrefix)
+ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda, bool median, const string& parameterPrefix) :
+  AbstractDiscreteDistribution(parameterPrefix)
 {
 	lambdaConstraint_ = new IncludingPositiveReal(0.0);
 	Parameter p(getNamespace() + "lambda", lambda, lambdaConstraint_, true);
@@ -81,7 +82,7 @@ Domain ExponentialDiscreteDistribution::getDomain() const
 
 void ExponentialDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
 {
-  discretize(numberOfCategories, getParameter(0).getValue(), median_);
+  discretize(numberOfCategories, getParameter_(0).getValue(), median_);
 }
 
 /******************************************************************************/
